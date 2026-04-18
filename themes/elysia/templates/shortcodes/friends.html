@@ -17,7 +17,12 @@
     {% set default_avatar = def_avatars | nth(n=loop.index0 % def_avatar_count) | default(value="/avatar.png") %}
     <a class="friend-card" href="{{ item.url | safe }}" target="_blank" rel="noopener noreferrer" title="{{ item.desc | default(value='') }}">
         <div class="friend-avatar">
-            <img src="{{ item.icon | default(value=default_avatar) | safe }}" alt="{{ item.name }}">
+            {% set _avatar = item.icon | default(value=default_avatar) %}
+            {% if _avatar is starting_with("http") %}
+            <img src="{{ _avatar | safe }}" alt="{{ item.name }}">
+            {% else %}
+            <img src="{{ get_url(path=_avatar) }}" alt="{{ item.name }}">
+            {% endif %}
         </div>
         <div class="friend-name">{{ item.name }}</div>
         {% if item.desc %}

@@ -12,11 +12,20 @@
     {% set default_cover = def_covers | nth(n=loop.index0 % def_cover_count) | default(value="/images/default_cover.png") %}
     <a class="links-card" href="{{ item.url | safe }}" target="_blank" rel="noopener noreferrer">
         <div class="links-cover">
-            <img src="{{ item.cover | default(value=default_cover) }}" alt="{{ item.title }}">
+            {% set _cover = item.cover | default(value=default_cover) %}
+            {% if _cover is starting_with("http") %}
+            <img src="{{ _cover | safe }}" alt="{{ item.title }}">
+            {% else %}
+            <img src="{{ get_url(path=_cover) }}" alt="{{ item.title }}">
+            {% endif %}
         </div>
         <div class="links-info">
             {% if item.icon %}
-            <img class="links-icon" src="{{ item.icon }}" alt="">
+            {% if item.icon is starting_with("http") %}
+            <img class="links-icon" src="{{ item.icon | safe }}" alt="">
+            {% else %}
+            <img class="links-icon" src="{{ get_url(path=item.icon) }}" alt="">
+            {% endif %}
             {% endif %}
             <div class="links-text">
                 <div class="links-title">{{ item.title }}</div>

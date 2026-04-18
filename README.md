@@ -1,6 +1,6 @@
 # Stellar for Zola
 
-一个受 [Hexo Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 启发的 [Zola](https://www.getzola.org/) 静态博客主题，简洁优雅，开箱即用。
+一个受 [Hexo Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 和 [Reimu](https://github.com/D-Sketon/hugo-theme-reimu) 启发的 [Zola](https://www.getzola.org/) 静态博客主题，简洁优雅，开箱即用。
 
 ---
 

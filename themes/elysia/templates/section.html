@@ -2,11 +2,11 @@
 
 {% block content %}
 <nav class="post-nav-bar">
-    <a class="post-nav-item" href="/">近期发布</a>
-    <a class="post-nav-item" href="/categories/">分类</a>
-    <a class="post-nav-item" href="/tags/">标签</a>
-    <a class="post-nav-item" href="/archive/">归档</a>
-    <a class="post-nav-item" href="/rss/">RSS 订阅</a>
+    <a class="post-nav-item" href="{{ get_url(path='/') | safe }}">近期发布</a>
+    <a class="post-nav-item" href="{{ get_url(path='/categories/') | safe }}">分类</a>
+    <a class="post-nav-item" href="{{ get_url(path='/tags/') | safe }}">标签</a>
+    <a class="post-nav-item" href="{{ get_url(path='/archive/') | safe }}">归档</a>
+    <a class="post-nav-item" href="{{ get_url(path='/rss/') | safe }}">RSS 订阅</a>
 </nav>
 
 <div class="post-list">
@@ -41,7 +41,7 @@
                     {% endfor %}
                     {% endif %}
                 </div>
-                </div>{% if page.extra.cover %}<div class="post-item-cover"><img src="{{ page.extra.cover }}" alt="{{ page.title }}"></div>{% endif %}
+                </div>{% if page.extra.cover %}<div class="post-item-cover"><img src="{{ get_url(path=page.extra.cover) | safe }}" alt="{{ page.title }}"></div>{% endif %}
             </article>
         </a>
         {% endfor %}
@@ -73,7 +73,7 @@
                     {% endfor %}
                     {% endif %}
                 </div>
-                </div>{% if page.extra.cover %}<div class="post-item-cover"><img src="{{ page.extra.cover }}" alt="{{ page.title }}"></div>{% endif %}
+                </div>{% if page.extra.cover %}<div class="post-item-cover"><img src="{{ get_url(path=page.extra.cover) | safe }}" alt="{{ page.title }}"></div>{% endif %}
             </article>
         </a>
         {% endif %}
@@ -107,7 +107,7 @@
                     {% endfor %}
                     {% endif %}
                 </div>
-                </div>{% if page.extra.cover %}<div class="post-item-cover"><img src="{{ page.extra.cover }}" alt="{{ page.title }}"></div>{% endif %}
+                </div>{% if page.extra.cover %}<div class="post-item-cover"><img src="{{ get_url(path=page.extra.cover) | safe }}" alt="{{ page.title }}"></div>{% endif %}
             </article>
         </a>
         {% endfor %}
@@ -138,7 +138,7 @@
                     {% endfor %}
                     {% endif %}
                 </div>
-                </div>{% if page.extra.cover %}<div class="post-item-cover"><img src="{{ page.extra.cover }}" alt="{{ page.title }}"></div>{% endif %}
+                </div>{% if page.extra.cover %}<div class="post-item-cover"><img src="{{ get_url(path=page.extra.cover) | safe }}" alt="{{ page.title }}"></div>{% endif %}
             </article>
         </a>
         {% endif %}

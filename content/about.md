@@ -5,10 +5,6 @@ path = "about"
 date = 2026-01-01
 +++
 
-## 关于我
-
-你好！我是这个博客的作者。热爱技术、写作与开源，喜欢把有趣的想法记录下来与大家分享。
-
 ## 关于本站
 
 本站使用 [Zola](https://www.getzola.org/) 构建，主题基于 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 和 [Reimu](https://github.com/D-Sketon/hugo-theme-reimu) 风格设计。

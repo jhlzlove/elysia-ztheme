@@ -119,7 +119,7 @@
         <p class="desc">{{ config.description }}</p>
         <nav class="nav-menu">
             {% for item in config.extra.menu %}
-            <a class="nav-item {% if current_url and (current_url == get_url(path=item.url, trailing_slash=false) or (current_url == get_url(path=item.url, trailing_slash=true))) %}active{% endif %}" href="{{ item.url | safe }}">
+            <a class="nav-item {% if current_url and (current_url == get_url(path=item.url, trailing_slash=false) or (current_url == get_url(path=item.url, trailing_slash=true))) %}active{% endif %}" href="{{ get_url(path=item.url) | safe }}">
                 {{ item.name }}
             </a>
             {% endfor %}

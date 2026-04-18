@@ -1,6 +1,9 @@
 ---
 title: 主题效果测试
 date: 2026-04-17
+extra:
+  cover: /avatar.jpg
+  pinned: true
 ---
 
 主题效果测试

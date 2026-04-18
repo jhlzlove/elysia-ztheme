@@ -66,7 +66,7 @@
         {% if config.extra.sidebar.logo %}
         <div class="avatar">
             <a href="{{ get_url(path='/') | safe }}">
-                <img src="{{ config.extra.sidebar.logo }}" alt="avatar">
+                <img src="{{ get_url(path=config.extra.sidebar.logo) | safe }}" alt="avatar">
             </a>
         </div>
         {% endif %}
@@ -74,7 +74,7 @@
         <p class="desc">{{ config.description }}</p>
         <nav class="nav-menu">
             {% for item in config.extra.menu %}
-            <a class="nav-item {% if current_url and (current_url == get_url(path=item.url, trailing_slash=false) or (current_url == get_url(path=item.url, trailing_slash=true))) %}active{% endif %}" href="{{ item.url | safe }}">
+            <a class="nav-item {% if current_url and (current_url == get_url(path=item.url, trailing_slash=false) or (current_url == get_url(path=item.url, trailing_slash=true))) %}active{% endif %}" href="{{ get_url(path=item.url) | safe }}">
                 {{ item.name }}
             </a>
             {% endfor %}

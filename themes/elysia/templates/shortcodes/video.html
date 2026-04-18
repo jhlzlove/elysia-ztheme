@@ -36,7 +36,11 @@
     controls
     {%- if _autoplay %} autoplay muted{%- endif %}
     preload="metadata">
-    <source src="{{ src }}">
+    {% if src is starting_with("http") %}
+    <source src="{{ src | safe }}">
+    {% else %}
+    <source src="{{ get_url(path=src) }}">
+    {% endif %}
     您的浏览器不支持 video 标签。
   </video>
 {%- endif %}
