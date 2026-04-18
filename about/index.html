@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function() {
+            var theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            // 同步高亮主题 CSS media 属性，确保 data-theme 与高亮主题一致
+            function syncHlTheme(t) {
+                var light = document.getElementById('hl-light');
+                var dark = document.getElementById('hl-dark');
+                if (light) light.media = t === 'dark' ? 'not all' : 'all';
+                if (dark) dark.media = t === 'dark' ? 'all' : 'not all';
+            }
+            document.addEventListener('DOMContentLoaded', function() { syncHlTheme(theme); });
+        })();
+    </script>
+    <title>关于 | Elysia theme for zola</title>
+    <link rel="stylesheet" href="https://jhlzlove.github.io/elysia-ztheme/style.css">
+    <link id="hl-light" rel="stylesheet" href="https://jhlzlove.github.io/elysia-ztheme/giallo-light.css" media="(prefers-color-scheme: light)">
+    <link id="hl-dark" rel="stylesheet" href="https://jhlzlove.github.io/elysia-ztheme/giallo-dark.css" media="(prefers-color-scheme: dark)">
+    
+        
+        <link rel="stylesheet" href="https://s1.hdslb.com/bfs/static/jinkela/long/font/medium.css">
+        
+        <link rel="stylesheet" href="https://unpkg.com/jetbrains-mono@latest/css/jetbrains-mono.css">
+        
+    
+    
+    <style>
+        :root {
+            --font-body: "HarmonyOS_Medium", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-code: "jetbrains mono", "SFMono-Regular", Consolas, monospace;
+            --font-size-body: 17.5px;
+            --font-size-code: 16px;
+        }
+    </style>
+    
+    
+    <link rel="alternate" type="application/atom+xml" title="Elysia theme for zola - RSS 订阅" href="https://jhlzlove.github.io/elysia-ztheme/atom.xml">
+    
+    
+</head>
+<body>
+    <div id="l_header">
+        <div class="container flex-row">
+            <div class="logo">
+                <a href="https://jhlzlove.github.io/elysia-ztheme">
+                    
+                    <img src="https://jhlzlove.github.io/elysia-ztheme/avatar.jpg" alt="logo">
+                    
+                    <span class="site-title">Elysia theme for zola</span>
+                </a>
+            </div>
+            <div class="header-right">
+                <a class="header-rss" href="https://jhlzlove.github.io/elysia-ztheme/atom.xml" title="RSS 订阅" aria-label="RSS">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"></circle></svg>
+                </a>
+                <div class="nav-toggle" id="nav-toggle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="l_body">
+        <div id="nav-mask"></div>
+        <div class='container  sidebar-left'>
+            <div id="l_main">
+                
+<div class="about-page">
+    <div class="about-header">
+        
+        <div class="about-avatar">
+            <img src="https://jhlzlove.github.io/elysia-ztheme/avatar.jpg" alt="avatar">
+        </div>
+        
+        <div class="about-info">
+            <h1>Elysia theme for zola</h1>
+            <p>A simple Zola theme powered entirely by AI.</p>
+        </div>
+    </div>
+    <div class="about-body">
+        <h2 id="guan-yu-ben-zhan">关于本站</h2>
+<p>本站使用 <a rel="external" href="https://www.getzola.org/">Zola</a> 构建，主题基于 <a rel="external" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 和 <a rel="external" href="https://github.com/D-Sketon/hugo-theme-reimu">Reimu</a> 风格设计。</p>
+<p>主要内容包括：</p>
+<ul>
+<li><strong>博客</strong>：记录技术探索、学习笔记和生活感悟</li>
+<li><strong>Wiki</strong>：整理各类项目文档与知识库</li>
+</ul>
+<h2 id="lian-xi-wo">联系我</h2>
+<p>如果你有任何问题或想法，欢迎通过以下方式联系：</p>
+<ul>
+<li>GitHub：<a rel="external" href="https://github.com">github.com</a></li>
+<li>Email：your@email.com</li>
+</ul>
+
+    </div>
+</div>
+
+            </div>
+            <aside id="l_side">
+                
+                <!-- 默认侧边栏内容 -->
+                <section class="widget profile">
+                    <div class="content">
+                        
+                        <div class="avatar">
+                            <a href="https://jhlzlove.github.io/elysia-ztheme">
+                                <img src="https://jhlzlove.github.io/elysia-ztheme/avatar.jpg" alt="avatar">
+                            </a>
+                        </div>
+                        
+                        <h2 class="title">Elysia theme for zola</h2>
+                        <p class="desc">A simple Zola theme powered entirely by AI.</p>
+                        <nav class="nav-menu">
+                            
+                            <a class="nav-item " href="https://jhlzlove.github.io/elysia-ztheme/post">
+                                博客
+                            </a>
+                            
+                            <a class="nav-item " href="https://jhlzlove.github.io/elysia-ztheme/wiki">
+                                项目
+                            </a>
+                            
+                            <a class="nav-item " href="https://jhlzlove.github.io/elysia-ztheme/friend">
+                                友链
+                            </a>
+                            
+                            <a class="nav-item " href="https://jhlzlove.github.io/elysia-ztheme/about">
+                                关于
+                            </a>
+                            
+                        </nav>
+                    </div>
+                </section>
+
+                <section class="widget taxonomy-widget">
+                    <div class="content">
+                        
+                        
+                        <div class="sidebar-widget-custom"><p>👋 Hi，welcome <strong>Elysia theme for zola</strong>！</p>
+<p>A Zola theme inspired by <a rel="external" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> and <a rel="external" href="https://github.com/D-Sketon/hugo-theme-reimu">Reimu</a>.
+<img src="https://api.szfx.top/info-card/?word=%E6%AC%A2%E8%BF%8E%E6%97%85%E8%A1%8C%E8%80%85" style="border-radius: 10px"/></p>
+</div>
+                        
+                        <div class="year-progress-wrap">
+                            <div class="year-progress-label">
+                                <span class="year-progress-text">今年已过</span>
+                                <span class="year-progress-pct" id="year-pct">0%</span>
+                            </div>
+                            <div class="year-progress-bar">
+                                <div class="year-progress-fill" id="year-fill"></div>
+                            </div>
+                            <div class="year-progress-days" id="year-days"></div>
+                        </div>
+                        
+                        <div class="social-icons">
+                            
+                            <a class="social-icon-btn" href="https://jhlzlove.github.io/elysia-ztheme/https://github.com" title="GitHub" aria-label="GitHub" target="_blank" rel="noopener">
+                                
+                                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                                
+                                <span class="social-icon-tooltip">GitHub</span>
+                            </a>
+                            
+                            <a class="social-icon-btn" href="https://jhlzlove.github.io/elysia-ztheme/https://bilibili.com" title="bilibili" aria-label="bilibili" target="_blank" rel="noopener">
+                                
+                                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+                                
+                                <span class="social-icon-tooltip">bilibili</span>
+                            </a>
+                            
+                            <a class="social-icon-btn" href="https://jhlzlove.github.io/elysia-ztheme/atom.xml" title="RSS" aria-label="RSS" target="_blank" rel="noopener">
+                                
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"></circle></svg>
+                                
+                                <span class="social-icon-tooltip">RSS</span>
+                            </a>
+                            
+                        </div>
+                        
+                    </div>
+                </section>
+                
+            </aside>
+        </div>
+    </div>
+
+    <button id="back-to-top" title="回到顶部" aria-label="回到顶部">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+    </button>
+
+    <footer id="footer">
+        <div class="container">
+            
+                
+                <div class="footer-custom"><p><span id="jinrishici-sentence"></span> <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script> 本站由 <a href="/">@jhlz + AI</a> 创建。
+本博客所有文章除特别声明外，均采用 <a rel="external" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br>
+<uptime></uptime></p>
+<script>
+  setInterval(() => {
+    let startDate = new Date("2026-04-16")
+    let now = new Date();
+    // 计算时间差（以毫秒为单位）
+    let differenceInMs = now.getTime() - startDate.getTime();
+    // 转换为天数、小时数、分钟数和秒数
+    let days = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((differenceInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((differenceInMs % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((differenceInMs % (1000 * 60)) / 1000);
+    let uptimeTags = Array.from(document.getElementsByTagName("uptime"));
+    uptimeTags.forEach(ele => { ele.textContent = `🌱 本站已活了 ${days} 天 | ${hours} 时 | ${minutes} 分 | ${seconds} 秒 🌱` });
+  }, 1000);
+</script>
+</div>
+            
+        </div>
+    </footer>
+
+    <div id="copy-notification" class="copy-notification">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span>复制成功</span>
+    </div>
+
+    <script>
+    (function() {
+        var toggle = document.getElementById('nav-toggle');
+        var body = document.getElementById('l_body');
+        var mask = document.getElementById('nav-mask');
+        if (!toggle || !body || !mask) return;
+        
+        function openNav() {
+            body.classList.add('nav-open');
+        }
+        function closeNav() {
+            body.classList.remove('nav-open');
+        }
+        
+        toggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            body.classList.contains('nav-open') ? closeNav() : openNav();
+        });
+        
+        mask.addEventListener('click', closeNav);
+        
+        // 窗口大小改变时自动关闭
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) closeNav();
+        }, { passive: true });
+    })();
+    </script>
+    
+    
+    <script>
+    (function() {
+        document.querySelectorAll('img[data-random-covers]').forEach(function(img) {
+            var covers = img.getAttribute('data-random-covers').split('|').filter(Boolean);
+            if (covers.length > 1) {
+                img.src = covers[Math.floor(Math.random() * covers.length)];
+            }
+            img.removeAttribute('data-random-covers');
+        });
+    })();
+    </script>
+    <script>
+    (function() {
+        var btn = document.getElementById('back-to-top');
+        if (!btn) return;
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) btn.classList.add('visible');
+            else btn.classList.remove('visible');
+        }, { passive: true });
+        btn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    })();
+    </script>
+    <script>
+    // Auto-linkify plain URLs in post content
+    (function() {
+        var content = document.querySelector('.post-content .content');
+        if (!content) return;
+        var urlRe = /https?:\/\/[^\s<>"')\]\u3000-\u303f\uff00-\uffef\u2018\u2019\u201c\u201d\u3001\u3002\uff0c\uff01\uff1f\uff1a\uff1b\u300a\u300b\u3010\u3011\u300c\u300d]+/g;
+        function linkifyNode(node) {
+            if (node.nodeType === 3) {
+                var text = node.nodeValue;
+                if (!urlRe.test(text)) return;
+                urlRe.lastIndex = 0;
+                var frag = document.createDocumentFragment();
+                var last = 0, m;
+                while ((m = urlRe.exec(text)) !== null) {
+                    if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+                    var a = document.createElement('a');
+                    a.href = m[0];
+                    a.textContent = m[0];
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.className = 'auto-link';
+                    frag.appendChild(a);
+                    last = m.index + m[0].length;
+                }
+                if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+                node.parentNode.replaceChild(frag, node);
+            } else if (node.nodeType === 1 && !['A','CODE','PRE','SCRIPT','STYLE'].includes(node.tagName)) {
+                Array.from(node.childNodes).forEach(linkifyNode);
+            }
+        }
+        Array.from(content.childNodes).forEach(linkifyNode);
+    })();
+    </script>
+    <script>
+    // GitHub Alert syntax: > [!NOTE], > [!TIP], > [!WARNING], > [!DANGER], > [!CAUTION]
+    (function() {
+        var typeMap = {
+            'NOTE': 'info',
+            'TIP': 'tip',
+            'WARNING': 'warning',
+            'IMPORTANT': 'important',
+            'DANGER': 'danger',
+            'CAUTION': 'caution',
+            'SUCCESS': 'success'
+        };
+        var titleMap = {
+            'NOTE': 'Note',
+            'TIP': 'Tip',
+            'WARNING': 'Warning',
+            'IMPORTANT': 'Important',
+            'DANGER': 'Danger',
+            'CAUTION': 'Caution',
+            'SUCCESS': 'Success'
+        };
+        document.querySelectorAll('blockquote').forEach(function(bq) {
+            var first = bq.querySelector('p:first-child');
+            if (!first) return;
+            var text = first.textContent.trim();
+            var m = text.match(/^\[!(NOTE|TIP|WARNING|IMPORTANT|DANGER|CAUTION|SUCCESS)\]/i);
+            if (!m) return;
+            var key = m[1].toUpperCase();
+            var noteType = typeMap[key];
+            var noteTitle = titleMap[key];
+            // Extract remainder HTML after the [!TYPE] marker
+            var rawHtml = first.innerHTML;
+            var markerEnd = rawHtml.search(/\[!(NOTE|TIP|WARNING|IMPORTANT|DANGER|CAUTION|SUCCESS)\]/i);
+            var remainderHtml = '';
+            if (markerEnd !== -1) {
+                remainderHtml = rawHtml.slice(markerEnd + m[0].length).replace(/^(<br\s*\/?>|\s)+/, '').trim();
+            }
+            // build note div
+            var note = document.createElement('div');
+            note.className = 'note ' + noteType;
+            var titleEl = document.createElement('p');
+            titleEl.className = 'note-title';
+            titleEl.textContent = noteTitle;
+            note.appendChild(titleEl);
+            var contentEl = document.createElement('div');
+            contentEl.className = 'note-content';
+            // if remainder html exists in first <p>, create a new <p> for it
+            if (remainderHtml) {
+                var remEl = document.createElement('p');
+                remEl.innerHTML = remainderHtml;
+                contentEl.appendChild(remEl);
+            }
+            // copy remaining siblings (skip first <p>)
+            var children = Array.from(bq.children);
+            children.slice(1).forEach(function(el) {
+                contentEl.appendChild(el.cloneNode(true));
+            });
+            note.appendChild(contentEl);
+            bq.parentNode.replaceChild(note, bq);
+        });
+    })();
+    </script>
+    <script>
+    // Code block: Copy button & Header info (Giallo highlighter)
+    (function() {
+        var notification = document.getElementById('copy-notification');
+        var timer;
+        function showNotification() {
+            if (timer) clearTimeout(timer);
+            notification.classList.add('visible');
+            timer = setTimeout(function() { notification.classList.remove('visible'); }, 2000);
+        }
+
+        document.querySelectorAll('pre.giallo').forEach(function(pre) {
+            var container = document.createElement('div');
+            container.className = 'code-container';
+            pre.parentNode.insertBefore(container, pre);
+            container.appendChild(pre);
+
+            var code = pre.querySelector('code');
+            if (!code) return;
+
+            // Add line numbers dynamically
+            var lines = code.querySelectorAll('.giallo-l');
+            if (lines.length > 0) {
+                pre.classList.add('has-line-numbers');
+                var digits = String(lines.length).length;
+                var lnWidth = (digits + 1.2) + 'ch';
+                lines.forEach(function(line, idx) {
+                    var ln = document.createElement('span');
+                    ln.className = 'giallo-ln';
+                    ln.setAttribute('aria-hidden', 'true');
+                    ln.textContent = idx + 1;
+                    ln.style.width = lnWidth;
+                    ln.style.minWidth = lnWidth;
+                    line.insertBefore(ln, line.firstChild);
+                });
+            }
+
+            // Language label
+            var lang = code.getAttribute('data-lang') || '';
+            var name = code.getAttribute('data-name') || '';
+
+            // Language label (top-left, overlaid on border)
+            var langSpan = document.createElement('span');
+            langSpan.className = 'code-lang';
+            langSpan.textContent = lang || 'code';
+            container.appendChild(langSpan);
+
+            // Name/title label (top-center, overlaid on border)
+            if (name) {
+                var titleSpan = document.createElement('span');
+                titleSpan.className = 'code-title';
+                titleSpan.textContent = name;
+                container.appendChild(titleSpan);
+            }
+
+            // Copy button (top-right, overlaid on border)
+            var copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.title = 'Copy';
+            copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+            copyBtn.addEventListener('click', function() {
+                // Extract text from .giallo-l spans, skip .giallo-ln (line numbers)
+                var lines = code.querySelectorAll('.giallo-l');
+                var text;
+                if (lines.length > 0) {
+                    text = Array.from(lines).map(function(l) {
+                        // clone and remove line number spans
+                        var clone = l.cloneNode(true);
+                        clone.querySelectorAll('.giallo-ln').forEach(function(n) { n.remove(); });
+                        return clone.innerText;
+                    }).join('');
+                } else {
+                    text = code.innerText;
+                }
+                text = text.replace(/\n$/, '');
+                navigator.clipboard.writeText(text).then(function() {
+                    copyBtn.classList.add('copied');
+                    copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                    showNotification();
+                    setTimeout(function() {
+                        copyBtn.classList.remove('copied');
+                        copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+                    }, 2000);
+                });
+            });
+            container.appendChild(copyBtn);
+        });
+    })();
+    </script>
+    <script>
+    // Year progress bar
+    (function() {
+        var fill = document.getElementById('year-fill');
+        var pct = document.getElementById('year-pct');
+        var days = document.getElementById('year-days');
+        if (!fill || !pct || !days) return;
+        var now = new Date();
+        var year = now.getFullYear();
+        var start = new Date(year, 0, 1);
+        var end = new Date(year + 1, 0, 1);
+        var total = end - start;
+        var passed = now - start;
+        var ratio = passed / total;
+        var pctVal = (ratio * 100).toFixed(1);
+        var daysPassed = Math.floor(passed / 86400000);
+        var daysTotal = Math.floor(total / 86400000);
+        fill.style.width = pctVal + '%';
+        pct.textContent = pctVal + '%';
+        days.textContent = '已过 ' + daysPassed + ' 天，共 ' + daysTotal + ' 天';
+    })();
+    </script>
+    <script>
+    // TOC active highlight
+    (function() {
+        var tocNav = document.querySelector('.toc-nav');
+        if (!tocNav) return;
+        var headings = Array.from(document.querySelectorAll('.post-content h1[id], .post-content h2[id], .post-content h3[id], .post-content h4[id]'));
+        if (!headings.length) return;
+        var tocLinks = Array.from(tocNav.querySelectorAll('a'));
+        function setActive(id) {
+            tocLinks.forEach(function(a) {
+                var href = a.getAttribute('href') || '';
+                var linkId = href.split('#')[1] || '';
+                a.classList.toggle('active', linkId === id);
+            });
+        }
+        function onScroll() {
+            var scrollY = window.scrollY || window.pageYOffset;
+            var offset = 80; // account for sticky nav bar
+            var active = null;
+            for (var i = headings.length - 1; i >= 0; i--) {
+                if (headings[i].getBoundingClientRect().top + scrollY - offset <= scrollY) {
+                    active = headings[i];
+                    break;
+                }
+            }
+            if (!active) active = headings[0];
+            if (active && active.id) setActive(active.id);
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    })();
+    </script>
+</body>
+</html>

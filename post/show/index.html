@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function() {
+            var theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            // 同步高亮主题 CSS media 属性，确保 data-theme 与高亮主题一致
+            function syncHlTheme(t) {
+                var light = document.getElementById('hl-light');
+                var dark = document.getElementById('hl-dark');
+                if (light) light.media = t === 'dark' ? 'not all' : 'all';
+                if (dark) dark.media = t === 'dark' ? 'all' : 'not all';
+            }
+            document.addEventListener('DOMContentLoaded', function() { syncHlTheme(theme); });
+        })();
+    </script>
+    <title>Elysia theme for zola</title>
+    <link rel="stylesheet" href="https://jhlzlove.github.io/elysia-ztheme/style.css">
+    <link id="hl-light" rel="stylesheet" href="https://jhlzlove.github.io/elysia-ztheme/giallo-light.css" media="(prefers-color-scheme: light)">
+    <link id="hl-dark" rel="stylesheet" href="https://jhlzlove.github.io/elysia-ztheme/giallo-dark.css" media="(prefers-color-scheme: dark)">
+    
+        
+        <link rel="stylesheet" href="https://s1.hdslb.com/bfs/static/jinkela/long/font/medium.css">
+        
+        <link rel="stylesheet" href="https://unpkg.com/jetbrains-mono@latest/css/jetbrains-mono.css">
+        
+    
+    
+    <style>
+        :root {
+            --font-body: "HarmonyOS_Medium", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-code: "jetbrains mono", "SFMono-Regular", Consolas, monospace;
+            --font-size-body: 17.5px;
+            --font-size-code: 16px;
+        }
+    </style>
+    
+    
+    <link rel="alternate" type="application/atom+xml" title="Elysia theme for zola - RSS 订阅" href="https://jhlzlove.github.io/elysia-ztheme/atom.xml">
+    
+    
+</head>
+<body>
+    <div id="l_header">
+        <div class="container flex-row">
+            <div class="logo">
+                <a href="https://jhlzlove.github.io/elysia-ztheme">
+                    
+                    <img src="https://jhlzlove.github.io/elysia-ztheme/avatar.jpg" alt="logo">
+                    
+                    <span class="site-title">Elysia theme for zola</span>
+                </a>
+            </div>
+            <div class="header-right">
+                <a class="header-rss" href="https://jhlzlove.github.io/elysia-ztheme/atom.xml" title="RSS 订阅" aria-label="RSS">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"></circle></svg>
+                </a>
+                <div class="nav-toggle" id="nav-toggle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="l_body">
+        <div id="nav-mask"></div>
+        <div class='container  sidebar-left'>
+            <div id="l_main">
+                
+<article class="post-content">
+    <h1>主题效果测试</h1>
+    <div class="post-meta">
+        <time datetime="2026-04-17">2026-04-17</time>
+        <span class="meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            1028 字
+        </span>
+        <span class="meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            6 分钟
+        </span>
+    </div>
+    <div class="content">
+        <p>主题效果测试</p>
+<span id="continue-reading"></span><h2 id="chang-gui-lian-jie-xian-shi">常规链接显示</h2>
+<ul>
+<li>https://www.getzola.org/</li>
+<li>md 链接：<a rel="external" href="https://jhlzlove.github.io/post/first-post/">主题效果测试</a></li>
+</ul>
+<h3 id="cuo-wu-lian-jie-zi-dong-xiu-fu">错误链接自动修复</h3>
+
+<div class="tabs-container" data-align="left">
+    <div class="tabs-nav tabs-align-left"></div>
+    <div class="tabs-body">
+        <!-- tab 效果 -->
+<ul>
+<li>https://www.getzola.org/，</li>
+<li>https://www.getzola.org/。</li>
+</ul>
+<blockquote>
+<p>[!IMPORTANT]<br />
+只有简单字符可以自动调整。强烈建议编写 md 时中英文之间添加空格，养成好习惯</p>
+</blockquote>
+<!-- tab 写法 -->
+<pre class="giallo z-code"><code data-lang="markdown"><span class="giallo-l"><span>https://www.getzola.org/，</span></span>
+<span class="giallo-l"><span>https://www.getzola.org/。</span></span></code></pre>
+    </div>
+</div>
+<script>
+(function() {
+    var containers = document.querySelectorAll('.tabs-container:not([data-tabs-init])');
+    containers.forEach(function(container) {
+        container.setAttribute('data-tabs-init', '1');
+        var bodyEl = container.querySelector('.tabs-body');
+        var nav = container.querySelector('.tabs-nav');
+        if (!bodyEl || !nav) return;
+        var html = bodyEl.innerHTML;
+        var splitRe = new RegExp('<!--\\s*tab\\s+[^>]+?\\s*-->');
+        var matchRe = new RegExp('<!--\\s*tab\\s+([^>]+?)\\s*-->', 'g');
+        var parts = html.split(splitRe);
+        var names = [];
+        var m;
+        while ((m = matchRe.exec(html)) !== null) { names.push(m[1].trim()); }
+        if (names.length === 0) return;
+        nav.innerHTML = '';
+        bodyEl.innerHTML = '';
+        names.forEach(function(name, idx) {
+            var btn = document.createElement('button');
+            btn.className = 'tab-btn' + (idx === 0 ? ' active' : '');
+            btn.textContent = name;
+            btn.setAttribute('data-tab', idx);
+            nav.appendChild(btn);
+            var panel = document.createElement('div');
+            panel.className = 'tab-panel' + (idx === 0 ? ' active' : '');
+            panel.setAttribute('data-tab', idx);
+            panel.innerHTML = parts[idx + 1] || '';
+            bodyEl.appendChild(panel);
+        });
+        nav.addEventListener('click', function(e) {
+            var btn = e.target.closest('.tab-btn');
+            if (!btn) return;
+            var idx = btn.getAttribute('data-tab');
+            nav.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+            bodyEl.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+            btn.classList.add('active');
+            bodyEl.querySelector('.tab-panel[data-tab="' + idx + '"]').classList.add('active');
+        });
+    });
+})();
+</script>
+<h2 id="biao-ge-ce-shi">表格测试</h2>
+<table><thead><tr><th>诗人</th><th>代表作</th><th>简介</th><th>长表头怎么样</th><th>长表头怎么样</th><th>长表头怎么样</th></tr></thead><tbody>
+<tr><td>李白</td><td>静夜思</td><td>李白此诗看似白话入诗，实则匠心独运。首句“床前明月光”以最朴素的语言描绘寻常夜景，次句“疑”字妙绝——月光皎洁如霜的错觉，既暗示了秋夜的清冷，又带出诗人从恍惚到清醒的瞬间状态。后两句“举头”“低头”两个动作，将无形的乡愁化为可见的肢体语言：举头寻月是望乡的替代，低头沉思则是归期无望的妥协。全诗在明暗（月光与阴影）、动静（举头与低头）、虚实（疑霜与真月）的转换中，完成了一场完整的心理活动。<br>尤为精妙的是“月光—霜—月光—故乡”的意象链条：月光触发了霜的联想，霜的寒意暗示了客居的孤独，再回到真实的月光时，这光已浸透了思乡的温度。二十字中无一生僻字，却让每个中国人在月夜自然吟诵——这种“无痕”之境，正是盛唐诗歌“清水出芙蓉”美学理念的完美体现。</td><td></td><td></td><td></td></tr>
+<tr><td>白居易</td><td>长恨歌</td><td>白居易以120句长诗重构李杨爱情悲剧，在历史真实与艺术想象间开辟了独特的叙事空间。全诗可分四大段落：极宠（“天生丽质难自弃”至“不重生男重生女”），铺陈华清池、霓裳舞的奢靡，以“春宵苦短日高起”暗示政治懈怠；惊变（“渔阳鼙鼓动地来”至“回看血泪相和流”），马嵬之变的惨烈与“君王掩面救不得”的无力感形成戏剧性转折；悲思（“黄埃散漫风萧索”至“魂魄不曾来入梦”），通过太液芙蓉、未央柳等物是人非的意象，层层渲染玄宗归京后的孤寂；幻境（“临邛道士鸿都客”至结尾），以“含情凝睇谢君王”的仙界重逢，将人间悲剧升华为超越生死的永恒遗憾。<br>白居易的高明在于：既用“不重生男重生女”讽刺政治昏聩，又以“但令心似金钿坚”歌颂至死不渝。这种双重立场使诗歌超越了一般讽喻诗——当历史批判让位于情感共鸣时，读者记住的不是“重色误国”的道德训诫，而是“此恨绵绵”的生命叹息。结尾“天长地久有时尽”的悖论式宣言，更将具体情事升华为人类共通的缺憾美学。</td><td></td><td></td><td></td></tr>
+</tbody></table>
+<blockquote>
+<p>引用说明，表格没有测试完全 https://jhlzlove.github.io/post/first-post/。</p>
+</blockquote>
+<h2 id="zhu-ti-shortcode">主题 shortcode</h2>
+<h3 id="tabs-ce-shi">tabs 测试</h3>
+
+<div class="tabs-container" data-align="left">
+    <div class="tabs-nav tabs-align-left"></div>
+    <div class="tabs-body">
+        <!-- tab node -->
+<p>使用 node 安装：</p>
+<pre class="giallo z-code"><code data-lang="shellscript"><span class="giallo-l"><span class="z-entity z-name">npm</span><span class="z-string"> install</span></span></code></pre><!-- tab deno -->
+<p>使用 deno 安装：</p>
+<pre class="giallo z-code"><code data-lang="shellscript"><span class="giallo-l"><span class="z-entity z-name">deno</span><span class="z-string"> install</span></span></code></pre><!-- tab bun -->
+<p>使用 bun 安装：</p>
+<pre class="giallo z-code"><code data-lang="shellscript"><span class="giallo-l"><span class="z-entity z-name">bun</span><span class="z-string"> install</span></span></code></pre>
+    </div>
+</div>
+<script>
+(function() {
+    var containers = document.querySelectorAll('.tabs-container:not([data-tabs-init])');
+    containers.forEach(function(container) {
+        container.setAttribute('data-tabs-init', '1');
+        var bodyEl = container.querySelector('.tabs-body');
+        var nav = container.querySelector('.tabs-nav');
+        if (!bodyEl || !nav) return;
+        var html = bodyEl.innerHTML;
+        var splitRe = new RegExp('<!--\\s*tab\\s+[^>]+?\\s*-->');
+        var matchRe = new RegExp('<!--\\s*tab\\s+([^>]+?)\\s*-->', 'g');
+        var parts = html.split(splitRe);
+        var names = [];
+        var m;
+        while ((m = matchRe.exec(html)) !== null) { names.push(m[1].trim()); }
+        if (names.length === 0) return;
+        nav.innerHTML = '';
+        bodyEl.innerHTML = '';
+        names.forEach(function(name, idx) {
+            var btn = document.createElement('button');
+            btn.className = 'tab-btn' + (idx === 0 ? ' active' : '');
+            btn.textContent = name;
+            btn.setAttribute('data-tab', idx);
+            nav.appendChild(btn);
+            var panel = document.createElement('div');
+            panel.className = 'tab-panel' + (idx === 0 ? ' active' : '');
+            panel.setAttribute('data-tab', idx);
+            panel.innerHTML = parts[idx + 1] || '';
+            bodyEl.appendChild(panel);
+        });
+        nav.addEventListener('click', function(e) {
+            var btn = e.target.closest('.tab-btn');
+            if (!btn) return;
+            var idx = btn.getAttribute('data-tab');
+            nav.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+            bodyEl.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+            btn.classList.add('active');
+            bodyEl.querySelector('.tab-panel[data-tab="' + idx + '"]').classList.add('active');
+        });
+    });
+})();
+</script>
+<h3 id="link-ce-shi">link 测试</h3>
+<h4 id="wai-lian">外链</h4>
+
+
+<div class="link-card">
+    <a href="https://www.getzola.org" target="_blank" rel="noopener noreferrer">
+        
+        <div class="link-icon">
+            <img src="https:&#x2F;&#x2F;www.getzola.org&#x2F;favicon.ico" alt="">
+        </div>
+        
+        <div class="link-body">
+            <div class="link-title">Zola 官网</div>
+            <div class="link-desc">A fast static site generator in a single binary</div>
+        </div>
+        <div class="link-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+    </a>
+</div>
+<h4 id="nei-lian">内链</h4>
+
+
+<div class="link-card">
+    <a href="/about">
+        
+        <div class="link-icon">
+            <img src="&#x2F;avatar.jpg" alt="">
+        </div>
+        
+        <div class="link-body">
+            <div class="link-title">关于本站</div>
+            
+        </div>
+        <div class="link-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+    </a>
+</div>
+<h3 id="note-ce-shi">note 测试</h3>
+
+<div class="note info">
+    <p class="note-title">提示</p>
+    <div class="note-content">
+        
+            <p>这是默认 info 类型的 note，type 可省略。</p>
+
+        
+    </div>
+</div>
+
+<div class="note success">
+    <p class="note-title">成功</p>
+    <div class="note-content">
+        
+            <p>操作已成功完成！</p>
+
+        
+    </div>
+</div>
+
+<div class="note warning">
+    <p class="note-title">注意</p>
+    <div class="note-content">
+        
+            <p>请注意这里有一些需要留意的内容。</p>
+
+        
+    </div>
+</div>
+
+<div class="note danger">
+    <p class="note-title">危险</p>
+    <div class="note-content">
+        
+            <p>这是一个危险提示，请谨慎操作。</p>
+
+        
+    </div>
+</div>
+<h3 id="github-alert-ce-shi">GitHub Alert 测试</h3>
+<blockquote>
+<p>[!NOTE]
+这是 GitHub Alert 风格的 note。</p>
+<p>换行试试</p>
+</blockquote>
+<blockquote>
+<p>[!TIP]
+这是一个小技巧提示。</p>
+</blockquote>
+<blockquote>
+<p>[!WARNING]
+这是 GitHub Alert 风格的警告。</p>
+</blockquote>
+<blockquote>
+<p>[!CAUTION]
+请谨慎操作！</p>
+</blockquote>
+<blockquote>
+<p>[!IMPORTANT]<br />
+Crucial information necessary for users to succeed.</p>
+</blockquote>
+<h3 id="poetry-ce-shi">poetry 测试</h3>
+<div class="poetry">
+    <div class="poetry-header">
+        <div class="poetry-title">静夜思</div>
+        <div class="poetry-author">李白</div>
+    </div>
+    <div class="poetry-body">
+        <p>床前明月光，疑是地上霜。</p>
+<p>举头望明月，低头思故乡。</p>
+
+    </div>
+</div>
+<h3 id="image-ce-shi">image 测试</h3>
+
+
+
+
+
+<div class="sc-image" style="padding:0">
+    <img src="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;avatar.jpg" style="width:300px" alt="">
+</div>
+
+<h3 id="video-ce-shi">video 测试</h3>
+<figure class="sc-video-wrap" style="max-width: 100%;">
+  <div class="sc-video-iframe-wrap">
+    <iframe src="https:&#x2F;&#x2F;player.bilibili.com&#x2F;player.html?bvid=BV1Yy421a75p&amp;page=1&amp;high_quality=1&amp;danmaku=0&amp;autoplay=0"
+      scrolling="no" border="0" frameborder="no" framespacing="0"
+      allowfullscreen="true" allow="autoplay; fullscreen"></iframe>
+  </div>
+  <figcaption class="sc-video-caption">演示视频</figcaption>
+</figure>
+<h3 id="links-ce-shi">Links 测试</h3>
+
+
+
+
+
+
+
+
+
+<div class="links-grid">
+    
+    
+    <a class="links-card" href="https://github.com/rust-lang/rust" target="_blank" rel="noopener noreferrer">
+        <div class="links-cover">
+            
+            
+            <img src="https://tse2.mm.bing.net/th/id/OIP.V2D3Mkdt96xldo2nnXHVmwHaH-?rs=1&pid=ImgDetMain&o=7&rm=3" alt="rust">
+            
+        </div>
+        <div class="links-info">
+            
+            
+            <img class="links-icon" src="https://github.com/favicon.ico" alt="">
+            
+            
+            <div class="links-text">
+                <div class="links-title">rust</div>
+                
+                <div class="links-desc" title="The Rust Programming Language">The Rust Programming Language</div>
+                
+            </div>
+        </div>
+    </a>
+    
+    
+    <a class="links-card" href="https://dbeaver.io/" target="_blank" rel="noopener noreferrer">
+        <div class="links-cover">
+            
+            
+            <img src="https://jhlzlove.github.io/elysia-ztheme/images/default_cover.png" alt="dbeaver">
+            
+        </div>
+        <div class="links-info">
+            
+            
+            <img class="links-icon" src="https://dbeaver.io/favicon.ico" alt="">
+            
+            
+            <div class="links-text">
+                <div class="links-title">dbeaver</div>
+                
+                <div class="links-desc" title="Free multi-platform database tool">Free multi-platform database tool</div>
+                
+            </div>
+        </div>
+    </a>
+    
+</div>
+
+<h3 id="friends-ce-shi">Friends 测试</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="friends-grid">
+    
+    
+    <a class="friend-card" href="https://jhlzlove.github.io" target="_blank" rel="noopener noreferrer" title="">
+        <div class="friend-avatar">
+            
+            
+            <img src="https://jhlzlove.github.io/favicon.ico" alt="jhlzlove">
+            
+        </div>
+        <div class="friend-name">jhlzlove</div>
+        
+    </a>
+    
+    
+    <a class="friend-card" href="https://github.com/" target="_blank" rel="noopener noreferrer" title="">
+        <div class="friend-avatar">
+            
+            
+            <img src="https://github.githubassets.com/favicons/favicon.svg" alt="github">
+            
+        </div>
+        <div class="friend-name">github</div>
+        
+    </a>
+    
+</div>
+
+<h3 id="dai-ma-kuai-ce-shi">代码块测试</h3>
+<pre class="giallo z-code"><code data-lang="java" data-name="/home/Main.java"><span class="giallo-l"><span class="z-storage">public</span><span class="z-storage"> class</span><span class="z-entity z-name"> Main</span><span> {</span></span>
+<span class="giallo-l"><span class="z-storage">    public</span><span class="z-storage"> static</span><span class="z-storage z-type"> void</span><span class="z-entity z-name"> main</span><span>(</span><span class="z-storage z-type">String</span><span>[</span><span>]</span><span class="z-variable"> args</span><span>)</span><span> {</span></span>
+<span class="giallo-l"><span class="z-variable z-other">        System</span><span>.</span><span class="z-variable z-other">out</span><span>.</span><span class="z-entity z-name">println</span><span>(</span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-string">Hello, World!</span><span class="z-punctuation z-definition z-string">&quot;</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"><span class="z-storage">public</span><span class="z-storage"> class</span><span class="z-entity z-name"> Main</span><span> {</span></span>
+<span class="giallo-l"><span class="z-storage">    public</span><span class="z-storage"> static</span><span class="z-storage z-type"> void</span><span class="z-entity z-name"> main</span><span>(</span><span class="z-storage z-type">String</span><span>[</span><span>]</span><span class="z-variable"> args</span><span>)</span><span> {</span></span>
+<span class="giallo-l"><span class="z-variable z-other">        System</span><span>.</span><span class="z-variable z-other">out</span><span>.</span><span class="z-entity z-name">println</span><span>(</span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-string">Hello, World!</span><span class="z-punctuation z-definition z-string">&quot;</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"><span class="z-storage">public</span><span class="z-storage"> class</span><span class="z-entity z-name"> Main</span><span> {</span></span>
+<span class="giallo-l"><span class="z-storage">    public</span><span class="z-storage"> static</span><span class="z-storage z-type"> void</span><span class="z-entity z-name"> main</span><span>(</span><span class="z-storage z-type">String</span><span>[</span><span>]</span><span class="z-variable"> args</span><span>)</span><span> {</span></span>
+<span class="giallo-l"><span class="z-variable z-other">        System</span><span>.</span><span class="z-variable z-other">out</span><span>.</span><span class="z-entity z-name">println</span><span>(</span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-string">Hello, World!</span><span class="z-punctuation z-definition z-string">&quot;</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre><pre class="giallo z-code"><code data-lang="java" data-name="Main.java"><span class="giallo-l"><span class="z-storage">public</span><span class="z-storage"> class</span><span class="z-entity z-name"> Main</span><span> {</span></span>
+<span class="giallo-l"><span class="z-storage">    public</span><span class="z-storage"> static</span><span class="z-storage z-type"> void</span><span class="z-entity z-name"> main</span><span>(</span><span class="z-storage z-type">String</span><span>[</span><span>]</span><span class="z-variable"> args</span><span>)</span><span> {</span></span>
+<span class="giallo-l"><span class="z-variable z-other">        System</span><span>.</span><span class="z-variable z-other">out</span><span>.</span><span class="z-entity z-name">println</span><span>(</span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-string">Hello</span><span class="z-punctuation z-definition z-string">&quot;</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+    </div>
+</article>
+
+
+<div class="post-copyright">
+    <div class="copyright-item">
+        <span class="copyright-icon">👤</span>
+        <span class="copyright-label">本文作者：</span>
+        <span class="copyright-value">jhlz + AI</span>
+    </div>
+    <div class="copyright-item">
+        <span class="copyright-icon">🔗</span>
+        <span class="copyright-label">本文链接：</span>
+        <a class="copyright-value" href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;">https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;</a>
+    </div>
+    <div class="copyright-item">
+        <span class="copyright-icon">📝</span>
+        <span class="copyright-label">本文标题：</span>
+        <span class="copyright-value">主题效果测试</span>
+    </div>
+    <div class="copyright-item">
+        <span class="copyright-icon">©</span>
+        <span class="copyright-label">本文版权：</span>
+        <span class="copyright-value">本博客所有文章除特别声明外，均采用 <a href="https:&#x2F;&#x2F;creativecommons.org&#x2F;licenses&#x2F;by-nc-sa&#x2F;4.0&#x2F;" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处！</span>
+    </div>
+</div>
+
+
+
+<nav class="post-nav">
+    <div class="post-nav-item post-nav-prev">
+        
+    </div>
+    <div class="post-nav-item post-nav-next">
+        
+        <a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;test&#x2F;" class="post-nav-link">
+            <span class="post-nav-label">
+                下一篇
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </span>
+            <span class="post-nav-title">Hello World</span>
+        </a>
+        
+    </div>
+</nav>
+
+
+
+            </div>
+            <aside id="l_side">
+                
+<section class="widget profile">
+    <div class="content">
+        
+        <div class="avatar">
+            <a href="https://jhlzlove.github.io/elysia-ztheme">
+                <img src="https://jhlzlove.github.io/elysia-ztheme/avatar.jpg" alt="avatar">
+            </a>
+        </div>
+        
+        <h2 class="title">Elysia theme for zola</h2>
+        <p class="desc">A simple Zola theme powered entirely by AI.</p>
+        <nav class="nav-menu">
+            
+            <a class="nav-item " href="https://jhlzlove.github.io/elysia-ztheme/post">
+                博客
+            </a>
+            
+            <a class="nav-item " href="https://jhlzlove.github.io/elysia-ztheme/wiki">
+                项目
+            </a>
+            
+            <a class="nav-item " href="https://jhlzlove.github.io/elysia-ztheme/friend">
+                友链
+            </a>
+            
+            <a class="nav-item " href="https://jhlzlove.github.io/elysia-ztheme/about">
+                关于
+            </a>
+            
+        </nav>
+    </div>
+</section>
+
+
+
+<section class="widget toc-widget" id="toc-widget">
+    <div class="content">
+        <h3 class="widget-title">目录</h3>
+        <nav class="toc-nav">
+            <ul>
+            
+                <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#chang-gui-lian-jie-xian-shi">常规链接显示</a>
+                
+                <ul>
+                    
+                    <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#cuo-wu-lian-jie-zi-dong-xiu-fu">错误链接自动修复</a>
+                    
+                    </li>
+                    
+                </ul>
+                
+                </li>
+            
+                <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#biao-ge-ce-shi">表格测试</a>
+                
+                </li>
+            
+                <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#zhu-ti-shortcode">主题 shortcode</a>
+                
+                <ul>
+                    
+                    <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#tabs-ce-shi">tabs 测试</a>
+                    
+                    </li>
+                    
+                    <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#link-ce-shi">link 测试</a>
+                    
+                    <ul>
+                        
+                        <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#wai-lian">外链</a>
+                        
+                        </li>
+                        
+                        <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#nei-lian">内链</a>
+                        
+                        </li>
+                        
+                    </ul>
+                    
+                    </li>
+                    
+                    <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#note-ce-shi">note 测试</a>
+                    
+                    </li>
+                    
+                    <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#github-alert-ce-shi">GitHub Alert 测试</a>
+                    
+                    </li>
+                    
+                    <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#poetry-ce-shi">poetry 测试</a>
+                    
+                    </li>
+                    
+                    <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#image-ce-shi">image 测试</a>
+                    
+                    </li>
+                    
+                    <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#video-ce-shi">video 测试</a>
+                    
+                    </li>
+                    
+                    <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#links-ce-shi">Links 测试</a>
+                    
+                    </li>
+                    
+                    <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#friends-ce-shi">Friends 测试</a>
+                    
+                    </li>
+                    
+                    <li><a href="https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;elysia-ztheme&#x2F;post&#x2F;show&#x2F;#dai-ma-kuai-ce-shi">代码块测试</a>
+                    
+                    </li>
+                    
+                </ul>
+                
+                </li>
+            
+            </ul>
+        </nav>
+    </div>
+</section>
+
+
+
+            </aside>
+        </div>
+    </div>
+
+    <button id="back-to-top" title="回到顶部" aria-label="回到顶部">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+    </button>
+
+    <footer id="footer">
+        <div class="container">
+            
+                
+                <div class="footer-custom"><p><span id="jinrishici-sentence"></span> <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script> 本站由 <a href="/">@jhlz + AI</a> 创建。
+本博客所有文章除特别声明外，均采用 <a rel="external" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br>
+<uptime></uptime></p>
+<script>
+  setInterval(() => {
+    let startDate = new Date("2026-04-16")
+    let now = new Date();
+    // 计算时间差（以毫秒为单位）
+    let differenceInMs = now.getTime() - startDate.getTime();
+    // 转换为天数、小时数、分钟数和秒数
+    let days = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((differenceInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((differenceInMs % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((differenceInMs % (1000 * 60)) / 1000);
+    let uptimeTags = Array.from(document.getElementsByTagName("uptime"));
+    uptimeTags.forEach(ele => { ele.textContent = `🌱 本站已活了 ${days} 天 | ${hours} 时 | ${minutes} 分 | ${seconds} 秒 🌱` });
+  }, 1000);
+</script>
+</div>
+            
+        </div>
+    </footer>
+
+    <div id="copy-notification" class="copy-notification">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span>复制成功</span>
+    </div>
+
+    <script>
+    (function() {
+        var toggle = document.getElementById('nav-toggle');
+        var body = document.getElementById('l_body');
+        var mask = document.getElementById('nav-mask');
+        if (!toggle || !body || !mask) return;
+        
+        function openNav() {
+            body.classList.add('nav-open');
+        }
+        function closeNav() {
+            body.classList.remove('nav-open');
+        }
+        
+        toggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            body.classList.contains('nav-open') ? closeNav() : openNav();
+        });
+        
+        mask.addEventListener('click', closeNav);
+        
+        // 窗口大小改变时自动关闭
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) closeNav();
+        }, { passive: true });
+    })();
+    </script>
+    
+    
+    <script>
+    (function() {
+        document.querySelectorAll('img[data-random-covers]').forEach(function(img) {
+            var covers = img.getAttribute('data-random-covers').split('|').filter(Boolean);
+            if (covers.length > 1) {
+                img.src = covers[Math.floor(Math.random() * covers.length)];
+            }
+            img.removeAttribute('data-random-covers');
+        });
+    })();
+    </script>
+    <script>
+    (function() {
+        var btn = document.getElementById('back-to-top');
+        if (!btn) return;
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) btn.classList.add('visible');
+            else btn.classList.remove('visible');
+        }, { passive: true });
+        btn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    })();
+    </script>
+    <script>
+    // Auto-linkify plain URLs in post content
+    (function() {
+        var content = document.querySelector('.post-content .content');
+        if (!content) return;
+        var urlRe = /https?:\/\/[^\s<>"')\]\u3000-\u303f\uff00-\uffef\u2018\u2019\u201c\u201d\u3001\u3002\uff0c\uff01\uff1f\uff1a\uff1b\u300a\u300b\u3010\u3011\u300c\u300d]+/g;
+        function linkifyNode(node) {
+            if (node.nodeType === 3) {
+                var text = node.nodeValue;
+                if (!urlRe.test(text)) return;
+                urlRe.lastIndex = 0;
+                var frag = document.createDocumentFragment();
+                var last = 0, m;
+                while ((m = urlRe.exec(text)) !== null) {
+                    if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+                    var a = document.createElement('a');
+                    a.href = m[0];
+                    a.textContent = m[0];
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.className = 'auto-link';
+                    frag.appendChild(a);
+                    last = m.index + m[0].length;
+                }
+                if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+                node.parentNode.replaceChild(frag, node);
+            } else if (node.nodeType === 1 && !['A','CODE','PRE','SCRIPT','STYLE'].includes(node.tagName)) {
+                Array.from(node.childNodes).forEach(linkifyNode);
+            }
+        }
+        Array.from(content.childNodes).forEach(linkifyNode);
+    })();
+    </script>
+    <script>
+    // GitHub Alert syntax: > [!NOTE], > [!TIP], > [!WARNING], > [!DANGER], > [!CAUTION]
+    (function() {
+        var typeMap = {
+            'NOTE': 'info',
+            'TIP': 'tip',
+            'WARNING': 'warning',
+            'IMPORTANT': 'important',
+            'DANGER': 'danger',
+            'CAUTION': 'caution',
+            'SUCCESS': 'success'
+        };
+        var titleMap = {
+            'NOTE': 'Note',
+            'TIP': 'Tip',
+            'WARNING': 'Warning',
+            'IMPORTANT': 'Important',
+            'DANGER': 'Danger',
+            'CAUTION': 'Caution',
+            'SUCCESS': 'Success'
+        };
+        document.querySelectorAll('blockquote').forEach(function(bq) {
+            var first = bq.querySelector('p:first-child');
+            if (!first) return;
+            var text = first.textContent.trim();
+            var m = text.match(/^\[!(NOTE|TIP|WARNING|IMPORTANT|DANGER|CAUTION|SUCCESS)\]/i);
+            if (!m) return;
+            var key = m[1].toUpperCase();
+            var noteType = typeMap[key];
+            var noteTitle = titleMap[key];
+            // Extract remainder HTML after the [!TYPE] marker
+            var rawHtml = first.innerHTML;
+            var markerEnd = rawHtml.search(/\[!(NOTE|TIP|WARNING|IMPORTANT|DANGER|CAUTION|SUCCESS)\]/i);
+            var remainderHtml = '';
+            if (markerEnd !== -1) {
+                remainderHtml = rawHtml.slice(markerEnd + m[0].length).replace(/^(<br\s*\/?>|\s)+/, '').trim();
+            }
+            // build note div
+            var note = document.createElement('div');
+            note.className = 'note ' + noteType;
+            var titleEl = document.createElement('p');
+            titleEl.className = 'note-title';
+            titleEl.textContent = noteTitle;
+            note.appendChild(titleEl);
+            var contentEl = document.createElement('div');
+            contentEl.className = 'note-content';
+            // if remainder html exists in first <p>, create a new <p> for it
+            if (remainderHtml) {
+                var remEl = document.createElement('p');
+                remEl.innerHTML = remainderHtml;
+                contentEl.appendChild(remEl);
+            }
+            // copy remaining siblings (skip first <p>)
+            var children = Array.from(bq.children);
+            children.slice(1).forEach(function(el) {
+                contentEl.appendChild(el.cloneNode(true));
+            });
+            note.appendChild(contentEl);
+            bq.parentNode.replaceChild(note, bq);
+        });
+    })();
+    </script>
+    <script>
+    // Code block: Copy button & Header info (Giallo highlighter)
+    (function() {
+        var notification = document.getElementById('copy-notification');
+        var timer;
+        function showNotification() {
+            if (timer) clearTimeout(timer);
+            notification.classList.add('visible');
+            timer = setTimeout(function() { notification.classList.remove('visible'); }, 2000);
+        }
+
+        document.querySelectorAll('pre.giallo').forEach(function(pre) {
+            var container = document.createElement('div');
+            container.className = 'code-container';
+            pre.parentNode.insertBefore(container, pre);
+            container.appendChild(pre);
+
+            var code = pre.querySelector('code');
+            if (!code) return;
+
+            // Add line numbers dynamically
+            var lines = code.querySelectorAll('.giallo-l');
+            if (lines.length > 0) {
+                pre.classList.add('has-line-numbers');
+                var digits = String(lines.length).length;
+                var lnWidth = (digits + 1.2) + 'ch';
+                lines.forEach(function(line, idx) {
+                    var ln = document.createElement('span');
+                    ln.className = 'giallo-ln';
+                    ln.setAttribute('aria-hidden', 'true');
+                    ln.textContent = idx + 1;
+                    ln.style.width = lnWidth;
+                    ln.style.minWidth = lnWidth;
+                    line.insertBefore(ln, line.firstChild);
+                });
+            }
+
+            // Language label
+            var lang = code.getAttribute('data-lang') || '';
+            var name = code.getAttribute('data-name') || '';
+
+            // Language label (top-left, overlaid on border)
+            var langSpan = document.createElement('span');
+            langSpan.className = 'code-lang';
+            langSpan.textContent = lang || 'code';
+            container.appendChild(langSpan);
+
+            // Name/title label (top-center, overlaid on border)
+            if (name) {
+                var titleSpan = document.createElement('span');
+                titleSpan.className = 'code-title';
+                titleSpan.textContent = name;
+                container.appendChild(titleSpan);
+            }
+
+            // Copy button (top-right, overlaid on border)
+            var copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.title = 'Copy';
+            copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+            copyBtn.addEventListener('click', function() {
+                // Extract text from .giallo-l spans, skip .giallo-ln (line numbers)
+                var lines = code.querySelectorAll('.giallo-l');
+                var text;
+                if (lines.length > 0) {
+                    text = Array.from(lines).map(function(l) {
+                        // clone and remove line number spans
+                        var clone = l.cloneNode(true);
+                        clone.querySelectorAll('.giallo-ln').forEach(function(n) { n.remove(); });
+                        return clone.innerText;
+                    }).join('');
+                } else {
+                    text = code.innerText;
+                }
+                text = text.replace(/\n$/, '');
+                navigator.clipboard.writeText(text).then(function() {
+                    copyBtn.classList.add('copied');
+                    copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                    showNotification();
+                    setTimeout(function() {
+                        copyBtn.classList.remove('copied');
+                        copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+                    }, 2000);
+                });
+            });
+            container.appendChild(copyBtn);
+        });
+    })();
+    </script>
+    <script>
+    // Year progress bar
+    (function() {
+        var fill = document.getElementById('year-fill');
+        var pct = document.getElementById('year-pct');
+        var days = document.getElementById('year-days');
+        if (!fill || !pct || !days) return;
+        var now = new Date();
+        var year = now.getFullYear();
+        var start = new Date(year, 0, 1);
+        var end = new Date(year + 1, 0, 1);
+        var total = end - start;
+        var passed = now - start;
+        var ratio = passed / total;
+        var pctVal = (ratio * 100).toFixed(1);
+        var daysPassed = Math.floor(passed / 86400000);
+        var daysTotal = Math.floor(total / 86400000);
+        fill.style.width = pctVal + '%';
+        pct.textContent = pctVal + '%';
+        days.textContent = '已过 ' + daysPassed + ' 天，共 ' + daysTotal + ' 天';
+    })();
+    </script>
+    <script>
+    // TOC active highlight
+    (function() {
+        var tocNav = document.querySelector('.toc-nav');
+        if (!tocNav) return;
+        var headings = Array.from(document.querySelectorAll('.post-content h1[id], .post-content h2[id], .post-content h3[id], .post-content h4[id]'));
+        if (!headings.length) return;
+        var tocLinks = Array.from(tocNav.querySelectorAll('a'));
+        function setActive(id) {
+            tocLinks.forEach(function(a) {
+                var href = a.getAttribute('href') || '';
+                var linkId = href.split('#')[1] || '';
+                a.classList.toggle('active', linkId === id);
+            });
+        }
+        function onScroll() {
+            var scrollY = window.scrollY || window.pageYOffset;
+            var offset = 80; // account for sticky nav bar
+            var active = null;
+            for (var i = headings.length - 1; i >= 0; i--) {
+                if (headings[i].getBoundingClientRect().top + scrollY - offset <= scrollY) {
+                    active = headings[i];
+                    break;
+                }
+            }
+            if (!active) active = headings[0];
+            if (active && active.id) setActive(active.id);
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    })();
+    </script>
+</body>
+</html>

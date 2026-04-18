@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
+    <title>Elysia theme for zola</title>
+    <subtitle>A simple Zola theme powered entirely by AI.</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://jhlzlove.github.io/elysia-ztheme/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://jhlzlove.github.io/elysia-ztheme"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-04-18T00:00:00+00:00</updated>
+    <id>https://jhlzlove.github.io/elysia-ztheme/atom.xml</id>
+    <entry xml:lang="zh-CN">
+        <title>Hello World</title>
+        <published>2026-04-18T00:00:00+00:00</published>
+        <updated>2026-04-18T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              jhlz + AI
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://jhlzlove.github.io/elysia-ztheme/post/test/"/>
+        <id>https://jhlzlove.github.io/elysia-ztheme/post/test/</id>
+        
+        <content type="html" xml:base="https://jhlzlove.github.io/elysia-ztheme/post/test/">&lt;p&gt;hello world&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh-CN">
+        <title>主题效果测试</title>
+        <published>2026-04-17T00:00:00+00:00</published>
+        <updated>2026-04-17T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              jhlz + AI
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://jhlzlove.github.io/elysia-ztheme/post/show/"/>
+        <id>https://jhlzlove.github.io/elysia-ztheme/post/show/</id>
+        
+        <summary type="html">&lt;p&gt;主题效果测试&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+    <entry xml:lang="zh-CN">
+        <title>友链</title>
+        <published>2026-04-14T00:00:00+00:00</published>
+        <updated>2026-04-14T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              jhlz + AI
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://jhlzlove.github.io/elysia-ztheme/friend/"/>
+        <id>https://jhlzlove.github.io/elysia-ztheme/friend/</id>
+        
+        <content type="html" xml:base="https://jhlzlove.github.io/elysia-ztheme/friend/">
+
+
+
+
+
+
+
+
+
+
+
+&lt;div class=&quot;friends-grid&quot;&gt;
+    
+    
+    &lt;a class=&quot;friend-card&quot; href=&quot;https:&#x2F;&#x2F;jhlzlove.github.io&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot; title=&quot;&quot;&gt;
+        &lt;div class=&quot;friend-avatar&quot;&gt;
+            
+            
+            &lt;img src=&quot;https:&#x2F;&#x2F;jhlzlove.github.io&#x2F;favicon.ico&quot; alt=&quot;jhlzlove&quot;&gt;
+            
+        &lt;&#x2F;div&gt;
+        &lt;div class=&quot;friend-name&quot;&gt;jhlzlove&lt;&#x2F;div&gt;
+        
+    &lt;&#x2F;a&gt;
+    
+    
+    &lt;a class=&quot;friend-card&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot; title=&quot;&quot;&gt;
+        &lt;div class=&quot;friend-avatar&quot;&gt;
+            
+            
+            &lt;img src=&quot;https:&#x2F;&#x2F;github.githubassets.com&#x2F;favicons&#x2F;favicon.svg&quot; alt=&quot;github&quot;&gt;
+            
+        &lt;&#x2F;div&gt;
+        &lt;div class=&quot;friend-name&quot;&gt;github&lt;&#x2F;div&gt;
+        
+    &lt;&#x2F;a&gt;
+    
+&lt;&#x2F;div&gt;
+
+</content>
+        
+    </entry>
+    <entry xml:lang="zh-CN">
+        <title>关于</title>
+        <published>2026-01-01T00:00:00+00:00</published>
+        <updated>2026-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              jhlz + AI
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://jhlzlove.github.io/elysia-ztheme/about/"/>
+        <id>https://jhlzlove.github.io/elysia-ztheme/about/</id>
+        
+        <content type="html" xml:base="https://jhlzlove.github.io/elysia-ztheme/about/">&lt;h2 id=&quot;guan-yu-ben-zhan&quot;&gt;关于本站&lt;&#x2F;h2&gt;
+&lt;p&gt;本站使用 &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.getzola.org&#x2F;&quot;&gt;Zola&lt;&#x2F;a&gt; 构建，主题基于 &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;xaoxuu&#x2F;hexo-theme-stellar&quot;&gt;Stellar&lt;&#x2F;a&gt; 和 &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;D-Sketon&#x2F;hugo-theme-reimu&quot;&gt;Reimu&lt;&#x2F;a&gt; 风格设计。&lt;&#x2F;p&gt;
+&lt;p&gt;主要内容包括：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;博客&lt;&#x2F;strong&gt;：记录技术探索、学习笔记和生活感悟&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Wiki&lt;&#x2F;strong&gt;：整理各类项目文档与知识库&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;lian-xi-wo&quot;&gt;联系我&lt;&#x2F;h2&gt;
+&lt;p&gt;如果你有任何问题或想法，欢迎通过以下方式联系：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub：&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&quot;&gt;github.com&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;Email：your@email.com&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="zh-CN">
+        <title>归档</title>
+        <published>2026-01-01T00:00:00+00:00</published>
+        <updated>2026-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              jhlz + AI
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://jhlzlove.github.io/elysia-ztheme/archive/"/>
+        <id>https://jhlzlove.github.io/elysia-ztheme/archive/</id>
+        
+        <content type="html" xml:base="https://jhlzlove.github.io/elysia-ztheme/archive/"></content>
+        
+    </entry>
+    <entry xml:lang="zh-CN">
+        <title>RSS 订阅</title>
+        <published>2026-01-01T00:00:00+00:00</published>
+        <updated>2026-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              jhlz + AI
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://jhlzlove.github.io/elysia-ztheme/rss/"/>
+        <id>https://jhlzlove.github.io/elysia-ztheme/rss/</id>
+        
+        <content type="html" xml:base="https://jhlzlove.github.io/elysia-ztheme/rss/"></content>
+        
+    </entry>
+    <entry xml:lang="zh-CN">
+        <title>分类</title>
+        <published>2020-01-01T00:00:00+00:00</published>
+        <updated>2020-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              jhlz + AI
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://jhlzlove.github.io/elysia-ztheme/categories/"/>
+        <id>https://jhlzlove.github.io/elysia-ztheme/categories/</id>
+        
+        <content type="html" xml:base="https://jhlzlove.github.io/elysia-ztheme/categories/"></content>
+        
+    </entry>
+    <entry xml:lang="zh-CN">
+        <title>标签</title>
+        <published>2020-01-01T00:00:00+00:00</published>
+        <updated>2020-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              jhlz + AI
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://jhlzlove.github.io/elysia-ztheme/tags/"/>
+        <id>https://jhlzlove.github.io/elysia-ztheme/tags/</id>
+        
+        <content type="html" xml:base="https://jhlzlove.github.io/elysia-ztheme/tags/"></content>
+        
+    </entry>
+</feed>
