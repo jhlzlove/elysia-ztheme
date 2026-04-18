@@ -1,0 +1,12 @@
+github:
+  - title: rust
+    url: https://github.com/rust-lang/rust
+    icon: https://github.com/favicon.ico
+    cover: https://tse2.mm.bing.net/th/id/OIP.V2D3Mkdt96xldo2nnXHVmwHaH-?rs=1&pid=ImgDetMain&o=7&rm=3
+    desc: The Rust Programming Language
+  - title: dbeaver
+    url: https://dbeaver.io/
+    icon: https://dbeaver.io/favicon.ico
+    cover: /images/default_cover.png
+    desc: Free multi-platform database tool
+

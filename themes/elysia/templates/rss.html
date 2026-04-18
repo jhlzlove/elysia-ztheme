@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}RSS 订阅 · {{ config.title }}{% endblock %}
+
+{% block content %}
+<div class="post-nav-bar">
+    <a class="post-nav-item {% if current_url and current_url is containing('/post') %}active{% endif %}" href="/post/">近期发布</a>
+    <a class="post-nav-item {% if current_url and current_url is containing('/categories') %}active{% endif %}" href="/categories/">分类</a>
+    <a class="post-nav-item {% if current_url and current_url is containing('/tags') %}active{% endif %}" href="/tags/">标签</a>
+    <a class="post-nav-item {% if current_url and current_url is containing('/archive') %}active{% endif %}" href="/archive/">归档</a>
+    <a class="post-nav-item {% if current_url and current_url is containing('/rss') %}active{% endif %}" href="/rss/">RSS</a>
+</div>
+
+<div class="rss-page">
+    <div class="rss-hero">
+        <div class="rss-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48">
+                <path d="M4 11a9 9 0 0 1 9 9"></path>
+                <path d="M4 4a16 16 0 0 1 16 16"></path>
+                <circle cx="5" cy="19" r="1.5" fill="currentColor" stroke="none"></circle>
+            </svg>
+        </div>
+        <h1 class="rss-title">RSS 订阅</h1>
+        <p class="rss-desc">订阅 <strong>{{ config.title }}</strong>，第一时间获取最新文章推送。</p>
+    </div>
+
+    <div class="rss-cards">
+        <a class="rss-card" href="/atom.xml" target="_blank" rel="noopener">
+            <div class="rss-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28">
+                    <path d="M4 11a9 9 0 0 1 9 9"></path>
+                    <path d="M4 4a16 16 0 0 1 16 16"></path>
+                    <circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"></circle>
+                </svg>
+            </div>
+            <div class="rss-card-body">
+                <div class="rss-card-title">Atom Feed</div>
+                <div class="rss-card-url">/atom.xml</div>
+                <div class="rss-card-desc">推荐格式，兼容绝大多数 RSS 阅读器</div>
+            </div>
+            <div class="rss-card-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+        </a>
+    </div>
+
+    <div class="rss-how">
+        <h2 class="rss-how-title">如何订阅？</h2>
+        <div class="rss-steps">
+            <div class="rss-step">
+                <div class="rss-step-num">1</div>
+                <div class="rss-step-text">选择一款 RSS 阅读器，例如 <a href="https://feedly.com" target="_blank" rel="noopener">Feedly</a>、<a href="https://netnewswire.com" target="_blank" rel="noopener">NetNewsWire</a>、<a href="https://www.inoreader.com" target="_blank" rel="noopener">Inoreader</a> 等。</div>
+            </div>
+            <div class="rss-step">
+                <div class="rss-step-num">2</div>
+                <div class="rss-step-text">在阅读器中选择「添加订阅源」，粘贴上方 Feed 地址。</div>
+            </div>
+            <div class="rss-step">
+                <div class="rss-step-num">3</div>
+                <div class="rss-step-text">完成！新文章发布后将自动推送到你的阅读器。</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

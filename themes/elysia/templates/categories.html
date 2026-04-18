@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}分类 | {{ config.title }}{% endblock %}
+
+{% block content %}
+<nav class="post-nav-bar">
+    <a class="post-nav-item" href="/">近期发布</a>
+    <a class="post-nav-item active" href="/categories/">分类</a>
+    <a class="post-nav-item" href="/tags/">标签</a>
+    <a class="post-nav-item" href="/archive/">归档</a>
+    <a class="post-nav-item" href="/rss/">RSS 订阅</a>
+</nav>
+{% set tax = get_taxonomy(kind="categories") %}
+<div class="tax-page-cats">
+    {% for term in tax.items %}
+    <a class="tax-cat-item" href="{{ term.permalink }}">
+        <span class="tax-cat-icon">📁</span>
+        <span class="tax-cat-name">{{ term.name }}</span>
+        <span class="tax-cat-count">({{ term.pages | length }})</span>
+    </a>
+    {% endfor %}
+</div>
+{% endblock content %}

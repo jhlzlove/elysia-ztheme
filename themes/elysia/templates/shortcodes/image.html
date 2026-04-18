@@ -1,0 +1,13 @@
+{% set _padding = padding | default(value="0") %}
+{% set _wrap_style = "padding:" ~ _padding %}
+{% set _src = get_url(path=src) %}
+{% if width %}
+{% set _img_style = "width:" ~ width %}
+<div class="sc-image" style="{{ _wrap_style }}">
+    <img src="{{ _src }}" style="{{ _img_style }}" alt="">
+</div>
+{% else %}
+<div class="sc-image" style="{{ _wrap_style }}">
+    <img src="{{ _src }}" alt="">
+</div>
+{% endif %}

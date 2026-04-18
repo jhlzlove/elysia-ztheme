@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block layout_class %}wiki{% endblock %}
+
+{% block content %}
+    {% if page %}
+        {% set section_path = page.ancestors | last %}
+        {% if not section_path %}
+            {% set current_section = get_section(path="wiki/_index.md") %}
+        {% else %}
+            {% set current_section = get_section(path=section_path) %}
+        {% endif %}
+        {% set current_item = page %}
+    {% else %}
+        {% set current_section = section %}
+        {% set current_item = section %}
+    {% endif %}
+
+<div class="wiki-content-inner post-content">
+    <article>
+        <h1>{{ current_item.title }}</h1>
+        <div class="content">
+            {{ current_item.content | safe }}
+        </div>
+    </article>
+</div>
+
+{% if config.extra.comment and config.extra.comment.enable %}
+<div class="comment-container">
+    {% if config.extra.comment.type == "giscus" %}
+    <div class="giscus-container">
+        <script src="https://giscus.app/client.js"
+            data-repo="{{ config.extra.comment.giscus.repo }}"
+            data-repo-id="{{ config.extra.comment.giscus.repo_id }}"
+            data-category="{{ config.extra.comment.giscus.category }}"
+            data-category-id="{{ config.extra.comment.giscus.category_id }}"
+            data-mapping="{{ config.extra.comment.giscus.mapping | default(value='pathname') }}"
+            data-strict="{{ config.extra.comment.giscus.strict | default(value='0') }}"
+            data-reactions-enabled="{{ config.extra.comment.giscus.reactions_enabled | default(value='1') }}"
+            data-emit-metadata="{{ config.extra.comment.giscus.emit_metadata | default(value='0') }}"
+            data-input-position="{{ config.extra.comment.giscus.input_position | default(value='bottom') }}"
+            data-theme="{{ config.extra.comment.giscus.theme | default(value='preferred_color_scheme') }}"
+            data-lang="{{ config.extra.comment.giscus.lang | default(value='zh-CN') }}"
+            crossorigin="anonymous"
+            async>
+        </script>
+    </div>
+    {% elif config.extra.comment.type == "utterances" %}
+    <div class="utterances-container">
+        <script src="https://utteranc.es/client.js"
+            repo="{{ config.extra.comment.utterances.repo }}"
+            issue-term="{{ config.extra.comment.utterances.issue_term | default(value='pathname') }}"
+            theme="{{ config.extra.comment.utterances.theme | default(value='github-light') }}"
+            crossorigin="anonymous"
+            async>
+        </script>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock content %}
+
+{% block sidebar %}
+<section class="widget profile">
+    <div class="content">
+        {% if config.extra.sidebar.logo %}
+        <div class="avatar">
+            <a href="{{ get_url(path='/') | safe }}">
+                <img src="{{ config.extra.sidebar.logo }}" alt="avatar">
+            </a>
+        </div>
+        {% endif %}
+        <h2 class="title">{{ config.title }}</h2>
+        <p class="desc">{{ config.description }}</p>
+        <nav class="nav-menu">
+            {% for item in config.extra.menu %}
+            <a class="nav-item {% if current_url and (current_url == get_url(path=item.url, trailing_slash=false) or (current_url == get_url(path=item.url, trailing_slash=true))) %}active{% endif %}" href="{{ item.url | safe }}">
+                {{ item.name }}
+            </a>
+            {% endfor %}
+        </nav>
+    </div>
+</section>
+
+<div class="widget wiki-sidebar-inner">
+    <div class="content">
+        <h3 class="widget-title">{{ current_section.title }}</h3>
+        <nav class="wiki-nav">
+            <ul>
+                {% for p in current_section.pages %}
+                <li {% if current_url == p.permalink %}class="active"{% endif %}>
+                    <a href="{{ p.permalink }}">{{ p.title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<section class="widget toc-widget">
+    <div class="content">
+        <h3 class="widget-title">目录</h3>
+        <nav class="toc-nav">
+            <ul>
+            {% for h in current_item.toc %}
+                <li><a href="{{ h.permalink }}">{{ h.title }}</a>
+                {% if h.children %}
+                <ul>
+                    {% for h2 in h.children %}
+                    <li><a href="{{ h2.permalink }}">{{ h2.title }}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </nav>
+    </div>
+</section>
+
+{% endblock sidebar %}

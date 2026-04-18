@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}页面未找到 | {{ config.title }}{% endblock %}
+
+{% block content %}
+<div class="not-found-page">
+    <div class="not-found-code">404</div>
+    <h1 class="not-found-title">页面未找到</h1>
+    <p class="not-found-desc">抱歉，您访问的页面不存在或已被移除。</p>
+    <div class="not-found-actions">
+        <a href="{{ get_url(path='/') }}" class="btn btn-primary">返回首页</a>
+        <a href="{{ get_url(path='post') }}" class="btn btn-secondary">浏览博客</a>
+    </div>
+</div>
+{% endblock content %}

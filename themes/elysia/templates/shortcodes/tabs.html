@@ -1,0 +1,49 @@
+{% set align = align | default(value="left") %}
+<div class="tabs-container" data-align="{{ align }}">
+    <div class="tabs-nav tabs-align-{{ align }}"></div>
+    <div class="tabs-body">
+        {{ body | markdown | safe }}
+    </div>
+</div>
+<script>
+(function() {
+    var containers = document.querySelectorAll('.tabs-container:not([data-tabs-init])');
+    containers.forEach(function(container) {
+        container.setAttribute('data-tabs-init', '1');
+        var bodyEl = container.querySelector('.tabs-body');
+        var nav = container.querySelector('.tabs-nav');
+        if (!bodyEl || !nav) return;
+        var html = bodyEl.innerHTML;
+        var splitRe = new RegExp('<!--\\s*tab\\s+[^>]+?\\s*-->');
+        var matchRe = new RegExp('<!--\\s*tab\\s+([^>]+?)\\s*-->', 'g');
+        var parts = html.split(splitRe);
+        var names = [];
+        var m;
+        while ((m = matchRe.exec(html)) !== null) { names.push(m[1].trim()); }
+        if (names.length === 0) return;
+        nav.innerHTML = '';
+        bodyEl.innerHTML = '';
+        names.forEach(function(name, idx) {
+            var btn = document.createElement('button');
+            btn.className = 'tab-btn' + (idx === 0 ? ' active' : '');
+            btn.textContent = name;
+            btn.setAttribute('data-tab', idx);
+            nav.appendChild(btn);
+            var panel = document.createElement('div');
+            panel.className = 'tab-panel' + (idx === 0 ? ' active' : '');
+            panel.setAttribute('data-tab', idx);
+            panel.innerHTML = parts[idx + 1] || '';
+            bodyEl.appendChild(panel);
+        });
+        nav.addEventListener('click', function(e) {
+            var btn = e.target.closest('.tab-btn');
+            if (!btn) return;
+            var idx = btn.getAttribute('data-tab');
+            nav.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+            bodyEl.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+            btn.classList.add('active');
+            bodyEl.querySelector('.tab-panel[data-tab="' + idx + '"]').classList.add('active');
+        });
+    });
+})();
+</script>

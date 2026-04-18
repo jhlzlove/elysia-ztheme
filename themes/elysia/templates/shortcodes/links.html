@@ -1,0 +1,31 @@
+{% set data_yaml = load_data(path="data/links.yaml", required=false) %}
+{% set data_yml = load_data(path="data/links.yml", required=false) %}
+{% set data = data_yaml | default(value=data_yml) %}
+{% set def_yaml = load_data(path="data/default.yaml", required=false) %}
+{% set def_yml = load_data(path="data/default.yml", required=false) %}
+{% set def = def_yaml | default(value=def_yml) %}
+{% set def_covers = def.cover | default(value=["/images/default_cover.png"]) %}
+{% set def_cover_count = def_covers | length %}
+{% if data[group] %}
+<div class="links-grid">
+    {% for item in data[group] %}
+    {% set default_cover = def_covers | nth(n=loop.index0 % def_cover_count) | default(value="/images/default_cover.png") %}
+    <a class="links-card" href="{{ item.url | safe }}" target="_blank" rel="noopener noreferrer">
+        <div class="links-cover">
+            <img src="{{ item.cover | default(value=default_cover) }}" alt="{{ item.title }}">
+        </div>
+        <div class="links-info">
+            {% if item.icon %}
+            <img class="links-icon" src="{{ item.icon }}" alt="">
+            {% endif %}
+            <div class="links-text">
+                <div class="links-title">{{ item.title }}</div>
+                {% if item.desc %}
+                <div class="links-desc" title="{{ item.desc }}">{{ item.desc }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}

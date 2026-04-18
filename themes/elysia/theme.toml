@@ -1,0 +1,21 @@
+name = "elysia"
+description = "zola theme"
+license = "MIT"
+homepage = "https://github.com/jhlzlove/elysia-theme"
+demo = "https://github.com/jhlzlove/elysia-theme"
+min_version = "0.22.1"
+
+
+[extra]
+show_word_count = true
+show_reading_time = true
+
+date_format = "%a %b %e, %Y"
+
+home = "home"
+
+sam_bottom_menu = true
+
+[author]
+name = "jhlzlove"
+homepage = "https://jhlzlove.github.io"

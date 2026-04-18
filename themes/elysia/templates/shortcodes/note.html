@@ -1,0 +1,9 @@
+{% set _type = type | default(value="info") %}
+<div class="note {{ _type }}">
+    {% if title %}<p class="note-title">{{ title }}</p>{% endif %}
+    <div class="note-content">
+        {% if body %}
+            {{ body | markdown | safe }}
+        {% endif %}
+    </div>
+</div>

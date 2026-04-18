@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article class="post-content">
+    <h1>{{ page.title }}</h1>
+    <div class="post-meta">
+        <time datetime="{{ page.date }}">{{ page.date | date(format="%Y-%m-%d") }}</time>
+        <span class="meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            {{ page.word_count }} 字
+        </span>
+        <span class="meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            {{ page.reading_time }} 分钟
+        </span>
+    </div>
+    <div class="content">
+        {{ page.content | safe }}
+    </div>
+</article>
+
+{% if config.extra.copyright and config.extra.copyright.enable %}
+<div class="post-copyright">
+    <div class="copyright-item">
+        <span class="copyright-icon">👤</span>
+        <span class="copyright-label">本文作者：</span>
+        <span class="copyright-value">{{ config.author }}</span>
+    </div>
+    <div class="copyright-item">
+        <span class="copyright-icon">🔗</span>
+        <span class="copyright-label">本文链接：</span>
+        <a class="copyright-value" href="{{ page.permalink }}">{{ page.permalink }}</a>
+    </div>
+    <div class="copyright-item">
+        <span class="copyright-icon">📝</span>
+        <span class="copyright-label">本文标题：</span>
+        <span class="copyright-value">{{ page.title }}</span>
+    </div>
+    <div class="copyright-item">
+        <span class="copyright-icon">©</span>
+        <span class="copyright-label">本文版权：</span>
+        <span class="copyright-value">本博客所有文章除特别声明外，均采用 <a href="{{ config.extra.copyright.license_url }}" target="_blank" rel="noopener">{{ config.extra.copyright.license_name }}</a> 许可协议，转载请注明出处！</span>
+    </div>
+</div>
+{% endif %}
+
+{% if page.lower or page.higher %}
+<nav class="post-nav">
+    <div class="post-nav-item post-nav-prev">
+        {% if page.higher %}
+        <a href="{{ page.higher.permalink }}" class="post-nav-link">
+            <span class="post-nav-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                上一篇
+            </span>
+            <span class="post-nav-title">{{ page.higher.title }}</span>
+        </a>
+        {% endif %}
+    </div>
+    <div class="post-nav-item post-nav-next">
+        {% if page.lower %}
+        <a href="{{ page.lower.permalink }}" class="post-nav-link">
+            <span class="post-nav-label">
+                下一篇
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </span>
+            <span class="post-nav-title">{{ page.lower.title }}</span>
+        </a>
+        {% endif %}
+    </div>
+</nav>
+{% endif %}
+{% if config.extra.comment and config.extra.comment.enable %}
+<div class="comment-container">
+    {% if config.extra.comment.type == "giscus" %}
+    <div class="giscus-container">
+        <script src="https://giscus.app/client.js"
+            data-repo="{{ config.extra.comment.giscus.repo }}"
+            data-repo-id="{{ config.extra.comment.giscus.repo_id }}"
+            data-category="{{ config.extra.comment.giscus.category }}"
+            data-category-id="{{ config.extra.comment.giscus.category_id }}"
+            data-mapping="{{ config.extra.comment.giscus.mapping | default(value='pathname') }}"
+            data-strict="{{ config.extra.comment.giscus.strict | default(value='0') }}"
+            data-reactions-enabled="{{ config.extra.comment.giscus.reactions_enabled | default(value='1') }}"
+            data-emit-metadata="{{ config.extra.comment.giscus.emit_metadata | default(value='0') }}"
+            data-input-position="{{ config.extra.comment.giscus.input_position | default(value='bottom') }}"
+            data-theme="{{ config.extra.comment.giscus.theme | default(value='preferred_color_scheme') }}"
+            data-lang="{{ config.extra.comment.giscus.lang | default(value='zh-CN') }}"
+            crossorigin="anonymous"
+            async>
+        </script>
+    </div>
+    {% elif config.extra.comment.type == "utterances" %}
+    <div class="utterances-container">
+        <script src="https://utteranc.es/client.js"
+            repo="{{ config.extra.comment.utterances.repo }}"
+            issue-term="{{ config.extra.comment.utterances.issue_term | default(value='pathname') }}"
+            theme="{{ config.extra.comment.utterances.theme | default(value='github-light') }}"
+            crossorigin="anonymous"
+            async>
+        </script>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock content %}
+
+{% block sidebar %}
+<section class="widget profile">
+    <div class="content">
+        {% if config.extra.sidebar.logo %}
+        <div class="avatar">
+            <a href="{{ get_url(path='/') | safe }}">
+                <img src="{{ get_url(path=config.extra.sidebar.logo) | safe }}" alt="avatar">
+            </a>
+        </div>
+        {% endif %}
+        <h2 class="title">{{ config.title }}</h2>
+        <p class="desc">{{ config.description }}</p>
+        <nav class="nav-menu">
+            {% for item in config.extra.menu %}
+            <a class="nav-item {% if current_url and (current_url == get_url(path=item.url, trailing_slash=false) or (current_url == get_url(path=item.url, trailing_slash=true))) %}active{% endif %}" href="{{ item.url | safe }}">
+                {{ item.name }}
+            </a>
+            {% endfor %}
+        </nav>
+    </div>
+</section>
+
+{% if page.toc %}
+{% set toc_depth = config.extra.toc_depth | default(value=4) %}
+<section class="widget toc-widget" id="toc-widget">
+    <div class="content">
+        <h3 class="widget-title">目录</h3>
+        <nav class="toc-nav">
+            <ul>
+            {% for h1 in page.toc %}
+                <li><a href="{{ h1.permalink }}">{{ h1.title }}</a>
+                {% if h1.children and h1.level < toc_depth %}
+                <ul>
+                    {% for h2 in h1.children %}
+                    <li><a href="{{ h2.permalink }}">{{ h2.title }}</a>
+                    {% if h2.children and h2.level < toc_depth %}
+                    <ul>
+                        {% for h3 in h2.children %}
+                        <li><a href="{{ h3.permalink }}">{{ h3.title }}</a>
+                        {% if h3.children and h3.level < toc_depth %}
+                        <ul>
+                            {% for h4 in h3.children %}
+                            <li><a href="{{ h4.permalink }}">{{ h4.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </nav>
+    </div>
+</section>
+{% endif %}
+
+{% endblock sidebar %}

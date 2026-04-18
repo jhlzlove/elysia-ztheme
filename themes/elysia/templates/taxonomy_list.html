@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}{{ taxonomy.name }} | {{ config.title }}{% endblock %}
+
+{% block content %}
+<nav class="post-nav-bar">
+    <a class="post-nav-item" href="/">近期发布</a>
+    <a class="post-nav-item {% if taxonomy.name == 'categories' %}active{% endif %}" href="/categories/">分类</a>
+    <a class="post-nav-item {% if taxonomy.name == 'tags' %}active{% endif %}" href="/tags/">标签</a>
+    <a class="post-nav-item" href="/archive/">归档</a>
+    <a class="post-nav-item" href="/rss/">RSS 订阅</a>
+</nav>
+{% if taxonomy.name == 'tags' %}
+<div class="tax-page-tags">
+    {% for term in terms %}
+    <a class="tax-tag-item" href="{{ term.permalink }}">#{{ term.name }}</a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="tax-page-cats">
+    {% for term in terms %}
+    <a class="tax-cat-item" href="{{ term.permalink }}">
+        <span class="tax-cat-icon">📁</span>
+        <span class="tax-cat-name">{{ term.name }}</span>
+        <span class="tax-cat-count">({{ term.pages | length }})</span>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock content %}

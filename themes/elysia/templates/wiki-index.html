@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="wiki-index post-content">
+    <h1>{{ section.title }}</h1>
+    <div class="wiki-projects">
+        {% set wiki_section = get_section(path="wiki/_index.md") %}
+        {% for subsection_path in wiki_section.subsections %}
+            {% set project = get_section(path=subsection_path) %}
+            <div class="wiki-project-card">
+                {% if project.pages %}
+                    {% set project_url = project.pages[0].permalink %}
+                {% else %}
+                    {% set project_url = project.permalink %}
+                {% endif %}
+                <a href="{{ project_url }}">
+                    <h3>{{ project.title }}</h3>
+                    <p>{{ project.description | default(value="") }}</p>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,20 @@
+{% set is_external = href | truncate(length=4, end="") == "http" %}
+{% set need_api = is_external and not title and not icon and not desc %}
+<div class="link-card"{% if need_api %} data-link-auto="{{ href | safe }}"{% endif %}>
+    <a href="{{ href | safe }}"{% if is_external %} target="_blank" rel="noopener noreferrer"{% endif %}>
+        {% if icon %}
+        <div class="link-icon">
+            <img src="{{ icon }}" alt="">
+        </div>
+        {% elif need_api %}
+        <div class="link-icon link-icon-placeholder"></div>
+        {% endif %}
+        <div class="link-body">
+            <div class="link-title">{% if title %}{{ title }}{% elif not need_api %}{{ href | safe }}{% endif %}</div>
+            {% if desc %}<div class="link-desc">{{ desc }}</div>{% endif %}
+        </div>
+        <div class="link-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+    </a>
+</div>

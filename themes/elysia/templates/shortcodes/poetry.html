@@ -1,0 +1,9 @@
+<div class="poetry">
+    <div class="poetry-header">
+        {% if title %}<div class="poetry-title">{{ title }}</div>{% endif %}
+        {% if author %}<div class="poetry-author">{{ author }}</div>{% endif %}
+    </div>
+    <div class="poetry-body">
+        {{ body | markdown | safe }}
+    </div>
+</div>

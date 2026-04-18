@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}关于 | {{ config.title }}{% endblock %}
+
+{% block content %}
+<div class="about-page">
+    <div class="about-header">
+        {% if config.extra.sidebar.logo %}
+        <div class="about-avatar">
+            <img src="{{ get_url(path=config.extra.sidebar.logo) | safe }}" alt="avatar">
+        </div>
+        {% endif %}
+        <div class="about-info">
+            <h1>{{ config.title }}</h1>
+            <p>{{ config.description }}</p>
+        </div>
+    </div>
+    <div class="about-body">
+        {{ page.content | safe }}
+    </div>
+</div>
+{% endblock content %}

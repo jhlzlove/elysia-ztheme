@@ -1,0 +1,145 @@
+# The URL the site will be built for
+base_url = "https://jhlzlove.github.io/elysia-ztheme"
+# site name
+title = "Elysia theme for zola"
+# site default language
+default_language = "zh-CN"
+author = "jhlz + AI"
+description = "A simple Zola theme powered entirely by AI."
+
+theme = "elysia"
+
+compile_sass = false
+
+generate_feeds = true
+feed_filenames = ["atom.xml"]
+
+taxonomies = [
+    { name = "categories", feed = false },
+    { name = "tags", feed = false },
+]
+
+[markdown]
+render_emoji = true
+
+[markdown.highlighting]
+light_theme = "github-light"
+dark_theme = "github-dark"
+style = "class"
+line_numbers = true
+error_on_missing_language = false
+
+
+####################### 自定义配置 #######################
+[extra]
+# 导航栏配置
+menu = [
+    { name = "博客", url = "/post" },
+    { name = "项目", url = "/wiki" },
+    { name = "友链", url = "/friend" },
+    { name = "关于", url = "/about" },
+]
+
+# 社交链接（icon 使用 SVG path 数据，name 鼠标悬浮显示）
+social = [
+    { name = "GitHub", url = "https://github.com", icon = "github" },
+    { name = "bilibili", url = "https://bilibili.com/", icon = "bilibili" },
+    { name = "RSS", url = "/atom.xml", icon = "rss" },
+]
+
+# 主题相关配置
+# sidebar_position: 侧边栏位置，"left" 居左，"right" 居右（默认）
+sidebar = { logo = "/avatar.jpg", position = "left" }
+# 站点摘要字数
+truncate_at = 100
+# 目录显示层级，默认 4
+toc_depth = 4
+
+# 注入外部链接（如字体、图标库等）
+# 在此处添加 <link> 标签注入到 <head>，例如 Google Fonts
+[extra.inject]
+links = [
+    # 鸿蒙字体
+    { rel="stylesheet", href="https://s1.hdslb.com/bfs/static/jinkela/long/font/medium.css" },
+    { rel="stylesheet", href="https://unpkg.com/jetbrains-mono@latest/css/jetbrains-mono.css" }
+]
+
+# 字体配置
+# body: 网站正文字体名称，需与 inject 中导入的字体一致，留空使用系统默认
+# code: 代码块字体名称，需与 inject 中导入的字体一致，留空使用系统默认
+[extra.font]
+body = "HarmonyOS_Medium"
+code = "jetbrains mono"
+body_size = "17.5px"
+code_size = "16px"
+
+# link shortcode 元数据 API
+# 当 link 标签未提供 title/icon/desc 时，自动调用此 API 获取网站元数据
+# {url} 会被替换为实际链接
+# https://github.com/xaoxuu/site-info-api
+[extra.link]
+meta_api = ""
+
+# 自定义 footer 内容，支持 Markdown 和 HTML
+# 可用占位符：{author} 作者名，{year} 当前年份，{title} 站点标题
+[extra.footer]
+# 文本不能有缩进
+content = """
+<span id="jinrishici-sentence"></span> <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script> 本站由 [@{author}](/) 创建。
+本博客所有文章除特别声明外，均采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。<br>
+<uptime></uptime>
+<script>
+  setInterval(() => {
+    let startDate = new Date("2026-04-16")
+    let now = new Date();
+    // 计算时间差（以毫秒为单位）
+    let differenceInMs = now.getTime() - startDate.getTime();
+    // 转换为天数、小时数、分钟数和秒数
+    let days = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((differenceInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((differenceInMs % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((differenceInMs % (1000 * 60)) / 1000);
+    let uptimeTags = Array.from(document.getElementsByTagName("uptime"));
+    uptimeTags.forEach(ele => { ele.textContent = `🌱 本站已活了 ${days} 天 | ${hours} 时 | ${minutes} 分 | ${seconds} 秒 🌱` });
+  }, 1000);
+</script>
+"""
+
+# 侧边栏自定义内容，支持 Markdown 和 HTML
+# 可用占位符：{author} 作者名，{year} 当前年份，{title} 站点标题
+[extra.sidebar_widget]
+# 文本不能有缩进
+content = """
+👋 Hi，welcome **{title}**！
+
+A Zola theme inspired by [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) and [Reimu](https://github.com/D-Sketon/hugo-theme-reimu).
+<img src="https://api.szfx.top/info-card/?word=%E6%AC%A2%E8%BF%8E%E6%97%85%E8%A1%8C%E8%80%85" style="border-radius: 10px"/>
+"""
+
+# 版权协议配置
+# enable: 是否在文章底部显示版权信息
+# license_name: 许可协议名称，例如 "CC BY-NC-SA 4.0"
+# license_url: 许可协议链接
+[extra.copyright]
+enable = true
+license_name = "CC BY-NC-SA 4.0"
+license_url = "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+
+# 评论系统配置
+[extra.comment]
+enable = false # 是否启用评论
+type = "giscus" # 评论系统类型，目前支持 "giscus"
+
+# giscus 具体配置
+[extra.comment.giscus]
+repo = "yourname/repo" # 仓库名
+repo_id = "xxx" # 仓库 ID
+category = "General" # 讨论类别
+category_id = "xxx" # 讨论类别 ID
+mapping = "pathname" # 页面与讨论的映射关系
+strict = "0" # 严格模式
+reactions_enabled = "1" # 是否启用表情回应
+emit_metadata = "0" # 是否导出元数据
+input_position = "bottom" # 输入框位置
+theme = "preferred_color_scheme" # 评论主题
+lang = "zh-CN" # 语言

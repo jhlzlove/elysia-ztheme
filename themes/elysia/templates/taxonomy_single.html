@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ term.name }} | {{ config.title }}{% endblock %}
+
+{% block content %}
+<nav class="post-nav-bar">
+    <a class="post-nav-item" href="/">近期发布</a>
+    <a class="post-nav-item" href="/categories/">分类</a>
+    <a class="post-nav-item" href="/tags/">标签</a>
+    <a class="post-nav-item" href="/archive/">归档</a>
+    <a class="post-nav-item" href="/rss/">RSS 订阅</a>
+</nav>
+<div class="tax-single-header">
+    {% if taxonomy.name == 'tags' %}
+    <span class="tax-single-icon">🏷️</span>#{{ term.name }}
+    {% else %}
+    <span class="tax-single-icon">📁</span>{{ term.name }}
+    {% endif %}
+    <span class="tax-single-count">{{ term.pages | length }} 篇</span>
+</div>
+<div class="post-list">
+    {% for page in term.pages %}
+    <a class="post-item-link" href="{{ page.permalink }}">
+        <article class="post-item">
+            <h2>{{ page.title }}</h2>
+            <div class="post-meta">
+                <span class="meta-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <time datetime="{{ page.date }}">{{ page.date | date(format="%Y-%m-%d") }}</time>
+                </span>
+            </div>
+        </article>
+    </a>
+    {% endfor %}
+</div>
+{% endblock content %}

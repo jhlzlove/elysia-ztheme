@@ -1,0 +1,46 @@
+{%- set _autoplay = autoplay | default(value="false") -%}
+{%- set _autoplay = _autoplay == true or _autoplay == "true" -%}
+{%- set _width = width | default(value="100%") -%}
+{%- set _caption = caption | default(value="") -%}
+
+<figure class="sc-video-wrap" style="max-width: {{ _width }};">
+{%- if bilibili %}
+  {%- set bv = bilibili | upper -%}
+  {%- if bv is starting_with("AV") %}
+    {%- set aid = bv | replace(from="AV", to="") -%}
+    {%- set embed_url = "https://player.bilibili.com/player.html?aid=" ~ aid ~ "&page=1&high_quality=1&danmaku=0&autoplay=0" -%}
+  {%- else %}
+    {%- set embed_url = "https://player.bilibili.com/player.html?bvid=" ~ bilibili ~ "&page=1&high_quality=1&danmaku=0&autoplay=0" -%}
+  {%- endif %}
+  {%- if _autoplay %}
+    {%- set embed_url = embed_url | replace(from="&autoplay=0", to="&autoplay=1") -%}
+  {%- endif %}
+  <div class="sc-video-iframe-wrap">
+    <iframe src="{{ embed_url }}"
+      scrolling="no" border="0" frameborder="no" framespacing="0"
+      allowfullscreen="true" allow="autoplay; fullscreen"></iframe>
+  </div>
+{%- elif youtube %}
+  {%- set embed_url = "https://www.youtube.com/embed/" ~ youtube -%}
+  {%- if _autoplay %}
+    {%- set embed_url = embed_url ~ "?autoplay=1" -%}
+  {%- endif %}
+  <div class="sc-video-iframe-wrap">
+    <iframe src="{{ embed_url }}"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen></iframe>
+  </div>
+{%- elif src %}
+  <video class="sc-video-native"
+    controls
+    {%- if _autoplay %} autoplay muted{%- endif %}
+    preload="metadata">
+    <source src="{{ src }}">
+    您的浏览器不支持 video 标签。
+  </video>
+{%- endif %}
+{%- if _caption %}
+  <figcaption class="sc-video-caption">{{ _caption }}</figcaption>
+{%- endif %}
+</figure>

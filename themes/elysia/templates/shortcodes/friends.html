@@ -1,0 +1,29 @@
+{% set data_yaml = load_data(path="data/friends.yaml", required=false) %}
+{% set data_yml = load_data(path="data/friends.yml", required=false) %}
+{% set data = data_yaml | default(value=data_yml) %}
+{% set def_yaml = load_data(path="data/default.yaml", required=false) %}
+{% set def_yml = load_data(path="data/default.yml", required=false) %}
+{% set def = def_yaml | default(value=def_yml) %}
+{% set def_avatars = def.avatar | default(value=["/avatar.png"]) %}
+{% set def_avatar_count = def_avatars | length %}
+{% if group and data[group] %}
+{% set items = data[group] %}
+{% else %}
+{% set items = [] %}
+{% endif %}
+{% if items %}
+<div class="friends-grid">
+    {% for item in items %}
+    {% set default_avatar = def_avatars | nth(n=loop.index0 % def_avatar_count) | default(value="/avatar.png") %}
+    <a class="friend-card" href="{{ item.url | safe }}" target="_blank" rel="noopener noreferrer" title="{{ item.desc | default(value='') }}">
+        <div class="friend-avatar">
+            <img src="{{ item.icon | default(value=default_avatar) | safe }}" alt="{{ item.name }}">
+        </div>
+        <div class="friend-name">{{ item.name }}</div>
+        {% if item.desc %}
+        <div class="friend-desc">{{ item.desc }}</div>
+        {% endif %}
+    </a>
+    {% endfor %}
+</div>
+{% endif %}

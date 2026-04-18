@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% set posts_section = get_section(path="post/_index.md") %}
+{% set pinned = posts_section.pages | filter(attribute="extra.pinned", value=true) %}
+{% set pinned_permalinks = pinned | map(attribute="permalink") %}
+
+<nav class="post-nav-bar">
+    <a class="post-nav-item" href="/">近期发布</a>
+    <a class="post-nav-item" href="/categories/">分类</a>
+    <a class="post-nav-item" href="/tags/">标签</a>
+    <a class="post-nav-item" href="/archive/">归档</a>
+    <a class="post-nav-item" href="/rss/">RSS 订阅</a>
+</nav>
+
+<div class="post-list">
+    {% for page in pinned %}
+    <a class="post-item-link" href="{{ page.permalink }}">
+        <article class="post-item post-item-pinned{% if page.extra.cover %} has-cover{% endif %}">
+            <div class="post-item-body">
+            <span class="pin-badge">📌 置顶</span>
+            <h2>{{ page.title }}</h2>
+            <div class="post-summary">
+                {% if page.summary %}
+                    {{ page.summary | safe }}
+                {% else %}
+                    {{ page.content | striptags | truncate(length=config.extra.truncate_at | default(value=100)) }}
+                {% endif %}
+            </div>
+            <div class="post-meta">
+                <span class="meta-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <time datetime="{{ page.date }}">{{ page.date | date(format="%Y年%-m月%-d日") }}</time>
+                </span>
+                {% if page.taxonomies.categories %}
+                {% for cat in page.taxonomies.categories %}
+                <a class="meta-item meta-category-inline" href="{{ get_taxonomy_url(kind='categories', name=cat) }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    {{ cat }}
+                </a>
+                {% endfor %}
+                {% endif %}
+            </div>
+            </div>{% if page.extra.cover %}<div class="post-item-cover"><img src="{{ page.extra.cover }}" alt="{{ page.title }}"></div>{% endif %}
+        </article>
+    </a>
+    {% endfor %}
+    {% for page in posts_section.pages | slice(end=posts_section.paginate_by) %}
+    {% if not page.extra.pinned %}
+    <a class="post-item-link" href="{{ page.permalink }}">
+        <article class="post-item{% if page.extra.cover %} has-cover{% endif %}">
+            <div class="post-item-body">
+            <h2>{{ page.title }}</h2>
+            <div class="post-summary">
+                {% if page.summary %}
+                    {{ page.summary | safe }}
+                {% else %}
+                    {{ page.content | striptags | truncate(length=config.extra.truncate_at | default(value=100)) }}
+                {% endif %}
+            </div>
+            <div class="post-meta">
+                <span class="meta-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <time datetime="{{ page.date }}">{{ page.date | date(format="%Y年%-m月%-d日") }}</time>
+                </span>
+                {% if page.taxonomies.categories %}
+                {% for cat in page.taxonomies.categories %}
+                <a class="meta-item meta-category-inline" href="{{ get_taxonomy_url(kind='categories', name=cat) }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    {{ cat }}
+                </a>
+                {% endfor %}
+                {% endif %}
+            </div>
+            </div>{% if page.extra.cover %}<div class="post-item-cover"><img src="{{ page.extra.cover }}" alt="{{ page.title }}"></div>{% endif %}
+        </article>
+    </a>
+    {% endif %}
+    {% endfor %}
+</div>
+
+{% set total_posts = posts_section.pages | length %}
+{% set per_page = posts_section.paginate_by %}
+{% set total_pages = (total_posts / per_page) | round(method="ceil") | int %}
+{% set base_url = get_url(path='post') ~ "/page/" %}
+
+{% if total_pages > 1 %}
+<nav class="pagination">
+    <span class="page-btn prev disabled">‹</span>
+
+    {% if total_pages <= 5 %}
+        {% for i in range(start=1, end=total_pages+1) %}
+            {% if i == 1 %}
+                <span class="page-btn active">{{ i }}</span>
+            {% else %}
+                <a class="page-btn" href="{{ base_url }}{{ i }}/">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        {% for i in range(start=1, end=5) %}
+            {% if i == 1 %}
+                <span class="page-btn active">{{ i }}</span>
+            {% else %}
+                <a class="page-btn" href="{{ base_url }}{{ i }}/">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+        <span class="page-btn ellipsis">…</span>
+        <a class="page-btn" href="{{ base_url }}{{ total_pages }}/">{{ total_pages }}</a>
+    {% endif %}
+
+    {% if total_pages > 1 %}
+    <a class="page-btn next" href="{{ base_url }}2/">›</a>
+    {% else %}
+    <span class="page-btn next disabled">›</span>
+    {% endif %}
+</nav>
+{% endif %}
+{% endblock content %}
