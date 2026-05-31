@@ -1,9 +1,9 @@
-hahaha:
-  - name: jhlzlove
-    url: https://jhlzlove.github.io
-    desc:
-    icon: https://jhlzlove.github.io/favicon.ico
+developer:
   - name: github
     url: https://github.com/
+    icon: https://github.com/favicon.ico
+    desc: github
+  - name: jhlzlove
+    url: https://jhlzlove.github.io/
+    icon:
     desc:
-    icon: https://github.githubassets.com/favicons/favicon.svg

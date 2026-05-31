@@ -5,4 +5,4 @@ template = "friends.html"
 path = "friend"
 +++
 
-{{ friends(group="hahaha") }}
+{{ friends(group="developer") }}

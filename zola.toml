@@ -125,7 +125,7 @@ enable = true
 license_name = "CC BY-NC-SA 4.0"
 license_url = "https://creativecommons.org/licenses/by-nc-sa/4.0/"
 
-# 评论系统配置
+# 评论系统配置，目前只支持 giscus
 [extra.comment]
 enable = false # 是否启用评论
 type = "giscus" # 评论系统类型，目前支持 "giscus"
@@ -143,3 +143,7 @@ emit_metadata = "0" # 是否导出元数据
 input_position = "bottom" # 输入框位置
 theme = "preferred_color_scheme" # 评论主题
 lang = "zh-CN" # 语言
+
+[extra.theme]
+name = "elysia"
+version = "0.0.1"

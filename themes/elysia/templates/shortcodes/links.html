@@ -6,10 +6,13 @@
 {% set def = def_yaml | default(value=def_yml) %}
 {% set def_covers = def.cover | default(value=["/images/default_cover.png"]) %}
 {% set def_cover_count = def_covers | length %}
+{% set def_icons = def.icon | default(value=["/images/default_icon.ico"]) %}
+{% set def_icon_count = def_icons | length %}
 {% if data[group] %}
 <div class="links-grid">
     {% for item in data[group] %}
     {% set default_cover = def_covers | nth(n=loop.index0 % def_cover_count) | default(value="/images/default_cover.png") %}
+    {% set default_icon = def_icons | nth(n=loop.index0 % def_icon_count) | default(value="/images/default_icon.ico") %}
     <a class="links-card" href="{{ item.url | safe }}" target="_blank" rel="noopener noreferrer">
         <div class="links-cover">
             {% set _cover = item.cover | default(value=default_cover) %}
@@ -20,12 +23,11 @@
             {% endif %}
         </div>
         <div class="links-info">
-            {% if item.icon %}
-            {% if item.icon is starting_with("http") %}
-            <img class="links-icon" src="{{ item.icon | safe }}" alt="">
+            {% set _icon = item.icon | default(value=default_icon) %}
+            {% if _icon is starting_with("http") %}
+            <img class="links-icon" src="{{ _icon | safe }}" alt="">
             {% else %}
-            <img class="links-icon" src="{{ get_url(path=item.icon) }}" alt="">
-            {% endif %}
+            <img class="links-icon" src="{{ get_url(path=_icon) }}" alt="">
             {% endif %}
             <div class="links-text">
                 <div class="links-title">{{ item.title }}</div>

@@ -4,7 +4,11 @@
     <a href="{{ href | safe }}"{% if is_external %} target="_blank" rel="noopener noreferrer"{% endif %}>
         {% if icon %}
         <div class="link-icon">
-            <img src="{{ icon }}" alt="">
+            {% if icon is starting_with("http") %}
+            <img src="{{ icon | safe }}" alt="">
+            {% else %}
+            <img src="{{ get_url(path=icon) }}" alt="">
+            {% endif %}
         </div>
         {% elif need_api %}
         <div class="link-icon link-icon-placeholder"></div>

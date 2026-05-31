@@ -9,4 +9,9 @@ github:
     icon: https://dbeaver.io/favicon.ico
     cover: /images/default_cover.png
     desc: Free multi-platform database tool
+  - title: jhlzlove
+    url: https://jhlzlove.github.io/
+    icon:
+    cover:
+    desc: Free multi-platform database tool
 
