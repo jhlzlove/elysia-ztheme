@@ -1,21 +1,11 @@
 name = "elysia"
-description = "zola theme"
+description = "Elysia — Modern minimalist Zola theme. Clean, readable, palette-rich. Reading is enjoyment."
+homepage = "https://github.com/example/elysia"
 license = "MIT"
-homepage = "https://github.com/jhlzlove/elysia-theme"
-demo = "https://github.com/jhlzlove/elysia-theme"
-min_version = "0.22.1"
-
+min_version = "0.23.4"
+author = "Elysia"
 
 [extra]
-show_word_count = true
-show_reading_time = true
-
-date_format = "%a %b %e, %Y"
-
-home = "home"
-
-sam_bottom_menu = true
-
-[author]
-name = "jhlzlove"
-homepage = "https://jhlzlove.github.io"
+# Default extra values (mirrored in zola.toml for site)
+avatar = "/avatar.jpg"
+site_motto = "清风徐来，水波不兴。"

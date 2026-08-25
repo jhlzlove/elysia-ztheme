@@ -1,170 +1,283 @@
 {% extends "base.html" %}
 
+{% block title %}{{ page.title }} — {{ config.title }}{% endblock title %}
+
+{% block head %}
+  {% if page.extra.style %}<meta name="elysia-style" content="{{ page.extra.style }}">{% endif %}
+  <meta property="og:title" content="{{ page.title }}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="{{ page.permalink | safe }}">
+  {% if page.description %}<meta property="og:description" content="{{ page.description }}">{% endif %}
+{% endblock head %}
+
 {% block content %}
-<article class="post-content">
-    <h1>{{ page.title }}</h1>
-    <div class="post-meta">
-        <time datetime="{{ page.date }}">{{ page.date | date(format="%Y-%m-%d") }}</time>
-        <span class="meta-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-            {{ page.word_count }} 字
-        </span>
-        <span class="meta-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            {{ page.reading_time }} 分钟
-        </span>
-    </div>
-    <div class="content">
-        {{ page.content | safe }}
-    </div>
-</article>
+<div class="content-area">
+  <div class="content-area__primary">
+    <article class="article" data-page-style="{{ page.extra.style | default(value="blog") }}">
+      <header class="article__header">
+        <div class="article__kicker">
+          {% if page.extra.sticky or page.extra.top or page.extra.pinned %}
+            <span class="post-card__pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 2l2.4 7.2H22l-6.2 4.5 2.4 7.3L12 17l-6.2 4 2.4-7.3L2 9.2h7.6z"/></svg> 置顶</span>
+          {% endif %}
+          {% if page.extra.encrypted %}
+            <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 加密</span>
+          {% endif %}
+          {% if page.taxonomies.categories %}
+            {% for cat in page.taxonomies.categories %}<span class="tag tag--category">{{ cat }}</span>{% endfor %}
+          {% endif %}
+          {% if page.taxonomies.tags %}
+            {% for tag in page.taxonomies.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+          {% endif %}
+        </div>
+        <h1 class="article__title">{{ page.title }}</h1>
+        <div class="article__meta">
+          {% if page.date %}<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> {{ page.date | date(format="%Y-%m-%d") }}</span>{% endif %}
+          {% if page.updated %}<span>更新于 {{ page.updated | date(format="%Y-%m-%d") }}</span>{% endif %}
+          {% if config.extra.features.show_reading_time %}<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg> {{ page.reading_time }} 分钟 · {{ page.word_count }} 字</span>{% endif %}
+          {% if page.extra.author %}<span>作者 {{ page.extra.author }}</span>{% endif %}
+        </div>
+      </header>
 
-{% if config.extra.copyright and config.extra.copyright.enable %}
-<div class="post-copyright">
-    <div class="copyright-item">
-        <span class="copyright-icon">👤</span>
-        <span class="copyright-label">本文作者：</span>
-        <span class="copyright-value">{{ config.author }}</span>
-    </div>
-    <div class="copyright-item">
-        <span class="copyright-icon">🔗</span>
-        <span class="copyright-label">本文链接：</span>
-        <a class="copyright-value" href="{{ page.permalink }}">{{ page.permalink }}</a>
-    </div>
-    <div class="copyright-item">
-        <span class="copyright-icon">📝</span>
-        <span class="copyright-label">本文标题：</span>
-        <span class="copyright-value">{{ page.title }}</span>
-    </div>
-    <div class="copyright-item">
-        <span class="copyright-icon">©</span>
-        <span class="copyright-label">本文版权：</span>
-        <span class="copyright-value">本博客所有文章除特别声明外，均采用 <a href="{{ config.extra.copyright.license_url }}" target="_blank" rel="noopener">{{ config.extra.copyright.license_name }}</a> 许可协议，转载请注明出处！</span>
-    </div>
-</div>
-{% endif %}
+      {# ── Encrypted wrapper ── #}
+      {% set is_encrypted = page.extra.encrypted | default(value=false) %}
+      {% if is_encrypted %}
+        <div class="encrypted" id="encryptedBox" data-password="{{ page.extra.password | default(value="") | safe }}" data-hint="{{ page.extra.password_hint | default(value="") | safe }}">
+          <div class="encrypted__icon">🔒</div>
+          <div class="encrypted__title">文章已加密</div>
+          <div class="encrypted__desc">请输入密码以查看正文{% if page.extra.password_hint %}（提示：{{ page.extra.password_hint }}）{% endif %}</div>
+          <form class="encrypted__form" id="encryptedForm" onsubmit="return false">
+            <input class="encrypted__input" id="encryptedInput" type="password" placeholder="输入密码" autocomplete="off" aria-label="密码">
+            <button class="encrypted__btn" id="encryptedBtn" type="submit">解锁</button>
+          </form>
+          <div class="encrypted__error" id="encryptedError">密码错误，请重试</div>
+        </div>
+        <div class="article__content" id="articleContent" hidden>
+          {{ page.content | safe }}
+        </div>
+      {% else %}
+        <div class="article__content" id="articleContent">
+          {{ page.content | safe }}
+        </div>
+      {% endif %}
+    </article>
 
-{% if page.lower or page.higher %}
-<nav class="post-nav">
-    <div class="post-nav-item post-nav-prev">
-        {% if page.higher %}
-        <a href="{{ page.higher.permalink }}" class="post-nav-link">
-            <span class="post-nav-label">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                上一篇
-            </span>
-            <span class="post-nav-title">{{ page.higher.title }}</span>
-        </a>
-        {% endif %}
-    </div>
-    <div class="post-nav-item post-nav-next">
-        {% if page.lower %}
-        <a href="{{ page.lower.permalink }}" class="post-nav-link">
-            <span class="post-nav-label">
-                下一篇
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="9 18 15 12 9 6"></polyline></svg>
-            </span>
-            <span class="post-nav-title">{{ page.lower.title }}</span>
-        </a>
-        {% endif %}
-    </div>
-</nav>
-{% endif %}
-{% if config.extra.comment and config.extra.comment.enable %}
-<div class="comment-container">
-    {% if config.extra.comment.type == "giscus" %}
-    <div class="giscus-container">
-        <script src="https://giscus.app/client.js"
-            data-repo="{{ config.extra.comment.giscus.repo }}"
-            data-repo-id="{{ config.extra.comment.giscus.repo_id }}"
-            data-category="{{ config.extra.comment.giscus.category }}"
-            data-category-id="{{ config.extra.comment.giscus.category_id }}"
-            data-mapping="{{ config.extra.comment.giscus.mapping | default(value='pathname') }}"
-            data-strict="{{ config.extra.comment.giscus.strict | default(value='0') }}"
-            data-reactions-enabled="{{ config.extra.comment.giscus.reactions_enabled | default(value='1') }}"
-            data-emit-metadata="{{ config.extra.comment.giscus.emit_metadata | default(value='0') }}"
-            data-input-position="{{ config.extra.comment.giscus.input_position | default(value='bottom') }}"
-            data-theme="{{ config.extra.comment.giscus.theme | default(value='preferred_color_scheme') }}"
-            data-lang="{{ config.extra.comment.giscus.lang | default(value='zh-CN') }}"
-            crossorigin="anonymous"
-            async>
-        </script>
-    </div>
-    {% elif config.extra.comment.type == "utterances" %}
-    <div class="utterances-container">
-        <script src="https://utteranc.es/client.js"
-            repo="{{ config.extra.comment.utterances.repo }}"
-            issue-term="{{ config.extra.comment.utterances.issue_term | default(value='pathname') }}"
-            theme="{{ config.extra.comment.utterances.theme | default(value='github-light') }}"
-            crossorigin="anonymous"
-            async>
-        </script>
+    {# ── Backlinks / neighbours ── #}
+    {% if page.lower or page.higher %}
+    <div class="post-nav">
+      {% if page.lower %}<a class="post-card post-nav__card" href="{{ page.lower.permalink | safe }}"><div class="post-nav__label">上一篇</div><div class="post-nav__title">{{ page.lower.title }}</div></a>{% endif %}
+      {% if page.higher %}<a class="post-card post-nav__card post-nav__card--next" href="{{ page.higher.permalink | safe }}"><div class="post-nav__label">下一篇</div><div class="post-nav__title">{{ page.higher.title }}</div></a>{% endif %}
     </div>
     {% endif %}
-</div>
-{% endif %}
-{% endblock content %}
 
-{% block sidebar %}
-<section class="widget profile">
-    <div class="content">
-        {% if config.extra.sidebar.logo %}
-        <div class="avatar">
-            <a href="{{ get_url(path='/') | safe }}">
-                <img src="{{ get_url(path=config.extra.sidebar.logo) | safe }}" alt="avatar">
-            </a>
+    {# ── Comments — unified provider: giscus | artalk | waline | none ── #}
+    {% set comments_disabled_by_page = false %}
+    {% if page.extra.comments is defined and page.extra.comments == false %}{% set_global comments_disabled_by_page = true %}{% endif %}
+    {% set comments_global_enabled = true %}
+    {% if config.extra.comments and config.extra.comments.enable is defined and config.extra.comments.enable == false %}{% set_global comments_global_enabled = false %}{% endif %}
+    {% if not comments_disabled_by_page and comments_global_enabled %}
+      {# decide provider — enable 统一在 [extra.comments]，各系统不再单独 enable #}
+      {% if config.extra.comments and config.extra.comments.provider is defined and config.extra.comments.provider != "" %}
+        {% set provider = config.extra.comments.provider | lower %}
+      {% elif config.extra.artalk and config.extra.artalk.server is defined and config.extra.artalk.server != "" %}
+        {% set provider = "artalk" %}
+      {% elif config.extra.waline and config.extra.waline.serverURL is defined and config.extra.waline.serverURL != "" %}
+        {% set provider = "waline" %}
+      {% elif config.extra.giscus and config.extra.giscus.repo is defined and config.extra.giscus.repo != "" and config.extra.giscus.repo != "user/repo" %}
+        {% set provider = "giscus" %}
+      {% else %}
+        {% set provider = "none" %}
+      {% endif %}
+
+      {% if provider == "giscus" and config.extra.giscus and config.extra.giscus.repo is defined and config.extra.giscus.repo != "" %}
+      <div class="comment-wrap giscus-wrap">
+        {% if config.extra.comments and config.extra.comments.comment_title %}<div class="comment-title">{{ config.extra.comments.comment_title }}</div>{% endif %}
+        <div class="giscus" id="giscus-mount"></div>
+        <script src="https://giscus.app/client.js"
+                data-repo="{{ config.extra.giscus.repo }}"
+                data-repo-id="{{ config.extra.giscus.repo_id }}"
+                data-category="{{ config.extra.giscus.category }}"
+                data-category-id="{{ config.extra.giscus.category_id }}"
+                data-mapping="{{ config.extra.giscus.mapping | default(value="pathname") }}"
+                data-strict="{{ config.extra.giscus.strict | default(value="0") }}"
+                data-reactions-enabled="{{ config.extra.giscus.reactions_enabled | default(value="1") }}"
+                data-emit-metadata="{{ config.extra.giscus.emit_metadata | default(value="0") }}"
+                data-input-position="{{ config.extra.giscus.input_position | default(value="bottom") }}"
+                data-theme="{{ config.extra.giscus.theme | default(value="preferred_color_scheme") }}"
+                data-lang="{{ config.extra.giscus.lang | default(value="zh-CN") }}"
+                crossorigin="anonymous" async>
+        </script>
+      </div>
+      {% elif provider == "artalk" and config.extra.artalk and config.extra.artalk.server is defined and config.extra.artalk.server != "" %}
+      <div class="comment-wrap artalk-wrap">
+        {% if config.extra.comments and config.extra.comments.comment_title %}<div class="comment-title">{{ config.extra.comments.comment_title }}</div>{% endif %}
+        <div id="artalk"></div>
+        <script>
+          window.ARTALK_CONFIG = {
+            server: "{{ config.extra.artalk.server | safe }}",
+            site: "{{ config.extra.artalk.site | default(value=config.title) | safe }}",
+            placeholder: "{{ config.extra.artalk.placeholder | default(value="") | safe }}",
+            noComment: "{{ config.extra.artalk.no_comment | default(value="") | safe }}",
+            pageKey: "{{ config.extra.artalk.page_key | default(value="") | safe }}" || location.pathname,
+            gravatarMirror: "{{ config.extra.artalk.gravatar_mirror | default(value="") | safe }}",
+            avatarMirror: "{{ config.extra.artalk.avatar_mirror | default(value="") | safe }}"
+          };
+        </script>
+      </div>
+      {% elif provider == "waline" and config.extra.waline and config.extra.waline.serverURL is defined and config.extra.waline.serverURL != "" %}
+      <div class="comment-wrap waline-wrap">
+        {% if config.extra.comments and config.extra.comments.comment_title %}<div class="comment-title">{{ config.extra.comments.comment_title }}</div>{% endif %}
+        <div id="waline"></div>
+        <script>
+          window.WALINE_CONFIG = {
+            serverURL: "{{ config.extra.waline.serverURL | safe }}",
+            lang: "{{ config.extra.waline.lang | default(value="zh-CN") | safe }}",
+            dark: "{{ config.extra.waline.dark | default(value="auto") | safe }}",
+            login: "{{ config.extra.waline.login | default(value="enable") | safe }}",
+            placeholder: "{{ config.extra.waline.placeholder | default(value="") | safe }}"
+          };
+          {% if config.extra.waline.emoji %}{% set ej = config.extra.waline.emoji %}window.WALINE_CONFIG.emoji = [{% for e in ej %}"{{ e | safe }}"{% if not loop.last %},{% endif %}{% endfor %}];{% endif %}
+          window.WALINE_CONFIG.meta = [{% for m in config.extra.waline.meta | default(value=["nick","mail","link"]) %}"{{ m }}"{% if not loop.last %},{% endif %}{% endfor %}];
+          window.WALINE_CONFIG.requiredMeta = [{% for m in config.extra.waline.requiredMeta | default(value=["nick","mail"]) %}"{{ m }}"{% if not loop.last %},{% endif %}{% endfor %}];
+        </script>
+      </div>
+      {% endif %}
+    {% endif %}
+  </div>
+
+  {# ── TOC aside: series nav above article TOC ── #}
+  <aside class="toc-aside" id="tocAside" aria-label="Table of contents">
+    {% if page.extra.series %}
+      {% set series_name = page.extra.series %}
+      {% set series_title = page.extra.series_title | default(value=series_name) %}
+      {% set parent_path = page.ancestors | last %}
+      {% if parent_path %}
+        {% set parent = get_section(path=parent_path) %}
+        {% if parent and parent.pages | length > 1 %}
+        <div class="series-nav" style="margin-bottom:14px">
+          <div class="series-nav__head">
+            <span class="series-nav__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            </span>
+            <span class="series-nav__title">系列：{{ series_title }}</span>
+            <span class="series-nav__count">{{ parent.pages | length }} 篇</span>
+          </div>
+          <ol class="series-nav__list">
+            {% for p in parent.pages %}
+              <li class="series-nav__item {% if p.permalink == page.permalink %}is-current{% endif %}">
+                <a href="{{ p.permalink | safe }}">
+                  <span class="series-nav__index">{{ loop.index }}</span>
+                  <span class="series-nav__item-title">{{ p.title }}</span>
+                  {% if p.permalink == page.permalink %}<span class="series-nav__here">· 正在阅读</span>{% endif %}
+                </a>
+              </li>
+            {% endfor %}
+          </ol>
+          <div class="series-nav__progress">
+            {% set cur_idx = 0 %}
+            {% for p in parent.pages %}
+              {% if p.permalink == page.permalink %}{% set_global cur_idx = loop.index %}{% endif %}
+            {% endfor %}
+            <div class="series-nav__bar"><div class="series-nav__bar-fill" style="width: {{ cur_idx * 100 / (parent.pages | length) }}%"></div></div>
+            <span class="series-nav__step">{{ cur_idx }} / {{ parent.pages | length }}</span>
+          </div>
         </div>
         {% endif %}
-        <h2 class="title">{{ config.title }}</h2>
-        <p class="desc">{{ config.description }}</p>
-        <nav class="nav-menu">
-            {% for item in config.extra.menu %}
-            <a class="nav-item {% if current_url and (current_url == get_url(path=item.url, trailing_slash=false) or (current_url == get_url(path=item.url, trailing_slash=true))) %}active{% endif %}" href="{{ get_url(path=item.url) | safe }}">
-                {{ item.name }}
-            </a>
-            {% endfor %}
-        </nav>
-    </div>
-</section>
-
-{% if page.toc %}
-{% set toc_depth = config.extra.toc_depth | default(value=4) %}
-<section class="widget toc-widget" id="toc-widget">
-    <div class="content">
-        <h3 class="widget-title">目录</h3>
-        <nav class="toc-nav">
-            <ul>
-            {% for h1 in page.toc %}
-                <li><a href="{{ h1.permalink }}">{{ h1.title }}</a>
-                {% if h1.children and h1.level < toc_depth %}
-                <ul>
-                    {% for h2 in h1.children %}
-                    <li><a href="{{ h2.permalink }}">{{ h2.title }}</a>
-                    {% if h2.children and h2.level < toc_depth %}
-                    <ul>
-                        {% for h3 in h2.children %}
-                        <li><a href="{{ h3.permalink }}">{{ h3.title }}</a>
-                        {% if h3.children and h3.level < toc_depth %}
-                        <ul>
-                            {% for h4 in h3.children %}
-                            <li><a href="{{ h4.permalink }}">{{ h4.title }}</a></li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                        </li>
-                        {% endfor %}
-                    </ul>
+      {% endif %}
+    {% endif %}
+    {% if config.extra.features.toc | default(value=true) and page.toc | length > 0 %}
+    <nav class="toc" id="toc">
+      <div class="toc__title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h7"/></svg> 目录</div>
+      <ol class="toc__list">
+        {% for h1 in page.toc %}
+          <li>
+            <a href="{{ h1.permalink | safe }}">{{ h1.title }}</a>
+            {% if h1.children %}
+              <ol class="toc__list toc__list--h3">
+                {% for h2 in h1.children %}
+                  <li><a href="{{ h2.permalink | safe }}">{{ h2.title }}</a>
+                    {% if h2.children %}
+                      <ol class="toc__list toc__list--h4">
+                        {% for h3 in h2.children %}<li><a href="{{ h3.permalink | safe }}">{{ h3.title }}</a></li>{% endfor %}
+                      </ol>
                     {% endif %}
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-                </li>
-            {% endfor %}
-            </ul>
-        </nav>
-    </div>
-</section>
-{% endif %}
+                  </li>
+                {% endfor %}
+              </ol>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+    </nav>
+    {% endif %}
+  </aside>
+</div>
+{% endblock content %}
 
-{% endblock sidebar %}
+{% block scripts %}
+{# Re-evaluate provider for script loading — enable 统一在 [extra.comments] #}
+{% set _provider = "" %}
+{% set _comments_enabled = true %}
+{% if config.extra.comments and config.extra.comments.enable is defined and config.extra.comments.enable == false %}{% set_global _comments_enabled = false %}{% endif %}
+{% if config.extra.comments and config.extra.comments.provider is defined and config.extra.comments.provider != "" %}
+  {% set_global _provider = config.extra.comments.provider | lower %}
+{% elif config.extra.artalk and config.extra.artalk.server is defined and config.extra.artalk.server != "" %}
+  {% set_global _provider = "artalk" %}
+{% elif config.extra.waline and config.extra.waline.serverURL is defined and config.extra.waline.serverURL != "" %}
+  {% set_global _provider = "waline" %}
+{% elif config.extra.giscus and config.extra.giscus.repo is defined and config.extra.giscus.repo != "" and config.extra.giscus.repo != "user/repo" %}
+  {% set_global _provider = "giscus" %}
+{% else %}
+  {% set_global _provider = "none" %}
+{% endif %}
+{% if not _comments_enabled %}{% set_global _provider = "none" %}{% endif %}
+{% set _page_comments_off = false %}
+{% if page.extra.comments is defined and page.extra.comments == false %}{% set_global _page_comments_off = true %}{% endif %}
+{% if not _page_comments_off and _comments_enabled %}
+  {# giscus 已在 content 块内通过 <script> 同步渲染，无需在此重复加载 #}
+  {% if _provider == "artalk" and config.extra.artalk and config.extra.artalk.server is defined and config.extra.artalk.server != "" %}
+<link rel="stylesheet" href="https://unpkg.com/artalk@2/dist/Artalk.css">
+<script src="https://unpkg.com/artalk@2/dist/Artalk.js" defer></script>
+<script defer>
+document.addEventListener('DOMContentLoaded', function(){
+  if(window.Artalk && window.ARTALK_CONFIG){
+    try{
+      var cfg = window.ARTALK_CONFIG;
+      Artalk.init({
+        el: '#artalk',
+        pageKey: cfg.pageKey || location.pathname,
+        pageTitle: document.title,
+        server: cfg.server,
+        site: cfg.site || document.title,
+        placeholder: cfg.placeholder || '',
+        noComment: cfg.noComment || '',
+        gravatar: { mirror: cfg.gravatarMirror || '' },
+        avatarURL: cfg.avatarMirror || ''
+      });
+    }catch(e){ console.error('Artalk init failed', e); }
+  }
+});
+</script>
+  {% elif _provider == "waline" and config.extra.waline and config.extra.waline.serverURL is defined and config.extra.waline.serverURL != "" %}
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css">
+<script type="module">
+import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+document.addEventListener('DOMContentLoaded', function(){
+  var c = window.WALINE_CONFIG || {};
+  try{
+    init({
+      el: '#waline',
+      serverURL: c.serverURL,
+      lang: c.lang || 'zh-CN',
+      dark: c.dark === 'auto' ? 'html[data-theme="dark"]' : c.dark,
+      emoji: c.emoji,
+      meta: c.meta,
+      requiredMeta: c.requiredMeta,
+      login: c.login || 'enable',
+      placeholder: c.placeholder || undefined
+    });
+  }catch(e){ console.error('Waline init failed', e); }
+});
+</script>
+  {% endif %}
+{% endif %}
+{% endblock scripts %}
