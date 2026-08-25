@@ -1,0 +1,63 @@
+{# Elysia Components — Tera components for Zola 0.23+ #}
+{% component note(title = "", color = "blue") -%}
+{% set c = color | lower -%}
+{% set cls = "blue" -%}
+{% if c == "red" %}{% set cls = "red" -%}
+{% elif c == "green" %}{% set cls = "green" -%}
+{% elif c == "yellow" %}{% set cls = "yellow" -%}
+{% elif c == "orange" %}{% set cls = "orange" -%}
+{% elif c == "black" %}{% set cls = "black" -%}
+{% elif c == "blue" %}{% set cls = "blue" -%}
+{% endif -%}
+<div class="callout callout--{{ cls }}" role="note" data-component="note">{% if title %}<div class="callout__head"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm6.5-.25A.75.75 0 0 1 7 8v2.5a.75.75 0 0 1-1.5 0V8A.75.75 0 0 1 6.5 7.75zm0-2.75A.75.75 0 1 1 8 4a.75.75 0 0 1-1.5.75z"/></svg><span>{{ title }}</span></div>{% endif %}<div class="callout__body">{{ body | markdown | safe }}</div></div>
+{% endcomponent note -%}
+
+{% component video(bilibili = "", youtube = "", src = "", width = "100%", caption = "") -%}
+{% set w = width | default(value="100%") -%}
+<div class="video-wrap" style="width:{{ w }};max-width:100%;margin-left:auto;margin-right:auto" data-component="video">{% if bilibili %}<iframe src="https://player.bilibili.com/player.html?bvid={{ bilibili }}&high_quality=1&danmaku=0&autoplay=0" scrolling="no" frameborder="no" allowfullscreen loading="lazy" title="bilibili video {{ bilibili }}"></iframe>{% elif youtube %}<iframe src="https://www.youtube.com/embed/{{ youtube }}?autoplay=0" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy" title="youtube video {{ youtube }}"></iframe>{% elif src %}<video src="{{ src | safe }}" controls preload="metadata" playsinline style="width:100%;display:block;background:#000"></video>{% endif %}{% if caption %}<div class="video-wrap__caption">{{ caption }}</div>{% endif %}</div>
+{% endcomponent video -%}
+
+{% component image(src, width = "", alt = "", caption = "") -%}
+<figure class="figure" data-component="image"><img src="{{ src | safe }}" alt="{{ alt | default(value=caption) | default(value=src) }}" {% if width %}style="width:{{ width }};max-width:100%;"{% endif %} loading="lazy">{% if caption %}<figcaption>{{ caption }}</figcaption>{% endif %}</figure>
+{% endcomponent image -%}
+
+{% component link(href, title = "", icon = "", desc = "") -%}
+<div class="link-card" data-component="link"><a class="link-card__link" href="{{ href | safe }}" {% if href is starting_with(pat="http") %}target="_blank" rel="noopener"{% endif %} style="display:flex;gap:14px;text-decoration:none;color:inherit;width:100%">{% if icon %}<div class="link-card__icon">{% if icon is starting_with(pat="http") or icon is starting_with(pat="/") %}<img src="{{ icon | safe }}" alt="" loading="lazy">{% else %}<span style="font-size:20px">{{ icon }}</span>{% endif %}</div>{% endif %}<div class="link-card__body"><div class="link-card__title">{{ title | default(value=href) }}</div>{% if desc %}<div class="link-card__desc">{{ desc }}</div>{% endif %}<div class="link-card__url">{{ href }}</div></div></a></div>
+{% endcomponent link -%}
+
+{% component links(group) -%}
+{% set data = load_data(path="data/links.yaml", required=false) -%}
+{% if not data %}{% set data = load_data(path="data/links.yml", required=false) %}{% endif -%}
+{% if not data %}{% set data = load_data(path="data/links.json", required=false) %}{% endif -%}
+{% if data and data[group] is defined -%}
+<div class="links-grid" data-component="links">{% for item in data[group] %}{% set url = item.url | default(value=item.href) | default(value="#") %}{% set title = item.title | default(value=item.name) | default(value=url) %}{% set icon = item.icon | default(value="") %}{% set cover = item.cover | default(value="") %}{% set desc = item.desc | default(value=item.description) | default(value="") %}<a class="bookmark-card" href="{{ url | safe }}" target="_blank" rel="noopener"><div class="bookmark-card__cover {% if not cover %}bookmark-card__cover--empty{% endif %}">{% if cover %}<img src="{{ cover | safe }}" alt="{{ title }}" loading="lazy">{% elif icon %}<img src="{{ icon | safe }}" alt="" loading="lazy" style="width:48px;height:48px;border-radius:10px;object-fit:cover">{% else %}🔗{% endif %}</div><div class="bookmark-card__main">{% if cover %}<div class="bookmark-card__icon">{% if icon %}<img src="{{ icon | safe }}" alt="" loading="lazy">{% else %}<span style="font-size:18px">🔗</span>{% endif %}</div>{% endif %}<div class="bookmark-card__body"><div class="bookmark-card__title">{{ title }}</div>{% if desc %}<div class="bookmark-card__desc">{{ desc }}</div>{% endif %}<div class="bookmark-card__url">{{ url }}</div></div></div></a>{% endfor %}</div>
+{% else -%}
+<div class="muted" style="font-size:13px;padding:12px;border:1px dashed var(--border);border-radius:10px">Links group “{{ group }}” not found in data/links.yaml</div>
+{% endif -%}
+{% endcomponent links -%}
+
+{% component friends(group = "") -%}
+{% set data = load_data(path="data/friends.yaml", required=false) -%}
+{% if not data %}{% set data = load_data(path="data/friends.yml", required=false) %}{% endif -%}
+{% if not data %}{% set data = load_data(path="data/links.yaml", required=false) %}{% endif -%}
+{% if not data %}{% set data = load_data(path="data/friends.json", required=false) %}{% endif -%}
+{% set list = [] -%}
+{% if group and data and data[group] is defined -%}
+{% set list = data[group] -%}
+{% elif not group and data -%}
+{% for k, v in data -%}
+{% set_global list = [...list, ...v] -%}
+{% endfor -%}
+{% endif -%}
+{% if list | length > 0 -%}
+<div class="friends-grid" data-component="friends">{% for item in list %}{% set url = item.url | default(value=item.href) | default(value="#") %}{% set title = item.name | default(value=item.title) | default(value=url) %}{% set icon = item.icon | default(value="") %}{% set desc = item.desc | default(value=item.description) | default(value="") %}{% set initial = title | truncate(length=1, end="") | upper %}<a class="friend-card" href="{{ url | safe }}" target="_blank" rel="noopener"><div class="friend-card__avatar">{% if icon %}<img src="{{ icon | safe }}" alt="{{ title }}" loading="lazy">{% else %}{{ initial }}{% endif %}</div><div class="friend-card__name">{{ title }}</div>{% if desc %}<div class="friend-card__desc">{{ desc }}</div>{% endif %}<div class="friend-card__url">{{ url | replace(from="https://", to="") | replace(from="http://", to="") | truncate(length=28, end="…") }}</div></a>{% endfor %}</div>
+{% else -%}
+<div class="muted" style="font-size:13px;padding:12px;border:1px dashed var(--border);border-radius:10px">Friends group “{{ group }}” not found</div>
+{% endif -%}
+{% endcomponent friends -%}
+
+{% component poetry(title = "", author = "") -%}
+<div class="poetry" data-component="poetry">{% if title %}<div class="poetry__title">{{ title }}</div>{% endif %}{% if author %}<div class="poetry__author">— {{ author }}</div>{% endif %}<div class="poetry__body">{{ body | markdown | safe }}</div></div>
+{% endcomponent poetry -%}
+
+{% component tabs() -%}{% set raw = body | trim -%}{% set parts = raw | split(pat="<!-- tab ") -%}<div class="tabs" data-component="tabs" role="tablist"><div class="tabs__nav" role="tablist">{% for part in parts %}{% if loop.index0 == 0 %}{% continue %}{% endif %}{% set seg = part | split(pat="-->") %}{% set label = seg[0] | trim %}<button class="tabs__btn {% if loop.index == 2 %}is-active{% endif %}" role="tab" aria-selected="{% if loop.index == 2 %}true{% else %}false{% endif %}" data-index="{{ loop.index0 }}">{{ label | lower }}</button>{% endfor %}</div><div class="tabs__panels">{% for part in parts %}{% if loop.index0 == 0 %}{% continue %}{% endif %}{% set seg = part | split(pat="-->") %}{% set label = seg[0] | trim %}{% set content = seg[1] | default(value="") | trim %}<div class="tabs__panel {% if loop.index == 2 %}is-active{% endif %}" role="tabpanel">{{ content | markdown | safe }}</div>{% endfor %}</div></div>{% endcomponent tabs -%}

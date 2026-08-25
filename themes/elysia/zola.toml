@@ -1,0 +1,209 @@
+# Zola configuration — Elysia Theme (modern minimalist)
+base_url = "https://example.com"
+title = "Elysia"
+description = "A modern, minimalist Zola theme — Reading is enjoyment."
+default_language = "zh"
+compile_sass = false
+build_search_index = false
+generate_feeds = true
+feed_filenames = ["atom.xml"]
+minify_html = false
+
+taxonomies = [
+    {name = "categories", feed = true, paginate_by = 12, paginate_path = "page"},
+    {name = "tags", feed = true, paginate_by = 12, paginate_path = "page"},
+]
+
+[markdown]
+render_emoji = true
+github_alerts = true
+bottom_footnotes = true
+
+[markdown.highlighting]
+theme = "catppuccin-mocha"
+style = "class"
+
+[extra]
+# ── Site Identity ──
+avatar = "/avatar.jpeg"
+avatar_alt = "Elysia"
+site_motto = "清风徐来 水波不兴"
+# Welcome (markdown supported)
+welcome = """
+> **你好，欢迎来到 Elysia！**
+>
+> 这里记录思考、分享知识，愿阅读成为一种享受。
+"""
+
+# Footer (markdown supported)
+footer = "© 2026 Elysia · 由 [Zola](https://www.getzola.org) 驱动 · 主题 [Elysia](https://github.com/)"
+
+# ── Top Navigation Buttons (wrap automatically, 4 per row on desktop) ──
+# icon is optional, can be emoji / svg name / url
+[[extra.menus]]
+name = "博客"
+url = "/"
+icon = "✍️"
+
+[[extra.menus]]
+name = "Wiki"
+url = "/wiki/"
+icon = "📚"
+
+[[extra.menus]]
+name = "归档"
+url = "/archive/"
+icon = "🗂️"
+
+[[extra.menus]]
+name = "分类"
+url = "/categories/"
+icon = "📁"
+
+[[extra.menus]]
+name = "标签"
+url = "/tags/"
+icon = "🏷️"
+
+[[extra.menus]]
+name = "热力图"
+url = "/heatmap/"
+icon = "🔥"
+
+[[extra.menus]]
+name = "友链"
+url = "/links/"
+icon = "🔗"
+
+# ── Social Icons (bottom) ──
+[[extra.socials]]
+name = "GitHub"
+url = "https://github.com"
+icon = "github"
+
+[[extra.socials]]
+name = "RSS"
+url = "/atom.xml"
+icon = "rss"
+
+[[extra.socials]]
+name = "Email"
+url = "mailto:hello@example.com"
+icon = "mail"
+
+
+# ── Fonts ──
+# Leave url empty to use system / bundled fonts
+# Sizes support any CSS length (px, rem, em). Example: "16px" "0.95rem"
+[extra.fonts]
+body_name = "LXGW WenKai Screen"
+body_url = "https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-web/style.css"
+body_size = "16px"
+body_size_small = "15px"
+code_name = "JetBrains Mono"
+code_url = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+code_size = "16px"
+article_size = "16px"
+toc_size = "13.5px"
+
+# ── Style / Palette defaults ──
+# theme: "auto" | "light" | "dark"
+[extra.style]
+default_theme = "auto"
+# palette: "default" | "lime" | "orange" | "violet"
+default_palette = "default"
+
+# ── Comments ──
+# enable 在 [extra.comments] 统一控制；各系统不再单独设 enable
+# provider: "giscus" | "artalk" | "waline" | "none"
+[extra.comments]
+enable = true
+provider = "giscus"   # e.g. "artalk"
+comment_title = "欢迎评论 — 留下你的想法"
+
+# ── Giscus ──
+[extra.giscus]
+repo = "user/repo"
+repo_id = ""
+category = ""
+category_id = ""
+mapping = "pathname"
+strict = "0"
+reactions_enabled = "1"
+emit_metadata = "0"
+input_position = "top"
+theme = "preferred_color_scheme"
+lang = "zh-CN"
+loading = "lazy"
+
+# ── Artalk ── https://artalk.js.org
+[extra.artalk]
+server = ""          # e.g. "https://artalk.example.com"
+site = ""            # site name, optional
+placeholder = ""     # placeholder text
+no_comment = ""      # text when no comments
+emit_own = false
+page_key = ""        # leave empty to use pathname
+gravatar_mirror = ""
+avatar_mirror = ""
+
+# ── Waline ── https://waline.js.org
+[extra.waline]
+serverURL = ""       # e.g. "https://waline.example.com"
+lang = "zh-CN"
+dark = "auto"        # "auto" | css selector
+emoji = ["https://unpkg.com/@waline/emojis@1.1.0/bilibili"]
+meta = ["nick", "mail", "link"]
+requiredMeta = ["nick", "mail"]
+login = "false"
+placeholder = ""
+
+# ── Algolia Search ──
+[extra.algolia]
+enable = true
+# Get from https://dashboard.algolia.com
+app_id = ""          # e.g. "LATENCY"
+api_key = ""         # search-only API key
+index_name = ""      # e.g. "elysia"
+hits_per_page = 8
+placeholder = "搜索文章..."
+show_powered_by = true
+# Optional: customize hits display (title, url, summary, content)
+# attribute_for_highlight = ["title", "content"]
+
+# ── Features ──
+[extra.features]
+# Show year progress bar
+year_progress = true
+# Enable TOC on pages
+toc = true
+# Enable copy button on code blocks (always true in JS anyway)
+code_copy = true
+# Show line numbers in code blocks (true by default)
+code_line_numbers = true
+# Articles per page
+paginate_by = 5
+# Show reading time
+show_reading_time = true
+
+# ── KaTeX ── 设 enable = true 即启用 $...$ / $$...$$ 数学公式
+[extra.katex]
+enable = true
+# 可选：自定义 CDN，默认 jsDelivr 0.16.9
+# css_url = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+# js_url = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+# auto_render_url = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+
+[languages.en]
+title = "Elysia EN"
+description = "A modern minimalist Zola theme — Reading is enjoyment."
+generate_feeds = true
+taxonomies = [
+    {name = "categories", feed = true},
+    {name = "tags", feed = true},
+]
+
+[slugify]
+paths = "on"
+taxonomies = "on"
+anchors = "on"
