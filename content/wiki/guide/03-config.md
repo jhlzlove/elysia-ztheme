@@ -1,104 +1,146 @@
 +++
 title = "03 · 配置详解"
-date = 2026-03-03
+date = 2026-09-02
 weight = 3
-description = "逐项讲解 zola.toml 的 base、taxonomies、markdown、extra、languages 与 slugify。"
+description = "逐项说明 zola.toml 的配置，覆盖所有常用项，开箱即用。"
 +++
 
-本章以根目录 `zola.toml` 为主（`themes/elysia/zola.toml` 为示例），按区块拆解。
+根配置为站点根目录的 `zola.toml`。下文按区块说明字段含义、取值与默认值，完整示例见仓库根 `zola.toml`。使用 Git 子模块时需额外设置 `theme = "elysia"`。
 
-## 基础与 Taxonomies
+## 基础与构建
 
 ```toml
 base_url = "https://example.com"
-title = "诗酒趁年华"
-description = "A modern, minimalist Zola theme — Reading is enjoyment."
+title = "我的博客"
+description = "记录文章和笔记"
 default_language = "zh"
 compile_sass = false
 build_search_index = false
 generate_feeds = true
 feed_filenames = ["atom.xml"]
+minify_html = false
+theme = "elysia"  # 仅子模块方式需要
+```
 
+- `base_url`：线上真实地址，影响链接、Feed、sitemap 与 canonical。上线前必改。
+- `default_language`：默认语言，如 `zh` / `en`。
+- `compile_sass`：本主题不使用 Sass，保持 `false`。
+- `build_search_index`：本主题使用 Algolia，保持 `false`。
+- `generate_feeds` / `feed_filenames`：生成 `atom.xml` 等订阅。
+- `theme`：主题目录名，仅在 `themes/elysia/` 方式下需要。
+
+## Taxonomies
+
+```toml
 taxonomies = [
-  {name = "categories", feed = true, paginate_by = 12},
-  {name = "tags", feed = true, paginate_by = 12},
+  {name = "categories", feed = true, paginate_by = 12, paginate_path = "page"},
+  {name = "tags", feed = true, paginate_by = 12, paginate_path = "page"},
 ]
-theme = "elysia"
+```
 
+- `categories` / `tags` 为内置分类与标签，必须通过 `[taxonomies]` 写入文章，前台才会计数。
+- `paginate_by`：taxonomy 列表分页数；`feed`：是否生成订阅。
+
+## Slugify
+
+```toml
 [slugify]
 paths = "on"
-taxonomies = "off"   # 保留中文分类/标签原文，不过度转写
+taxonomies = "off"
 anchors = "on"
 ```
 
-> `taxonomies="off"` 为中文站关键，否则 `技术加油站` 会被转写导致 404 与统计丢失。
+- `taxonomies = "off"`：保留中文分类/标签原文，否则会被转写导致 404。
+- `paths` / `anchors`：路径与锚点转写规则，一般保持默认。
 
 ## Markdown
 
 ```toml
 [markdown]
 render_emoji = true
-github_alerts = true      # > [!NOTE] 等
+github_alerts = true
 bottom_footnotes = true
 
 [markdown.highlighting]
 theme = "catppuccin-mocha"
-style = "class"           # 生成 giallo.css 的 class 模式，配合 style.css 覆写字符串色等
+style = "class"
 ```
 
-`style="class"` 会在 `public/giallo.css` 生成 `.z-*` 语法色，主题再按亮/暗覆写（见 05 章）。
+- `render_emoji`：支持 `:smile:` 简码。
+- `github_alerts`：支持 `> [!NOTE]` / `> [!TIP]` / `> [!WARNING]` 等。
+- `bottom_footnotes`：脚注沉底。
+- `highlighting.style = "class"`：以 CSS class 输出高亮，配合 `giallo.css` 与主题亮/暗覆写；`theme` 为构建期语法色。
 
-## Extra — 站点身份
+## Extra — 站点身份与页脚
 
 ```toml
 [extra]
-avatar = "/avatar.jpeg"
+avatar = "/avatar.jpg"
 avatar_alt = "Elysia"
-site_motto = "不修来世不修仙 且留大道在人间"
-welcome = """
-> **你好，欢迎来到 Elysia！**
->
-> 这里记录思考、分享知识，愿阅读成为一种享受。
-"""
-footer = "© 2026 Elysia · 由 [Zola](https://www.getzola.org) 驱动"
+site_motto = "记录、分享与阅读"
+footer = "© 2026 我的博客"
 ```
 
-`welcome` 支持完整 Markdown，会渲染在侧边栏“年度进度条”下方。
+- `avatar`：头像路径（`static/` 下）。
+- `site_motto`：侧边栏标语。
+- `footer`：页脚，支持 Markdown，可嵌入 HTML / 脚本。
 
-## 导航与社交
+## 备案信息
 
 ```toml
-# 仅维护一套菜单，显示名称通过 Zola translations 翻译（无需按 lang 复制两份）
+[extra.icp]
+icp = ""
+police = ""
+mengguo = ""
+```
+
+三项分别对应 ICP、公安、萌 ICP。留空不显示。
+
+## 导航与多语言
+
+菜单仅维护一套，显示文本由 `translations` 提供：
+
+```toml
 [[extra.menus]]
 name_key = "menu_blog"
 url = "/"
 icon = "✍️"
 
 [[extra.menus]]
-name_key = "menu_resume"
-url = "/resume/"
-icon = "📄"
+name_key = "menu_wiki"
+url = "/wiki/"
+icon = "📚"
 
-# 默认语言文案
 [translations]
 menu_blog = "博客"
-menu_resume = "简历"
+menu_wiki = "Wiki"
 
-# 其他语言
 [languages.en.translations]
 menu_blog = "Blog"
-menu_resume = "Resume"
-
-[[extra.socials]]
-name = "GitHub"
-url = "https://github.com"
-icon = "github"   # 内置 github/rss/mail，其他可直接用 emoji/字符
+menu_wiki = "Wiki"
 ```
 
-- `menus` 仅一套 `[[extra.menus]]`（`name_key` 为翻译 key，`url` 保持与语言无关如 `/wiki/`，模板自动按当前语言加前缀）
-- `name_key` 对应 `[translations]`（默认语言）与 `[languages.<code>.translations]` 中的键；增删菜单只需改一处并同步两处翻译
-- 模板通过 `trans(key=item.name_key, lang=cur_lang)` 渲染
-- `socials` 仅 `github/rss/mail` 有内置 SVG，其余会按 `icon` 原样渲染
+- `name_key` 必须在 `[translations]` 与各 `[languages.<code>.translations]` 中同时存在。
+- `url` 使用不带语言前缀的路径（如 `/wiki/`），模板按 `cur_lang` 自动加前缀。
+- 新增/删除菜单时，同步增删翻译 key。
+
+模板通过 `trans(key=item.name_key, lang=cur_lang)` 渲染；侧边栏地球图标根据 `config.languages` 自动显示语言切换。
+
+## 社交链接
+
+```toml
+[[extra.socials]]
+name = "GitHub"
+url = "https://github.com/yourname"
+icon = "github"
+
+[[extra.socials]]
+name = "RSS"
+url = "/atom.xml"
+icon = "rss"
+```
+
+- 内置 SVG：`github` / `rss` / `mail`，其他值按 Emoji 或文本原样渲染。
 
 ## 注入与样式
 
@@ -110,65 +152,29 @@ head = [
 ]
 
 [extra.style]
-default_theme = "auto"          # auto | light | dark
-default_palette = "default"     # default | lime | orange | violet
+default_theme = "auto"      # auto | light | dark
+default_palette = "default" # default | lime | orange | violet
 
 [extra.style.fonts]
 root_size = "16px"
 body_size = "16px"
-code_block_size = "16px"
+code_block_size = "14px"
 body_family = ["LXGW WenKai Screen", "Inter", "system-ui", "sans-serif"]
 code_block_family = ["JetBrains Mono", "ui-monospace", "monospace"]
 ```
 
-`body_family` 会注入 `:root --font-body`，代码块同理。留空则回退系统栈。
+- `inject.head`：任意 `<link>` / `<script>` 注入，用于加载网络字体或自定义 CSS。
+- `default_theme` / `default_palette`：首屏默认值，`auto` 跟随系统，用户切换后持久化到 `localStorage`。
+- `fonts`：数组即 CSS 字体栈；`root_size` 为 `html` 字号，`body_size` 为正文字号，`code_block_size` 为代码块字号。简历页不继承正文字体设置。
 
-## 搜索 Algolia
+调色盘：
 
-```toml
-[extra.algolia]
-enable = true
-app_id = "CCI6NCGAK0"
-api_key = "b2aa1cb7c425b70cd34bac3137a2156f"  # search-only
-index_name = "jhlzloveio"
-hits_per_page = 8
-placeholder = "搜索文章..."
-show_powered_by = true
-```
-
-两种同步方式：
-
-| 方式 | 操作 |
-| --- | --- |
-| 手动 | Algolia Dashboard → 手动推送 `public` 的索引 JSON |
-| 自动 | 配置爬虫每周抓取 `sitemap.xml`（推荐） |
-
-侧边栏 `/` 快捷聚焦，`search/_index.md` 为独立搜索页。
-
-## 评论统一开关
-
-```toml
-[extra.comments]
-enable = true
-provider = "giscus"   # giscus | artalk | waline | none
-comment_title = "欢迎评论 — 留下你的想法"
-
-[extra.giscus]
-repo = "user/repo"
-repo_id = ""
-category = "General"
-category_id = ""
-mapping = "pathname"
-# ... 其他 giscus 官方字段
-
-[extra.artalk]
-server = "https://artalk.example.com"
-
-[extra.waline]
-serverURL = "https://waline.example.com"
-```
-
-`provider` 为唯一开关，`enable=false` 全站关闭；单篇可用 `extra.comments=false` 关闭。
+| 值 | 亮色 `--accent` | 暗色 |
+| --- | --- | --- |
+| `default` | `#18181b` | `#fafafa` |
+| `lime` | `#5a7f2a` | `#8ab64a` |
+| `orange` | `#ea580c` | `#fb923c` |
+| `violet` | `#7c3aed` | `#a78bfa` |
 
 ## 功能开关
 
@@ -176,16 +182,95 @@ serverURL = "https://waline.example.com"
 [extra.features]
 year_progress = true
 toc = true
-code_copy = true
 code_line_numbers = true
 paginate_by = 5
 show_reading_time = true
-welcome = true
 ```
 
-- `year_progress`：侧边栏年度进度条
-- `toc`：文章右侧目录（`##` 起）
-- `code_line_numbers`：全局行号开关，`data-code-line-numbers` 控制
+- `year_progress`：侧边栏年进度条。
+- `toc`：文章右侧目录（`##` 起）。
+- `code_line_numbers`：代码行号。
+- `paginate_by`：首页列表每页数量。
+- `show_reading_time`：标题下方阅读时间。
+
+## Algolia 搜索
+
+```toml
+[extra.algolia]
+enable = true
+app_id = "YOUR_APP_ID"
+api_key = "YOUR_SEARCH_ONLY_KEY"
+index_name = "YOUR_INDEX"
+hits_per_page = 8
+placeholder = "搜索文章..."
+show_powered_by = true
+```
+
+- 使用 search-only key，勿提交 admin key。
+- 启用后需将文章数据推送至对应 index（手动或爬虫抓取 `sitemap.xml`）。
+- `search/_index.md` 为独立搜索页；侧边栏支持 `/` 聚焦。
+
+## 评论
+
+统一入口 `extra.comments`，`provider` 为唯一开关：
+
+```toml
+[extra.comments]
+enable = true
+provider = "giscus"  # giscus | artalk | waline | none
+comment_title = "欢迎评论 — 留下你的想法"
+```
+
+- `enable = false` 全站关闭；单篇 `extra.comments = false` 可关闭当页。
+- 未设置 `provider` 时，按 `giscus` → `artalk` → `waline` 是否填有服务地址自动推断。
+
+### Giscus
+
+```toml
+[extra.giscus]
+repo = "user/repo"
+repo_id = ""
+category = "General"
+category_id = ""
+mapping = "pathname"
+strict = "0"
+reactions_enabled = "1"
+emit_metadata = "0"
+input_position = "top"
+theme = "preferred_color_scheme"
+lang = "zh-CN"
+loading = "lazy"
+```
+
+均为 Giscus 官方字段，按其文档填入。
+
+### Artalk
+
+```toml
+[extra.artalk]
+server = "https://artalk.example.com"
+site = ""
+placeholder = ""
+no_comment = ""
+emit_own = false
+page_key = ""
+gravatar_mirror = ""
+avatar_mirror = ""
+```
+
+### Waline
+
+```toml
+[extra.waline]
+serverURL = "https://waline.example.com"
+lang = "zh-CN"
+dark = "auto"
+emoji = ["https://unpkg.com/@waline/emojis@1.1.0/bilibili"]
+meta = ["nick", "mail", "link"]
+requiredMeta = ["nick", "mail"]
+login = "false"
+placeholder = ""
+```
 
 ## 文章过期提示
 
@@ -194,41 +279,34 @@ welcome = true
 enable = true
 days = 90
 
-# 文案通过 Zola translations 管理（key 为 article_expiry），支持占位符 {date} {days} {diff}
 [translations]
 article_expiry = "本文最后更新于 {date}，已超过 {days} 天未更新，内容可能已过时，请注意甄别。"
 
 [languages.en.translations]
 article_expiry = "This article was last updated on {date} and has not been updated for over {days} days. The content may be outdated, please verify the information."
-
-# 单篇覆盖
-# +++
-# [extra]
-# expiry = false
-# expiry_days = 60
-# expiry_text = "自定义文案 {date} {days} {diff}"
-# +++
 ```
 
-- 模板通过 `trans(key="article_expiry", lang=cur_lang)` 获取当前语言文案
-- 占位符 `{date} {days} {diff}` 会在构建期与前端 `main.js` 分别渲染（前端动态计算 `diff`）
+- `days`：阈值天数，超过即显示。
+- 文案通过 `translations` 的 `article_expiry` 管理，支持占位符 `{days}` `{date}` `{diff}`。
+- 单篇覆盖：`extra.expiry = false` 关闭；`extra.expiry_days` 覆写天数；`extra.expiry_text` 覆写文案。
 
 ## KaTeX
 
 ```toml
 [extra.katex]
 enable = true
-# css_url / js_url / auto_render_url 可自定义 CDN
+# css_url = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+# js_url = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+# auto_render_url = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
 ```
 
-正文即可使用 `$E=mc^2$` 与 `$$\\int_0^\\infty$$`。
+启用后正文可写 `$E=mc^2$` 与 `$$...$$`，可选字段用于自托管 CDN。
 
 ## 多语言
 
 ```toml
 default_language = "zh"
 
-# 默认语言的菜单文案（与 extra.menus 的 name_key 对应）
 [translations]
 menu_blog = "博客"
 menu_wiki = "Wiki"
@@ -239,10 +317,15 @@ menu_heatmap = "热力图"
 menu_resume = "简历"
 menu_friends = "友链"
 menu_links = "工具集"
+toc_title = "目录"
+toc_on_this_page = "本页目录"
+article_expiry = "本文最后更新于 {date}，已超过 {days} 天未更新，内容可能已过时，请注意甄别。"
 
 [languages.en]
 title = "Elysia EN"
-taxonomies = [{name="categories",feed=true},{name="tags",feed=true}]
+description = "A modern minimalist Zola theme — Reading is enjoyment."
+generate_feeds = true
+taxonomies = [{name = "categories", feed = true}, {name = "tags", feed = true}]
 
 [languages.en.translations]
 menu_blog = "Blog"
@@ -254,12 +337,13 @@ menu_heatmap = "Heatmap"
 menu_resume = "Resume"
 menu_friends = "Friends"
 menu_links = "Tools"
+toc_title = "On this page"
+toc_on_this_page = "On this page"
+article_expiry = "This article was last updated on {date} and has not been updated for over {days} days. The content may be outdated, please verify the information."
 ```
 
-- 模板通过 `trans(key=item.name_key, lang=cur_lang)` 取当前语言名称，无需 `i18n_map` 或 `lang` 字段过滤
-- URL 自动按 `cur_lang != default_language` 加前缀（如 `/en/wiki/`），已带前缀不重复
-- 侧边栏地球图标自动出现语言切换（基于 `config.languages`）
-- 自定义 Section（如 `archive`/`heatmap`/`friends`/`links`/`search`/`resume`）需为每种语言创建对应的 `content/<section>/_index.<lang>.md`（或 `resume.<lang>.md`），否则对应语言下会 404（`archive` 已因此修复）
+- URL 按 `cur_lang != default_language` 自动加前缀（如 `/en/wiki/`）。
+- 自定义 Section（`archive` / `heatmap` / `friends` / `links` / `search` / `resume`）需为每种语言创建对应的 `content/<section>/_index.<lang>.md` 或 `resume.<lang>.md`，否则对应语言下 404。
 
 ## Front Matter 速查
 
@@ -267,33 +351,24 @@ menu_links = "Tools"
 +++
 title = "示例"
 date = 2026-03-03
-weight = 3
+updated = 2026-03-10
+weight = 1
 description = "摘要"
 [taxonomies]
-categories = ["技术加油站"]
-tags = ["zola", "主题"]
+categories = ["技术"]
+tags = ["zola"]
 [extra]
-style = "blog"          # blog | wiki | resume
-sticky = true           # 置顶（别名 top/pinned）
+sticky = true          # 置顶：sticky / top / pinned 任一
 encrypted = true
 password = "1234"
 password_hint = "提示"
-series = "elysia-guide" # 系列聚合
-expiry = false
+style = "blog"        # 仅作标记，版式由 template 决定
+expiry = false         # 关闭本篇过期提示
+expiry_days = 60
+expiry_text = "自定义 {date} {days} {diff}"
+comments = false       # 关闭本篇评论
 +++
 ```
 
-> 特别注意：`categories/tags` 必须在 `[taxonomies]` 下，且字符串加引号，否则中文会被忽略导致统计为 0。
-
-## 调色盘
-
-| 值 | 含义 | 亮色 `--accent` | 暗色 |
-| --- | --- | --- | --- |
-| `default` | 素雅黑 | `#18181b` | `#fafafa` |
-| `lime` | 鹅黄绿 | `#5a7f2a` | `#8ab64a` |
-| `orange` | 活力橙 | `#ea580c` | `#fb923c` |
-| `violet` | 梦幻紫 | `#7c3aed` | `#a78bfa` |
-
-`data-palette` 会与 `data-theme` 组合，选中色与代码字符串色已按对比度优化。
-
-> 下一章将把本站点推至 GitHub Pages，并演示如何新增 `resume/business` 等独立模板。
+- `categories` / `tags` 必须在 `[taxonomies]` 下且加引号。
+- `weight` 用于 Wiki 排序；`style` 为约定字段，真正版式由 `template` 决定。

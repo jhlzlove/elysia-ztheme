@@ -134,12 +134,6 @@
       </div>
       {% endif %}
 
-      {# Welcome (markdown) — 开关：config.extra.features.welcome，默认 true #}
-      {% if config.extra.welcome and config.extra.features.welcome | default(value=true) %}
-      <div class="welcome" id="welcome">
-        {{ config.extra.welcome | markdown | safe }}
-      </div>
-      {% endif %}
 
       <div class="sidebar__footer">
         {% if config.extra.socials %}

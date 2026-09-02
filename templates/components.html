@@ -15,13 +15,13 @@
 {% component video(bilibili = "", youtube = "", src = "", width = "100%", caption = "", autoplay = "") -%}
 {% set w = width | default(value="100%") -%}
 {% set ap = "0" -%}
-{% if autoplay %}{% set ap = "1" %}{% endif -%}
+{% if autoplay and autoplay | lower == "true" %}{% set ap = "1" %}{% endif -%}
 <div class="video-wrap" style="width:{{ w }};max-width:100%;margin-left:auto;margin-right:auto" data-component="video" data-autoplay="{{ ap }}">{% if bilibili %}<iframe src="https://player.bilibili.com/player.html?bvid={{ bilibili }}&high_quality=1&danmaku=0&autoplay={{ ap }}" scrolling="no" frameborder="no" {% if ap == "1" %}allow="autoplay; fullscreen" {% endif %}allowfullscreen loading="lazy" title="bilibili video {{ bilibili }}"></iframe>{% elif youtube %}<iframe src="https://www.youtube.com/embed/{{ youtube }}?autoplay={{ ap }}{% if ap == "1" %}&mute=1{% endif %}" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture{% if ap == "1" %}; autoplay{% endif %}" allowfullscreen loading="lazy" title="youtube video {{ youtube }}"></iframe>{% elif src %}<video src="{{ src | safe }}" controls {% if ap == "1" %}autoplay muted playsinline{% else %}preload="metadata" playsinline{% endif %} style="width:100%;display:block;background:#000" {% if ap == "1" %}data-autoplay="1"{% endif %}></video>{% endif %}{% if caption %}<div class="video-wrap__caption">{{ caption }}</div>{% endif %}</div>
 {% endcomponent video -%}
 
 {% component audio(netease = "", spotify = "", src = "", type = "single", autoplay = "", caption = "") -%}
 {% set ap = "0" -%}
-{% if autoplay %}{% set ap = "1" %}{% endif -%}
+{% if autoplay and autoplay | lower == "true" %}{% set ap = "1" %}{% endif -%}
 {% set t = type | default(value="single") | lower | trim -%}
 {% if t != "single" and t != "album" and t != "playlist" %}{% set t = "single" %}{% endif -%}
 <div class="audio-wrap" data-component="audio" data-autoplay="{{ ap }}" data-type="{{ t }}">
@@ -38,7 +38,7 @@
   <iframe src="https://open.spotify.com/embed/{{ stype }}/{{ sid }}?utm_source=generator{% if ap == "1" %}&autoplay=true{% endif %}" width="100%" height="{{ sh }}" frameborder="0" scrolling="no" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Spotify {{ t }} {{ sid }}" style="border-radius:12px; overflow:hidden; display:block;"></iframe>
 {% elif src %}
   {% set title = caption | default(value=src | split(pat="/") | last | default(value="Audio")) -%}
-  {% set srclabel = "本地音频" -%}
+  {% set srclabel = "音频" -%}
   {% if caption and caption != title %}{% set srclabel = caption %}{% endif -%}
   <div class="audio-player" data-src="{{ src | safe }}" data-autoplay="{{ ap }}">
     <button class="audio-player__play" type="button" aria-label="Play">
@@ -52,8 +52,6 @@
         <span class="audio-player__time">00:00 / 00:00</span>
       </div>
     </div>
-    <button class="audio-player__vol" type="button" aria-label="Volume"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
-    <button class="audio-player__list" type="button" aria-label="Playlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button>
     <audio src="{{ src | safe }}" {% if ap == "1" %}autoplay{% endif %} preload="metadata" hidden></audio>
   </div>
 {% endif %}

@@ -5,8 +5,6 @@ date = 2026-02-20
 categories = ["WIKI"]
 tags = ["wiki", "style"]
 
-[extra]
-series = "wiki"
 +++
 
 演示 Wiki 风格如何通过 front matter 切换

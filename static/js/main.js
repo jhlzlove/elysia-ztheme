@@ -747,7 +747,7 @@
       aside.classList.add('is-visible');
       aside.classList.add('has-series');
     }
-    // 无任何 TOC 时仅处理 series
+    // 无任何 TOC 时仅处理 Wiki 目录导航
     if(!toc && !tocMobile){
       if(!seriesNav) return;
       return;

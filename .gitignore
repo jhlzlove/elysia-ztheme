@@ -1,7 +1,7 @@
 other.md
-resume.md
-resume.en.md
-content/blog/life
-content/blog/skill
+content/blog/
+!content/blog/*.md
 public
-content/wiki/programming/
+content/wiki/
+!content/wiki/guide
+!content/wiki/*.md

@@ -25,36 +25,15 @@ style = "class"
 
 [extra]
 # ── Site Identity ──
-avatar = "/avatar.jpeg"
+avatar = "/avatar.jpg"
 avatar_alt = "Elysia"
 site_motto = "不修来世不修仙 且留大道在人间"
-# Welcome (markdown supported)
-welcome = """
-> **你好，欢迎来到 Elysia！**
->
-> 这里记录思考、分享知识，愿阅读成为一种享受。
-"""
+
 # Footer (markdown supported)
 # <span id="jinrishici-sentence"></span> <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
 footer = """
 本博客所有文章除特别声明外，均采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
 
-<uptime></uptime>
-<script>
-  setInterval(() => {
-    let startDate = new Date("2023-10-01")
-    let now = new Date();
-    // 计算时间差（以毫秒为单位）
-    let differenceInMs = now.getTime() - startDate.getTime();
-    // 转换为天数、小时数、分钟数和秒数
-    let days = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
-    let hours = Math.floor((differenceInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    let minutes = Math.floor((differenceInMs % (1000 * 60 * 60)) / (1000 * 60));
-    let seconds = Math.floor((differenceInMs % (1000 * 60)) / 1000);
-    let uptimeTags = Array.from(document.getElementsByTagName("uptime"));
-    uptimeTags.forEach(ele => { ele.textContent = `🌱 本站已活了 ${days} 天 | ${hours} 时 | ${minutes} 分 | ${seconds} 秒 🌱` });
-  }, 1000);
-</script>
 © 2026 Elysia · 由 [Zola](https://www.getzola.org) 驱动 · 主题 [Elysia](https://github.com/)
 """
 
@@ -164,7 +143,7 @@ code_block_family = ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo"
 # enable 在 [extra.comments] 统一控制；各系统不再单独设 enable
 # provider: "giscus" | "artalk" | "waline" | "none"
 [extra.comments]
-enable = true
+enable = false
 provider = "giscus"   # e.g. "artalk"
 comment_title = "欢迎评论 — 留下你的想法"
 
@@ -224,16 +203,13 @@ show_powered_by = true
 year_progress = true
 # Enable TOC on pages
 toc = true
-# Enable copy button on code blocks (always true in JS anyway)
-code_copy = true
 # Show line numbers in code blocks (true by default)
 code_line_numbers = true
 # Articles per page
 paginate_by = 5
 # Show reading time
 show_reading_time = true
-# Show welcome block in sidebar (欢迎语开关，默认 true)
-welcome = true
+
 
 # ── Article Expiry Warning — 文章过期提示 ──
 # 在文章头部显示过期提醒：根据 date/updated 与当前时间计算，超过 days 天即显示

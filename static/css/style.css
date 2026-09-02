@@ -534,8 +534,7 @@ html[data-palette="violet"][data-theme="dark"]{
   opacity:1;transform:translateX(-50%) translateY(0);
 }
 
-/* Welcome — 开放式，无容器边界，自然融入背景 */
-.welcome{
+.notice{
   background:transparent;
   border:none;
   border-radius:0;
@@ -545,17 +544,17 @@ html[data-palette="violet"][data-theme="dark"]{
   color:var(--muted);
   box-shadow:none;
 }
-.welcome :where(p, blockquote, ul, ol){margin:0 0 8px}
-.welcome :where(p:last-child){margin-bottom:0}
-.welcome blockquote{
+.notice :where(p, blockquote, ul, ol){margin:0 0 8px}
+.notice :where(p:last-child){margin-bottom:0}
+.notice blockquote{
   border-left:3px solid var(--accent);
   padding-left:10px;
   color:var(--muted);
   font-style:italic;
   margin:8px 0;
 }
-.welcome a{color:var(--accent);font-weight:500}
-.welcome code{
+.notice a{color:var(--accent);font-weight:500}
+.notice code{
   font-family:var(--font-code);
   font-size:12px;
   background:var(--bg-soft);
@@ -563,7 +562,6 @@ html[data-palette="violet"][data-theme="dark"]{
   padding:1px 5px;
   border-radius:6px;
 }
-
 /* Socials */
 .socials{
   display:flex;
@@ -2241,25 +2239,26 @@ html[data-theme="dark"] .cat-dir__badge--pin{background:#3b0764;color:#f0abfc;bo
   border-radius:var(--radius);
   background:var(--bg-soft);
   padding:16px;
-  overflow:auto;
+  overflow:hidden; /* 不显示滚动条，超长时缩小方块 */
 }
 .heatmap__inner{
   display:flex;
   gap:8px;
   align-items:flex-start;
-  min-width:max-content;
+  min-width:0;
+  width:100%;
 }
 .heatmap__grid{
   display:grid;
   grid-auto-flow:column;
-  grid-template-rows:repeat(5, 12px);
+  grid-template-rows:repeat(5, var(--cell, 12px));
   gap:3px;
   width:100%;
   max-width:100%;
   min-width:0;
 }
 .heatmap__cell{
-  width:12px;height:12px;
+  width:var(--cell, 12px);height:var(--cell, 12px);
   border-radius:3px;
   border:1px solid var(--border);
   background:var(--bg-muted);
@@ -2284,13 +2283,12 @@ html[data-theme="dark"] .heatmap__cell[data-level="4"]{background:#39d353}
   width:100%;
   min-width:0;
   align-items:center;
-  /* 确保横向排布，不被挤压为竖排 */
   writing-mode:horizontal-tb;
 }
 .heatmap__months span{
   font-size:10px;color:var(--muted);
   text-align:left;
-  width:12px;height:14px;line-height:14px;
+  width:var(--cell, 12px);height:14px;line-height:14px;
   white-space:nowrap;
   overflow:visible;
   writing-mode:horizontal-tb;
@@ -2298,12 +2296,12 @@ html[data-theme="dark"] .heatmap__cell[data-level="4"]{background:#39d353}
 .heatmap__months span:empty{visibility:hidden}
 .heatmap__weeks{
   display:grid;
-  grid-template-rows:repeat(5, 12px);
+  grid-template-rows:repeat(5, var(--cell, 12px));
   gap:3px;
   margin-right:4px;
   padding-top:20px;
 }
-.heatmap__weeks span{height:12px;display:grid;place-items:center;font-size:10px;color:var(--muted);line-height:1}
+.heatmap__weeks span{height:var(--cell, 12px);display:grid;place-items:center;font-size:10px;color:var(--muted);line-height:1}
 
 /* ─────────────────────────────────────────
    10. Encryption
@@ -2640,7 +2638,7 @@ html[data-theme="dark"] .heatmap__cell[data-level="4"]{background:#39d353}
   .post-card{padding:16px 0 16px}
   .brand__title{font-size:18px}
   .brand__avatar{width:72px; height:72px}
-  .welcome{padding:4px 0; font-size:13px; line-height:1.65}
+
   .search__input{font-size:14px}
   .nav-btn{padding:6px 2px; font-size:12.5px}
   .toc{padding:0}

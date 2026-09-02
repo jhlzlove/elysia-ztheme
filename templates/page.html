@@ -242,51 +242,25 @@
 
 {% block toc %}
 <aside class="toc-aside" id="tocAside" aria-label="Table of contents">
-    {% set series_name = "" %}
-    {% set series_title = "" %}
-    {% set series_section = "" %}
-    {% if page.extra.series is defined and page.extra.series %}
-      {% set_global series_name = page.extra.series %}
-      {% set_global series_title = page.extra.series_title | default(value=series_name) %}
-      {% if page.ancestors | length > 0 %}
-        {% set parent_path = page.ancestors | last %}
-        {% set_global series_section = get_section(path=parent_path) %}
-      {% endif %}
-    {% else %}
-      {% for ancestor_path in page.ancestors | reverse %}
-        {% set sec = get_section(path=ancestor_path) %}
-        {% if sec and sec.extra.series is defined and sec.extra.series %}
-          {% if series_name == "" %}
-            {% set_global series_name = sec.extra.series %}
-            {% set_global series_title = sec.extra.series_title | default(value=sec.title) %}
-            {% if page.extra.series_title is defined and page.extra.series_title %}
-              {% set_global series_title = page.extra.series_title %}
-            {% endif %}
-            {% set_global series_section = sec %}
-          {% endif %}
-        {% endif %}
-      {% endfor %}
-      {% if series_section == "" and page.ancestors | length > 0 %}
-        {% set parent_path = page.ancestors | last %}
-        {% set parent = get_section(path=parent_path) %}
-        {% if parent and parent.pages | length > 1 %}
-          {% if "wiki" in parent_path %}
-            {% set_global series_name = parent.title %}
-            {% set_global series_title = parent.title %}
-            {% set_global series_section = parent %}
-          {% endif %}
-        {% endif %}
+    {% set wiki_nav_title = "" %}
+    {% set wiki_nav_section = "" %}
+    {% if page.ancestors | length > 0 %}
+      {% set parent_path = page.ancestors | last %}
+      {% set parent = get_section(path=parent_path) %}
+      {% if parent and parent.pages | length > 1 and "wiki" in parent_path %}
+        {% set_global wiki_nav_title = parent.title %}
+        {% set_global wiki_nav_section = parent %}
       {% endif %}
     {% endif %}
-    {% if series_name and series_section %}
-      {% set parent = series_section %}
+    {% if wiki_nav_title and wiki_nav_section %}
+      {% set parent = wiki_nav_section %}
       {% if parent and parent.pages | length > 0 %}
         <div class="series-nav" style="margin-bottom:14px">
           <div class="series-nav__head">
             <span class="series-nav__icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
             </span>
-            <span class="series-nav__title">系列：{{ series_title }}</span>
+            <span class="series-nav__title">目录：{{ wiki_nav_title }}</span>
             <span class="series-nav__count">{{ parent.pages | length }} 篇</span>
           </div>
           <ol class="series-nav__list">

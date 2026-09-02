@@ -7,4 +7,4 @@ page_template = "page.html"
 transparent = false
 +++
 
-Welcome to the **Wiki** knowledge base. Content is organized by directory as series.
+Welcome to the **Wiki** knowledge base. Content is organized by directory as chapters.

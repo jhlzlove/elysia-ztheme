@@ -7,4 +7,3 @@ template = "index.html"
 page_template = "page.html"
 +++
 
-Welcome to **Elysia** — a modern Zola theme that makes the most of screen space and puts reading first.

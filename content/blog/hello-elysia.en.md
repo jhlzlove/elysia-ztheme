@@ -1,7 +1,6 @@
 +++
 title = "Hello, Elysia — A Modern Zola Theme"
-date = 2026-01-15
-description = "Introducing Elysia's design philosophy and core features"
+date = 2026-09-02
 [taxonomies]
 categories = ["THEME", "zola"]
 tags = ["zola", "elysia", "design"]
@@ -10,113 +9,174 @@ tags = ["zola", "elysia", "design"]
 sticky = true
 +++
 
-Welcome to **Elysia**! This is a pinned post (multiple pinned posts are sorted by date ascending).
+Welcome to **Elysia**! This is a pinned post (posts with earlier dates appear first when multiple are pinned).
 
-| Name | Age |
-|--|--|
-| Alice | 18 |
+<!-- more -->
 
-## Design Philosophy
+[hexo-theme-stellar]: https://github.com/xaoxuu/hexo-theme-stellar
+[hugo-theme-reimu]: https://github.com/D-Sketon/hugo-theme-reimu
 
-- Make the most of the viewport with comfortable spacing
-- Reading is enjoyment: generous tracking, comfortable line height, soft palette
-- Light/dark mode + 4 palettes (zinc / lime / orange / violet)
+## Zola 0.23+
 
-> GitHub Alerts work out of the box (`[markdown] github_alerts = true`).
+0.23 is a breaking change: you can treat it as a major update. Shortcodes were removed and all similar features are now provided through components.
 
-> [!NOTE]
-> This is a GitHub-style NOTE, matching the `note` component.
+Reference: https://github.com/getzola/zola/blob/master/CHANGELOG.md#0230-2026-08-05
 
-> [!TIP]
-> Use `> [!TIP]` — no HTML needed.
+## Component syntax
 
-> [!WARNING]
-> Warning style adapts to light/dark automatically.
+Zola components come in two forms, inline and block:
 
-## Code Demo
+- Inline:
 
-Code uses **JetBrains Mono** with art lines, line numbers, filename centered, language lower-left and copy button:
+  ```md
+  {% raw %}{{ <component-name attr=""/> }}{% endraw %}
+  ```
 
-```rust,linenos,name=main.rs
-fn main() {
-    println!("Hello, Elysia!");
-    // This is a very long line to test horizontal scrolling: lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor
-}
+- Block:
+
+  ```md
+  {% raw %}
+  {% <component-name attr=""> %}
+    some text...
+  {% <component-name/> %}
+  {% endraw %}
+  ```
+
+## Content layout
+
+```text
+content/
+├── _index.md                 # Blog home
+├── blog/
+│   ├── _index.md             # Blog section
+│   └── first-post.md         # A post
+├── wiki/
+│   ├── _index.md             # Wiki home
+│   └── guide/
+│       ├── _index.md         # A Wiki section
+│       └── 01-intro.md       # A page in that section
+├── resume.md                 # Independent resume page
+├── archive/_index.md         # Archive
+├── categories/_index.md      # Categories
+├── tags/_index.md            # Tags
+├── heatmap/_index.md         # Heatmap
+├── search/_index.md          # Search page
+├── friends/_index.md         # Friends
+└── links/_index.md           # Link collections
 ```
 
-```python,linenos,name=app.py
-def hello(name: str) -> str:
-    return f"Hello {name} from Elysia"
+Zola uses `_index.md` to declare a section. Articles inside a Wiki directory naturally belong to that directory; its title comes from `_index.md`.
+
+## Blog vs Wiki
+
+Blog posts usually live under `content/blog/` and are collected by the home page and archive. Wiki sections are better for tutorials and maintained documentation; placing pages in a subdirectory is enough to get directory navigation.
+
+The page type is mainly determined by its location and template:
+
+- Regular posts use `page.html`.
+- Wiki posts also use `page.html`, with Wiki navigation inferred from their directory.
+- The resume uses `template = "resume.html"` and is excluded from blog previous/next navigation.
+
+## No cover images
+
+Card layouts with cover images can look nice, but they require careful design. I previously tried the lists with images from [hexo-theme-stellar] and [hugo-theme-reimu] — nice designs worth checking if you like that style.
+
+This theme intentionally avoids cover images to save bandwidth (though it is not much) 😄. Images inside posts are supported via the `image` component; fancybox is not included yet.
+
+## No local search yet
+
+Zola's recommended search scripts have limited Chinese support. Currently only Algolia search is supported; local search may be considered later.
+
+## Nested directories in Zola
+
+For a subdirectory to appear in its parent list, it must contain an `_index.md` with at least `transparent = true`. Without it the section behaves differently from Hexo or Hugo.
+
+Even without being listed, Zola still compiles those pages and they are reachable by direct URL. They are called "orphan pages" in the docs, so a navigation entry is needed for convenient access. ~~(Who types URLs manually? 😑)~~
+
+## Use categories
+
+Because of orphan pages, a flat directory for posts is generally recommended. Use categories to group posts; Zola's taxonomy pages make it easy to find posts in the same category.
+
+If you have multiple subdirectories with related content, the Wiki layout provided by the theme is a better fit.
+
+## Blog
+
+Content in `content/blog/`. Blog posts should include the following fields; both TOML and YAML are supported.
+
+```md
+<!--toml-->
+
++++
+title = "Hello, Elysia — A Modern Zola Theme"
+date = 2026-01-15
+[taxonomies]
+categories = ["THEME", "ZOLA"]
+tags = ["zola", "elysia", "design"]
+description = "If you like writing summaries in front matter, Zola supports it"
++++
+
+<!--yaml-->
+
+---
+
+title: Hello, Elysia — A Modern Zola Theme
+date: 2026-01-15
+taxonomies:
+  categories: ["THEME", "ZOLA"]
+  tags: ["zola", "elysia", "design"]
+description: "If you like writing summaries in front matter, Zola supports it"
+---
 ```
 
-## Horizontal Scroll Table
+## Wiki
 
-| Feature | Description | Status |
-| --- | --- | --- |
-| Light/dark | Follows system, manual toggle | ✅ |
-| Palettes | 4 themes | ✅ |
-| Infinite scroll | Auto load on scroll | ✅ |
-| Encrypted | Lock icon, password | ✅ |
-| Table | Long content scrolls horizontally: this is a very long text to force the table to overflow and test the scrollbar | ✅ |
+Wiki does not need separate deployment configuration. Put `_index.md` and articles under `content/wiki/` and the build will generate pages and chapter navigation. Wiki pages should include:
 
-## Poetry
-
-{% <poetry title="Quiet Night Thought" author="Li Bai"> %}
-Moonlight before my bed, like frost on the ground.
-
-I lift my head to see the moon, then lower it, homesick.
-{% </poetry> %}
-
-## Note
-
-{% <note title="Tip" color="green"> %}
-This is a `note` card, supporting `red | green | yellow | orange | black`, default blue.
-{% </note> %}
-
-{% <note title="Attention" color="red"> %}
-Red for important reminders.
-{% </note> %}
-
-## Tabs
-
-{% <tabs> %}
-<!-- tab bash -->
-```bash
-echo "Hello from bash"
-ls -la
+```md
+title = "01 · Meet Elysia"
+date = 2026-03-01
+weight = 1
 ```
-<!-- tab fish -->
-```fish
-echo "Hello from fish"
-ls -la
+
+`weight` is required for ordering chapters.
+
+> [!note]
+> In principle, a Wiki page only needs the three fields above. If you are not sure about future migration, it is recommended to include `taxonomies` as well. No need to explain why — Zola is just that opinionated...
+
+## Resume page
+
+The resume is a standalone page and does not inherit the blog sidebar or table of contents. Create `content/resume.md` with:
+
+```toml
++++
+title = "Resume"
+template = "resume.html"
+[extra]
+style = "resume"
+name = "Your Name"
+role = "Software Engineer"
++++
 ```
-<!-- tab powershell -->
-```powershell
-Write-Host "Hello from PowerShell"
-Get-ChildItem
-```
-{% </tabs> %}
 
-## Media
+## Summary
 
-Bilibili:
+Zola handles summaries well. You can use `description` in front matter or `<!-- more -->` in the body; any amount of whitespace is accepted, which is much better than Hugo — migration from Hexo to Zola is seamless. This was a pain point when migrating from Hexo to Hugo.
 
-{{ <video bilibili="BV1n8Q7B7Ekz" width="100%" caption="Demo" /> }}
+## Limitations
 
-YouTube:
+Wiki categories and tags do not appear on the menu's category/tag pages; Wiki forms its own collection.
 
-{{ <video youtube="GoxJ4H8Chz8" width="80%" /> }}
+The resume page is also standalone and not included in the blog list.
 
-Image:
+## Inspirations
 
-{{ <image src="https://picsum.photos/800/400" caption="Random image" /> }}
+This theme borrows layout and ideas from:
 
-Link:
+- [Hexo Stellar](https://xaoxuu.com/)
+- [Hugo reimu](https://github.com/D-Sketon/hugo-theme-reimu)
+- [Hugo 椒盐豆豉](https://blog.douchi.space/)
+- AI: Claude, ChatGPT, Opencode
 
-{{ <link href="/about" title="About" icon="👋" desc="Learn more about Elysia" /> }}
+See the full guide:
 
-{{ <link href="https://www.getzola.org" title="Zola" icon="https://www.getzola.org/icons/apple-touch-icon.png" desc="A fast static site generator in Rust" /> }}
-
-## Friends
-
-Friends configured in `data/links.yaml`, render with `{{ <links group="github" /> }}`.
+{{ <link href="/wiki/guide" title="Elysia Guide" icon="/avatar.svg" desc="Complete guide from install to writing and deployment"/> }}

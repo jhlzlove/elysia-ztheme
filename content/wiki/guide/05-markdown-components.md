@@ -1,146 +1,183 @@
 +++
 title = "05 · Markdown 与组件"
-date = 2026-03-05
+date = 2026-09-02
 weight = 5
-description = "可复制的 Markdown 写作手册与 Elysia 主题组件大全。"
+description = "掌握文章 Front Matter、Markdown 写法和 Elysia 内置组件（附写法与效果）。"
 +++
 
-本章为**写作时直接复制**的手册，左侧为写法，右侧为效果。所有示例已在 `zola build` 下验证。
+本章示例可直接复制到文章中。组件使用 Zola 0.23+ 的 component 语法；每节先给写法，再给效果。
 
-> 本章本身即为组件演示，右侧目录可快速跳转。
+> [!tip]
+> 在 md 文章中使用 {% raw %} `{{ ... }}` 或 `{% ... %}` {% endraw %} 时必须使用 `raw`、`endraw` 进行包裹，以避免被当前页执行，导致 zola 解析导致报错。
+
+## 文章 Front Matter
+
+最简文章：
+
+```toml
++++
+title = "我的第一篇文章"
+date = 2026-03-10
+description = "这是一段摘要"
++++
+```
+
+博客常用字段：
+
+```toml
++++
+title = "一篇文章"
+date = 2026-03-10
+updated = 2026-03-12
+description = "列表页显示的摘要"
+weight = 1
+
+[taxonomies]
+categories = ["技术"]
+tags = ["zola", "博客"]
+
+[extra]
+sticky = true
++++
+```
+
+- `date`：排序与显示日期；`updated`：更新时间（用于过期提示）。
+- `description`：列表摘要与页面描述；也可用正文 `<!-- more -->` 分隔。
+- `weight`：Wiki 章节排序；`sticky` / `top` / `pinned` 置顶。
+- 分类与标签必须写在 `[taxonomies]` 下。
+
+加密文章：
+
+```toml
++++
+title = "私密文章"
+[extra]
+encrypted = true
+password = "change-this-password"
+password_hint = "请输入密码"
++++
+```
+
+不要把真实密码提交到公开仓库，前端加密仅作轻量保护。
 
 ## 基础 Markdown
 
-### 标题与段落
+**写法：**
 
 ```md
-# 一级
-## 二级
-### 三级
-#### 四级
+# 一级标题
+## 二级标题
 
-段落支持 **粗体**、*斜体*、~~删除线~~、`行内代码`、[链接](https://example.com)。
-```
+这是一段包含 **粗体**、*斜体*、~~删除线~~、`代码` 和 [链接](https://example.com) 的文字。
 
-### 列表与任务
+- 无序列表
+- 另一项
 
-```md
-- 无序一项
-- 无序二项
-  - 嵌套
+1. 有序列表
+2. 另一项
 
-1. 有序一
-2. 有序二
-
-- [x] 已完成
-- [ ] 未完成
-```
-
-- [x] 已完成
-- [ ] 未完成
-
-### 引用与分割线
-
-```md
-> 引用：这里是一段引用。
-> 第二行。
+> 这是一段引用。
 
 ---
 
-> [!NOTE]
-> GitHub Alerts 也会渲染为提示块（见下）。
-```
-
-> 引用：这里是一段引用。
-> 第二行。
-
----
-
-### 表格
-
-```md
 | 姓名 | 年龄 | 城市 |
 | --- | --- | --- |
 | Alice | 24 | 北京 |
 | Bob | 30 | 上海 |
 ```
 
+**效果：**
+
+# 一级标题
+## 二级标题
+
+这是一段包含 **粗体**、*斜体*、~~删除线~~、`代码` 和 [链接](https://example.com) 的文字。
+
+- 无序列表
+- 另一项
+
+1. 有序列表
+2. 另一项
+
+> 这是一段引用。
+
+---
+
 | 姓名 | 年龄 | 城市 |
 | --- | --- | --- |
 | Alice | 24 | 北京 |
 | Bob | 30 | 上海 |
 
-### 脚注与 Emoji
+正文中的 Markdown 链接会自动显示链接图标，图片链接除外。
 
-```md
-一句带脚注的话[^1]。
+## 提示块、脚注和公式
 
-[^1]: 脚注内容，`bottom_footnotes=true` 会沉底。
-
-:smile: :tada: 需 `render_emoji=true`
-```
-
-一句带脚注的话[^1]。
-
-[^1]: 脚注内容，`bottom_footnotes=true` 会沉底。
-
-### KaTeX 数学
-
-`extra.katex.enable=true` 后：
-
-```md
-行内 $E=mc^2$ ，块级：
-
-$$
-\int_0^\infty e^{-x} dx = 1
-$$
-
-\[ a^2 + b^2 = c^2 \]
-```
-
-行内 $E=mc^2$ ，块级：
-
-$$
-\int_0^\infty e^{-x} dx = 1
-$$
-
-### GitHub Alerts
+**写法（GitHub Alerts）：**
 
 ```md
 > [!NOTE]
-> 蓝色提示
+> 这是普通提示。
 
 > [!TIP]
-> 绿色技巧
-
-> [!IMPORTANT]
-> 紫色重要
+> 这是一个技巧。
 
 > [!WARNING]
-> 黄色警告
-
-> [!CAUTION]
-> 红色危险
+> 这是警告。
 ```
 
+**效果：**
+
 > [!NOTE]
-> 蓝色提示
+> 这是普通提示。
 
 > [!TIP]
-> 绿色技巧
-
-> [!IMPORTANT]
-> 紫色重要
+> 这是一个技巧。
 
 > [!WARNING]
-> 黄色警告
+> 这是警告。
 
-> [!CAUTION]
-> 红色危险
+**写法（脚注）：**
 
-## 围栏代码
+```md
+这句话有一个脚注[^source]。
 
-支持 `linenos` / `name` / `hl_lines`，行号与高亮已对齐：
+[^source]: 脚注内容。
+```
+
+**效果：**
+
+这句话有一个脚注[^source]。
+
+[^source]: 脚注内容。
+
+**写法（KaTeX，需 `extra.katex.enable = true`）：**
+
+```md
+行内公式：$E=mc^2$
+
+$$
+\int_0^\infty e^{-x}dx = 1
+$$
+```
+
+**效果：**
+
+行内公式：$E=mc^2$
+
+$$
+\int_0^\infty e^{-x}dx = 1
+$$
+
+配置：
+
+```toml
+[extra.katex]
+enable = true
+```
+
+## 代码块
+
+**写法：** 支持 `linenos` / `name` / `hl_lines`：
 
 ````md
 ```ts,linenos,name=example.ts,hl_lines=2 3
@@ -148,42 +185,57 @@ interface User {
   name: string;
   age: number;
 }
-function greet(u: User): string {
-  return `Hi, ${u.name}`;
-}
 ```
 ````
+
+**效果：**
 
 ```ts,linenos,name=example.ts,hl_lines=2 3
 interface User {
   name: string;
   age: number;
 }
-function greet(u: User): string {
-  return `Hi, ${u.name}`;
-}
 ```
 
-> 字符串色已优化：亮色琥珀 `#a16207`、暗色麦黄 `#fbbf24`，其余 token 按对比度加深。
+行号由 `extra.features.code_line_numbers` 控制，复制按钮由脚本自动提供。
 
-## 主题组件
+## 组件语法
 
-组件均为 Zola 0.23 的 component 语法（`{% raw %}{% component %}{% endraw %}`），**主题目录内 `themes/elysia/content` 不需更新，仅根目录 `content` 示例如下**。
+行组件：
+
+```jinja
+{% raw %}{{ <component-name parameter="value" /> }}{% endraw %}
+```
+
+块组件：
+
+```jinja
+{% raw %}{% <component-name parameter="value"> %}{% endraw %}
+内容
+{% raw %}{% </component-name> %}{% endraw %}
+```
+
+参数均使用双引号。块组件内容支持完整 Markdown。
 
 ### note 提示块
+
+**写法：**
 
 {% raw %}
 ```jinja
 {% <note title="提示" color="blue"> %}
-默认 blue，可选 green/yellow/orange/red/black
+这是一段提示内容。
 {% </note> %}
-
-{% <note title="成功" color="green"> %}green{% </note> %}
+{% <note title="成功" color="green"> %}...{% </note> %}
 ```
 {% endraw %}
 
+`color` 可选 `blue` / `green` / `yellow` / `orange` / `red` / `black`。
+
+**效果：**
+
 {% <note title="提示" color="blue"> %}
-默认 blue，可选 green/yellow/orange/red/black
+这是一段提示内容，`color="blue"` 为默认。
 {% </note> %}
 
 {% <note title="成功" color="green"> %}green{% </note> %}
@@ -194,79 +246,103 @@ function greet(u: User): string {
 
 ### video 视频
 
-{% raw %}
+**写法：**
+
 ```jinja
-{{ <video bilibili="BV1n8Q7B7Ekz" caption="B站示例" /> }}
-{{ <video youtube="GoxJ4H8Chz8" width="80%" /> }}
-{{ <video src="/video/demo.mp4" caption="本地" /> }}
+{% raw %}{{ <video bilibili="BV1n8Q7B7Ekz" caption="B 站示例" /> }}{% endraw %}
+{% raw %}{{ <video youtube="GoxJ4H8Chz8" width="80%" /> }}{% endraw %}
+{% raw %}{{ <video src="/video/demo.mp4" caption="本地视频" /> }}{% endraw %}
 ```
-{% endraw %}
 
-{{ <video bilibili="BV1n8Q7B7Ekz" caption="B站示例" /> }}
+参数：`bilibili` / `youtube` / `src` 三选一；`width` 宽度；`caption` 说明；`autoplay` 为 true 时自动播放。
 
-| 参数 | 说明 |
-| --- | --- |
-| `bilibili` | BV 号 |
-| `youtube` | YouTube ID |
-| `src` | 本地/外链 `mp4` |
-| `width` | 容器宽度，默认 `100%` |
-| `caption` | 底部说明 |
-| `autoplay` | 非空即尝试自动播放（受浏览器限制） |
+**效果：**
+
+{{ <video bilibili="BV1n8Q7B7Ekz" caption="B 站示例" autoplay="false" /> }}
 
 ### audio 音频
 
-本地极简播放器（进度条/音量/互斥）：
+**写法：**
 
-{% raw %}
+本地音频：
+
 ```jinja
-{{ <audio src="https://www.kumeiwp.com/wj/531/2021/02/24/514624f352b5b765149dd19a279af7c6.mp3" /> }}
-{{ <audio src="/audio/demo.mp3" caption="我的录音" /> }}
+{% raw %}{{ <audio src="/audio/demo.mp3" caption="远程音频" autoplay="true" /> }}{% endraw %}
 ```
-{% endraw %}
 
-网易云（`type=single/album/playlist`）：
+网易云（`type` 支持 `single` / `album` / `playlist`）：
 
 {% raw %}
 ```jinja
 {{ <audio netease="1852892593" type="single" /> }}
-{{ <audio netease="6757065893" type="playlist" /> }}
+{{ <audio netease="288635756" type="album" /> }}
+{{ <audio netease="2246151876" type="playlist" /> }}
 ```
 {% endraw %}
 
-Spotify（`type=single/album/playlist`，`single` 为 `track`）：
+Spotify（`type` 支持 `single` / `album` / `playlist`，`single` 对应 `track`）：
 
 {% raw %}
 ```jinja
 {{ <audio spotify="3QQcmb87X6e10gdEXDx1ep" type="single" /> }}
+{{ <audio spotify="3mlG9PR20AaeQQGA18PJ18" type="album" /> }}
 {{ <audio spotify="6UEIDpoU9CJD0b0jg04kgP" type="playlist" /> }}
 ```
 {% endraw %}
 
-> 单曲外框 `86×66` 已修正为 `height=66` 避免截半，歌单 `450×430`。
+**效果（本地播放器）：**
+
+{{ <audio src="https://www.kumeiwp.com/wj/531/2021/02/24/514624f352b5b765149dd19a279af7c6.mp3" caption="远程音频示例" autoplay="false" /> }}
+
+**效果（网易云 single / album / playlist）：**
+
+{{ <audio netease="1852892593" type="single" /> }}
+
+{{ <audio netease="288635756" type="album" /> }}
+
+{{ <audio netease="2246151876" type="playlist" /> }}
+
+**效果（Spotify single / album / playlist）：**
+
+{{ <audio spotify="3QQcmb87X6e10gdEXDx1ep" type="single" /> }}
+
+{{ <audio spotify="3mlG9PR20AaeQQGA18PJ18" type="album" /> }}
+
+{{ <audio spotify="6UEIDpoU9CJD0b0jg04kgP" type="playlist" /> }}
 
 ### image 图片
 
-{% raw %}
-```jinja
-{{ <image src="https://picsum.photos/seed/elysia/800/300" width="100%" caption="占位图" /> }}
-```
-{% endraw %}
-
-{{ <image src="https://picsum.photos/seed/elysia/800/300" width="100%" caption="占位图" /> }}
-
-### link / links / friends
-
-**单卡片**
+**写法：**
 
 {% raw %}
 ```jinja
-{{ <link href="https://github.com/getzola/zola" title="Zola" icon="https://www.getzola.org/icons/apple-touch-icon.png" desc="Zola 官方仓库" /> }}
+{{ <image src="https://picsum.photos/seed/elysia/800/300" alt="示例图片" width="100%" caption="图片说明" /> }}
 ```
 {% endraw %}
 
-{{ <link href="https://github.com/getzola/zola" title="Zola" icon="https://www.getzola.org/icons/apple-touch-icon.png" desc="Zola 官方仓库" /> }}
+图片文件建议放在站点的 `static/` 目录。
 
-**按组渲染**（`data/links.yaml`）：
+**效果：**
+
+{{ <image src="https://picsum.photos/seed/elysia/800/300" alt="示例图片" width="100%" caption="图片说明" /> }}
+
+### link 单个链接卡片
+
+**写法：**
+
+{% raw %}
+```jinja
+{{ <link href="https://www.getzola.org/" title="Zola" icon="https://www.getzola.org/icons/apple-touch-icon.png" desc="Zola 官方网站" /> }}
+```
+{% endraw %}
+
+**效果：**
+
+{{ <link href="https://www.getzola.org/" title="Zola" icon="https://www.getzola.org/icons/apple-touch-icon.png" desc="Zola 官方网站" /> }}
+
+### links 链接集合
+
+在 `data/links.yaml` 中准备数据：
 
 ```yaml
 github:
@@ -274,8 +350,9 @@ github:
     url: https://github.com/getzola/zola
     icon: https://www.getzola.org/icons/apple-touch-icon.png
     desc: Zola 官方仓库
-    cover: https://picsum.photos/seed/zola/600/200
 ```
+
+**写法：**
 
 {% raw %}
 ```jinja
@@ -283,114 +360,128 @@ github:
 ```
 {% endraw %}
 
-**好友**（`data/friends.yaml` 或复用 `links.yaml`）：
+**效果：**
+
+{{ <links group="github" /> }}
+
+### friends 友链
+
+`friends` 默认读取 `data/friends.yaml`，也支持复用链接数据。
+
+**写法：**
 
 {% raw %}
 ```jinja
 {{ <friends group="developer" /> }}
-{{ <friends /> }}  {# 全部 #}
+{{ <friends /> }}
 ```
 {% endraw %}
 
+**效果（developer 分组）：**
+
+{{ <friends group="developer" /> }}
+
 ### poetry 诗词
 
+**写法：**
 {% raw %}
 ```jinja
 {% <poetry title="春晓" author="孟浩然"> %}
-**春眠不觉晓，处处闻啼鸟。**
+春眠不觉晓，处处闻啼鸟。
 
 夜来风雨声，花落知多少。
 {% </poetry> %}
 ```
 {% endraw %}
 
+**效果：**
+
 {% <poetry title="春晓" author="孟浩然"> %}
-**春眠不觉晓，处处闻啼鸟。**
+春眠不觉晓，处处闻啼鸟。
 
 夜来风雨声，花落知多少。
 {% </poetry> %}
 
 ### tabs 多标签页
 
+**写法：**
+
 {% raw %}
-```jinja
+````jinja
 {% <tabs> %}
-<!-- tab python -->
-```python
-print("hello python")
+<!-- tab bash -->
+
+```bash
+echo "hello"
 ```
-<!-- tab javascript -->
-```javascript
-console.log("hello js")
+
+<!-- tab powershell -->
+```powershell
+Write-Output "hello"
 ```
-<!-- tab rust -->
-```rust
-println!("hello rust");
-```
+
 {% </tabs> %}
-```
+````
 {% endraw %}
 
+`<!-- tab 名称 -->` 为面板分隔符，标签名会自动小写显示。
+
+**效果：**
+
 {% <tabs> %}
-<!-- tab python -->
-```python
-print("hello python")
+<!-- tab bash -->
+```bash
+echo "hello"
+```
+<!-- tab powershell -->
+```powershell
+Write-Output "hello"
 ```
 <!-- tab javascript -->
 ```javascript
-console.log("hello js")
-```
-<!-- tab rust -->
-```rust
-println!("hello rust");
+console.log("hello")
 ```
 {% </tabs> %}
 
-> `tabs` 内代码块会自动套 `code-wrap`，切换时已做 `reflow` 对齐行号。
+## Wiki 章节
 
-## Front Matter 模板
+创建目录和 `_index.md`：
 
-```toml
-# 博客
-+++
-title = "我的第一篇"
-date = 2026-03-05
-[taxonomies]
-categories = ["技术加油站"]
-tags = ["zola", "主题"]
-[extra]
-style = "blog"
-sticky = true
-+++
-
-# 加密
-+++
-title = "私密"
-[extra]
-encrypted = true
-password = "1234"
-password_hint = "提示"
-+++
-
-# 系列（wiki）
-+++
-title = "02 · 快速安装"
-[extra]
-series = "elysia-guide"
-+++
-# 或在 _index.md
-[extra]
-series = "elysia-guide"
-series_title = "Elysia 完全指南"
+```text
+content/wiki/my-guide/
+├── _index.md
+├── 01-start.md
+└── 02-config.md
 ```
 
-## 写作建议
+`_index.md`：
 
-| 场景 | 推荐 |
-| --- | --- |
-| 中文阵地 | 开启 `extra.style.fonts.body_family` 的 `LXGW WenKai Screen`，正文 `16px` |
-| 代码为主 | `code_block_size=13px`，`hl_lines` 突出关键行 |
-| 需搜索 | 提前申请 Algolia，`zola build` 后手动推送首版 |
-| 长文 | 每 `##` 即目录锚点，保持 `h2/h3` 层级清晰 |
+```toml
++++
+title = "我的指南"
+sort_by = "weight"
+template = "section.html"
+page_template = "page.html"
++++
+```
 
-> 完整可运行示例见 `content/blog/content-components.md` 与 `content/blog/markdown-showcase.md`，本章所有代码可直接复制使用.
+章节文章使用 `weight` 排序；Wiki 导航来自目录结构。
+
+## 自定义样式
+
+在站点根目录创建 `static/css/custom.css`，然后注入：
+
+```toml
+[extra.inject]
+head = [
+  { rel = "stylesheet", href = "/css/custom.css" },
+]
+```
+
+示例：
+
+```css
+:root {
+  --accent: #0ea5e9;
+}
+```
