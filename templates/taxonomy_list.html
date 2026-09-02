@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+{# === 预处理：过滤 wiki、去重（按小写）并统计数量 === #}
+{% set_global filtered_terms = [] %}
+{% set_global seen_keys = [] %}
+{% set_global merged_map = [] %}
+{% for term in terms %}
+  {% set_global t_blog = [] %}
+  {% for p in term.pages %}
+    {% if p.path is not starting_with(pat="/wiki/") and p.path is not starting_with(pat="/resume") and p.extra.style | default(value="blog") != "wiki" and p.extra.style | default(value="blog") != "resume" %}
+      {% set_global t_blog = [...t_blog, p] %}
+    {% endif %}
+  {% endfor %}
+  {% if t_blog | length == 0 %}{% continue %}{% endif %}
+  {% set key = term.name | lower | trim %}
+  {% if key in seen_keys %}
+    {# 合并重复标签：累加数量，保留首个名称与链接 #}
+    {% set_global new_merged = [] %}
+    {% for m in merged_map %}
+      {% if m.key == key %}
+        {% set updated = {"key": key, "name": m.name, "permalink": m.permalink, "count": m.count + t_blog | length} %}
+        {% set_global new_merged = [...new_merged, updated] %}
+      {% else %}
+        {% set_global new_merged = [...new_merged, m] %}
+      {% endif %}
+    {% endfor %}
+    {% set_global merged_map = new_merged %}
+  {% else %}
+    {% set_global seen_keys = [...seen_keys, key] %}
+    {% set_global merged_map = [...merged_map, {"key": key, "name": term.name, "permalink": term.permalink, "count": t_blog | length, "pages": t_blog}] %}
+    {% set_global filtered_terms = [...filtered_terms, term] %}
+  {% endif %}
+{% endfor %}
+
+{# 为了分类/标签标题计数使用去重后的数量 #}
+{% set display_terms = merged_map %}
+
+<div class="page-header">
+  <h1>{{ taxonomy.name | capitalize }}</h1>
+  <p>共 {{ display_terms | length }} 个{{ taxonomy.name }}{% if taxonomy.name == "categories" %} · 以目录形式展示{% endif %}</p>
+</div>
+
+{% if taxonomy.name == "categories" %}
+{# —— 目录式分类：仅显示博客，排除 wiki，已去重 —— #}
+<div class="cat-dir">
+{% for item in display_terms | sort(attribute="count") | reverse %}
+  {# 找到原始 term 对应的 pages（已过滤）用于列表展示 #}
+  {% set term_pages = item.pages %}
+  {# 如果 pages 未在 merged 中保存（兼容旧逻辑），则重新从 terms 查找 #}
+  {% if not term_pages %}
+    {% for term in terms %}
+      {% if term.name | lower | trim == item.key %}
+        {% set_global term_pages = [] %}
+        {% for p in term.pages %}
+          {% if p.path is not starting_with(pat="/wiki/") and p.path is not starting_with(pat="/resume") and p.extra.style | default(value="blog") != "wiki" and p.extra.style | default(value="blog") != "resume" %}
+            {% set_global term_pages = [...term_pages, p] %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+  <details class="cat-dir__group">
+    <summary class="cat-dir__summary">
+      <span class="cat-dir__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/><path d="M3 7l3 3"/></svg>
+      </span>
+      <span class="cat-dir__name">{{ item.name }}</span>
+      <span class="cat-dir__count">{{ item.count }} 篇</span>
+      <span class="cat-dir__arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </span>
+      <a class="cat-dir__link" href="{{ item.permalink | safe }}" aria-label="查看分类 {{ item.name }}" onclick="event.stopPropagation()">→</a>
+    </summary>
+    <ul class="cat-dir__list">
+      {% for page in term_pages | sort(attribute="date") | reverse %}
+      <li class="cat-dir__item">
+        <a class="cat-dir__file" href="{{ page.permalink | safe }}">
+          <span class="cat-dir__file-icon">
+            {% if page.extra.encrypted %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            {% elif page.extra.sticky or page.extra.top or page.extra.pinned %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.2H22l-6.2 4.5 2.4 7.3L12 17l-6.2 4 2.4-7.3L2 9.2h7.6z"/></svg>
+            {% else %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M10 13H8"/><path d="M16 17H8"/><path d="M13 13h1"/></svg>
+            {% endif %}
+          </span>
+          <span class="cat-dir__file-title">{{ page.title }}</span>
+          {% if page.extra.encrypted %}<span class="cat-dir__badge">加密</span>{% endif %}
+          {% if page.extra.sticky or page.extra.top or page.extra.pinned %}<span class="cat-dir__badge cat-dir__badge--pin">置顶</span>{% endif %}
+        </a>
+        <span class="cat-dir__file-meta">
+          {% if page.taxonomies.tags %}
+            <span class="cat-dir__file-tags">
+              {% for t in page.taxonomies.tags[:3] %}<span class="tag" style="font-size:10px;padding:1px 6px">{{ t }}</span>{% endfor %}
+            </span>
+          {% endif %}
+          <time datetime="{{ page.date | date(format="%Y-%m-%d") }}">{{ page.date | date(format="%Y-%m-%d") }}</time>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  </details>
+{% endfor %}
+</div>
+
+<p class="muted" style="margin-top:18px;font-size:13px">提示：点击文件夹标题展开/收起，点击右箭头进入分类独立页。</p>
+
+{% else %}
+{# —— 标签：仅显示一种，去重后带数量 —— #}
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px">
+{% for item in display_terms | sort(attribute="count") | reverse %}
+  <a class="nav-btn" href="{{ item.permalink | safe }}" style="text-decoration:none">
+    <span class="tag" style="border:none;background:var(--bg-muted)">{{ item.name }}</span>
+    <span class="badge">{{ item.count }}</span>
+  </a>
+{% endfor %}
+</div>
+{% endif %}
+{% endblock content %}

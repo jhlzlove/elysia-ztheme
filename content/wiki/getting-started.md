@@ -1,14 +1,17 @@
 +++
 title = "Wiki 入门 — 风格扩展示例"
 date = 2026-02-20
-description = "演示 Wiki 风格如何通过 front matter 切换"
 [taxonomies]
 categories = ["WIKI"]
 tags = ["wiki", "style"]
 
 [extra]
-style = "wiki"
+series = "wiki"
 +++
+
+演示 Wiki 风格如何通过 front matter 切换
+
+<!--more-->
 
 这是一篇使用 `extra.style = "wiki"` 的示例文章，展示未来支持多风格的扩展点。
 

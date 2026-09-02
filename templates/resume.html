@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="{{ lang | default(value=config.default_language) }}" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title }} — {{ config.title }}</title>
+  <meta name="description" content="{{ page.description | default(value=config.description) }}">
+  <link rel="canonical" href="{{ page.permalink | safe }}">
+
+  <style>
+    :root{
+      --resume-bg:#ffffff;
+      --resume-fg:#1e293b;
+      --resume-muted:#64748b;
+      --resume-muted-2:#94a3b8;
+      --resume-border:#e2e8f0;
+      --resume-card:#f8fafc;
+      --resume-card-border:#eef2f7;
+      --resume-accent:#3b82f6;
+      --resume-accent-soft:#eff6ff;
+      --resume-accent-fg:#ffffff;
+      --resume-green:#10b981;
+      --resume-green-soft:#ecfdf5;
+      --resume-radius:12px;
+      --resume-radius-sm:8px;
+      --font-body:system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      --font-code:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    html[data-theme="dark"]{
+      --resume-bg:#0f172a;
+      --resume-fg:#f1f5f9;
+      --resume-muted:#94a3b8;
+      --resume-muted-2:#64748b;
+      --resume-border:#1e293b;
+      --resume-card:#1e293b;
+      --resume-card-border:#334155;
+      --resume-accent:#60a5fa;
+      --resume-accent-soft:#1e3a5f;
+      --resume-accent-fg:#0f172a;
+      --resume-green:#34d399;
+      --resume-green-soft:#064e3b;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:var(--font-body);
+      background:var(--resume-bg);
+      color:var(--resume-fg);
+      line-height:1.7;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+    /* 简约背景：去掉大面积装饰圆，仅保留干净留白与细腻分割 */
+    .resume-deco{display:none}
+    .resume-shell{
+      position:relative;z-index:1;
+      max-width:1060px;
+      margin:0 auto;
+      padding:32px 24px 48px;
+    }
+    /* Top bar */
+    .resume-topbar{
+      display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-bottom:12px;
+    }
+    .resume-palette{
+      display:flex;gap:8px;align-items:center;
+    }
+    .resume-dot{width:18px;height:18px;border-radius:50%;border:2px solid transparent;cursor:pointer}
+    .resume-dot--blue{background:#3b82f6}
+    .resume-dot--purple{background:#8b5cf6}
+    .resume-dot--orange{background:#f59e0b}
+    .resume-toggle{
+      margin-left:8px;
+      padding:6px 12px;
+      border:none;border-radius:999px;
+      background:var(--resume-accent);color:var(--resume-accent-fg);
+      font-size:12px;font-weight:600;cursor:pointer;
+      display:inline-flex;align-items:center;gap:6px;
+    }
+    /* Header */
+    .resume-header{
+      display:flex;justify-content:space-between;gap:24px;align-items:flex-start;
+      margin:8px 0 28px;
+      flex-wrap:wrap;
+    }
+    .resume-head__left{flex:1;min-width:280px}
+    .resume-name{font-size:32px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+    .resume-role{font-size:15px;font-weight:700;color:var(--resume-accent);margin-top:4px}
+    .resume-summary{font-size:13px;color:var(--resume-muted);margin-top:8px;max-width:520px}
+    .resume-contacts{
+      text-align:right;
+      font-size:13px;color:var(--resume-muted);
+      display:flex;flex-direction:column;gap:6px;align-items:flex-end;
+      min-width:220px;
+    }
+    .resume-contact{display:inline-flex;align-items:center;gap:6px}
+    .resume-contact svg{width:14px;height:14px;color:var(--resume-accent)}
+    .resume-contact a{color:inherit;text-decoration:none}
+    .resume-contact a:hover{color:var(--resume-accent)}
+    /* Grid */
+    .resume-grid{
+      display:grid;
+      grid-template-columns:1.55fr 0.85fr;
+      gap:20px;
+      align-items:start;
+    }
+    @media (max-width:900px){
+      .resume-grid{grid-template-columns:1fr}
+    }
+    .resume-col{display:flex;flex-direction:column;gap:20px}
+    .resume-card{
+      background:var(--resume-card);
+      border:1px solid var(--resume-card-border);
+      border-radius:var(--resume-radius);
+      padding:20px 18px;
+    }
+    .resume-section__title{
+      font-size:15px;font-weight:800;letter-spacing:-.01em;
+      padding-bottom:8px;margin-bottom:14px;
+      border-bottom:1.5px solid var(--resume-accent);
+      color:var(--resume-fg);
+    }
+    /* Experience */
+    .resume-exp{margin-bottom:18px}
+    .resume-exp:last-child{margin-bottom:0}
+    .resume-exp__head{
+      display:flex;justify-content:space-between;gap:12px;align-items:flex-start;
+      margin-bottom:4px;
+    }
+    .resume-exp__role{font-size:13.5px;font-weight:700;line-height:1.3}
+    .resume-exp__company{font-size:12px;color:var(--resume-accent);font-weight:500}
+    .resume-exp__date{
+      flex:0 0 auto;
+      font-size:11px;font-weight:600;
+      background:var(--resume-accent);color:var(--resume-accent-fg);
+      padding:3px 8px;border-radius:6px;
+      white-space:nowrap;
+    }
+    .resume-exp ul{margin:6px 0 0 18px;font-size:12.5px;color:var(--resume-muted);line-height:1.6}
+    .resume-exp li{margin:3px 0}
+    /* Education similar */
+    .resume-edu__major{font-size:13.5px;font-weight:700}
+    .resume-edu__school{font-size:12px;color:var(--resume-accent)}
+    .resume-edu__desc{font-size:12.5px;color:var(--resume-muted);margin-top:6px}
+    /* Skills */
+    .resume-skill{margin-bottom:14px}
+    .resume-skill:last-child{margin-bottom:0}
+    .resume-skill__head{
+      display:flex;justify-content:space-between;align-items:center;
+      font-size:12.5px;font-weight:600;margin-bottom:6px;
+    }
+    .resume-skill__name{color:var(--resume-fg)}
+    .resume-skill__level{color:var(--resume-muted);font-size:11px}
+    .resume-skill__bar{
+      height:6px;background:var(--resume-border);border-radius:999px;overflow:hidden;
+    }
+    .resume-skill__fill{height:100%;background:var(--resume-accent);border-radius:999px;transition:width .6s}
+    /* Projects */
+    .resume-proj{margin-bottom:16px}
+    .resume-proj:last-child{margin-bottom:0}
+    .resume-proj__title{font-size:13px;font-weight:700}
+    .resume-proj__desc{font-size:12.5px;color:var(--resume-muted);margin:4px 0 8px;line-height:1.6}
+    .resume-tags{display:flex;flex-wrap:wrap;gap:6px}
+    .resume-tag{
+      font-size:11px;font-weight:600;
+      background:var(--resume-green);color:#fff;
+      padding:3px 8px;border-radius:999px;
+      line-height:1;
+    }
+    html[data-theme="dark"] .resume-tag{background:var(--resume-green);color:#022c22}
+    /* Languages / Awards */
+    .resume-lang{display:flex;flex-direction:column;gap:12px}
+    .resume-lang__item{}
+    .resume-lang__head{display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;margin-bottom:6px}
+    .resume-lang__level{color:var(--resume-muted);font-weight:500}
+    /* Certifications / Awards list */
+    .resume-list{display:flex;flex-direction:column;gap:12px}
+    .resume-list__item{}
+    .resume-list__title{font-size:12.5px;font-weight:700}
+    .resume-list__sub{font-size:11.5px;color:var(--resume-accent)}
+    /* Markdown fallback for body */
+    .resume-md{font-size:13.5px;line-height:1.75;color:var(--resume-fg)}
+    .resume-md h2{font-size:15px;font-weight:800;border-bottom:1.5px solid var(--resume-accent);padding-bottom:8px;margin:18px 0 12px}
+    .resume-md h3{font-size:13.5px;font-weight:700;margin:14px 0 6px}
+    .resume-md p{margin:8px 0;color:var(--resume-muted)}
+    .resume-md ul{margin:8px 0 8px 18px;color:var(--resume-muted);font-size:12.5px}
+    .resume-md li{margin:4px 0}
+    .resume-md a{color:var(--resume-accent)}
+    .resume-footer{margin-top:28px;text-align:center;font-size:11px;color:var(--resume-muted-2)}
+    @media (max-width:600px){
+      .resume-shell{padding:20px 14px 32px}
+      .resume-name{font-size:26px}
+      .resume-header{flex-direction:column;align-items:flex-start}
+      .resume-contacts{align-items:flex-start;text-align:left}
+      .resume-card{padding:16px 14px}
+    }
+    @media print{
+      .resume-topbar{display:none}
+      .resume-deco{display:none}
+      body{background:#fff}
+      .resume-card{break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <div class="resume-deco" aria-hidden="true"><div class="resume-deco__c1"></div><div class="resume-deco__c2"></div></div>
+  <div class="resume-shell">
+    <div class="resume-topbar">
+      <div class="resume-palette" aria-hidden="true">
+        <span class="resume-dot resume-dot--blue" title="Blue"></span>
+        <span class="resume-dot resume-dot--purple" title="Purple"></span>
+        <span class="resume-dot resume-dot--orange" title="Orange"></span>
+      </div>
+      <button class="resume-toggle" id="resumeToggle" type="button">◐ Toggle Dark</button>
+    </div>
+
+    {% set extra = page.extra %}
+    <header class="resume-header">
+      <div class="resume-head__left">
+        <div class="resume-name">{{ extra.name | default(value=page.title) | default(value="小风") }}</div>
+        <div class="resume-role">{{ extra.role | default(value=extra.title) | default(value="软件开发工程师") }}</div>
+        <div class="resume-summary">{{ extra.summary | default(value="拥有 4+ 年的开发经验，主要聚焦于 Java 领域") }}</div>
+      </div>
+      <div class="resume-contacts">
+        {% if extra.email %}<div class="resume-contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="m2 7 10 7 10-7"/></svg><a href="mailto:{{ extra.email }}">{{ extra.email }}</a></div>{% endif %}
+        {% if extra.phone %}<div class="resume-contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 5 12.07 19.79 19.79 0 0 1 1.93 3.44 2 2 0 0 1 3.91 1h3a2 2 0 0 1 2 1.72c.12 1.2.45 2.36.97 3.44a2 2 0 0 1-.57 2.12l-1.27 1.27a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.12-.57c1.08.52 2.24.85 3.44.97A2 2 0 0 1 22 14.92z"/></svg>{{ extra.phone }}</div>{% endif %}
+        {% if extra.location %}<div class="resume-contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-11a7 7 0 1 0-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="3"/></svg>{{ extra.location }}</div>{% endif %}
+      </div>
+    </header>
+
+    <div class="resume-grid">
+      <div class="resume-col">
+        {# Work Experience #}
+        {% if extra.experience %}
+        <section class="resume-card">
+          <div class="resume-section__title">Work Experience</div>
+          {% for exp in extra.experience %}
+          <div class="resume-exp">
+            <div class="resume-exp__head">
+              <div>
+                <div class="resume-exp__role">{{ exp.title | default(value=exp.role) }}</div>
+                {% if exp.company %}<div class="resume-exp__company">{{ exp.company }}</div>{% endif %}
+              </div>
+              {% if exp.date %}<span class="resume-exp__date">{{ exp.date }}</span>{% endif %}
+            </div>
+            {% if exp.details %}
+            <ul>
+              {% for d in exp.details %}<li>{{ d }}</li>{% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </section>
+        {% endif %}
+
+        {# Education #}
+        {% if extra.education %}
+        <section class="resume-card">
+          <div class="resume-section__title">Education</div>
+          {% for edu in extra.education %}
+          <div class="resume-exp">
+            <div class="resume-exp__head">
+              <div>
+                <div class="resume-edu__major">{{ edu.major | default(value=edu.title) }}</div>
+                {% if edu.school %}<div class="resume-edu__school">{{ edu.school }}</div>{% endif %}
+              </div>
+              {% if edu.date %}<span class="resume-exp__date">{{ edu.date }}</span>{% endif %}
+            </div>
+            {% if edu.desc %}<div class="resume-edu__desc">{{ edu.desc }}</div>{% endif %}
+          </div>
+          {% endfor %}
+        </section>
+        {% endif %}
+
+        {# Projects #}
+        {% if extra.projects %}
+        <section class="resume-card">
+          <div class="resume-section__title">Projects</div>
+          {% for proj in extra.projects %}
+          <div class="resume-proj">
+            <div class="resume-proj__title">{{ proj.title | default(value=proj.name) }}</div>
+            {% if proj.desc %}<div class="resume-proj__desc">{{ proj.desc }}</div>{% endif %}
+            {% if proj.tags %}
+            <div class="resume-tags">
+              {% for t in proj.tags %}<span class="resume-tag">{{ t }}</span>{% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </section>
+        {% endif %}
+
+        {# Markdown body as fallback / extra content — 仅当有实质内容时显示，避免空卡片 #}
+        {% set md_stripped = page.content | striptags | trim %}
+        {% if md_stripped != "" %}
+        <section class="resume-card resume-md">
+          {{ page.content | safe }}
+        </section>
+        {% endif %}
+      </div>
+
+      <div class="resume-col">
+        {% if extra.skills %}
+        <section class="resume-card">
+          <div class="resume-section__title">Skills</div>
+          {% for s in extra.skills %}
+          <div class="resume-skill">
+            <div class="resume-skill__head">
+              <span class="resume-skill__name">{{ s.name }}</span>
+              {% if s.level is defined %}<span class="resume-skill__level">{{ s.level }}%</span>{% endif %}
+            </div>
+            <div class="resume-skill__bar"><div class="resume-skill__fill" style="width: {{ s.level | default(value=70) }}%"></div></div>
+          </div>
+          {% endfor %}
+        </section>
+        {% endif %}
+
+        {% if extra.certifications %}
+        <section class="resume-card">
+          <div class="resume-section__title">Certifications</div>
+          <div class="resume-list">
+            {% for c in extra.certifications %}
+            <div class="resume-list__item">
+              <div class="resume-list__title">{{ c.name | default(value=c.title) }}</div>
+              {% if c.org %}<div class="resume-list__sub">{{ c.org }}{% if c.date %} · {{ c.date }}{% endif %}</div>{% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+
+        {% if extra.languages %}
+        <section class="resume-card">
+          <div class="resume-section__title">Languages</div>
+          <div class="resume-lang">
+            {% for lang in extra.languages %}
+            <div class="resume-lang__item">
+              <div class="resume-lang__head"><span>{{ lang.name }}</span><span class="resume-lang__level">{{ lang.level }}</span></div>
+              <div class="resume-skill__bar"><div class="resume-skill__fill" style="width: {{ lang.percent | default(value=60) }}%"></div></div>
+            </div>
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+
+        {% if extra.awards %}
+        <section class="resume-card">
+          <div class="resume-section__title">Awards</div>
+          <div class="resume-list">
+            {% for a in extra.awards %}
+            <div class="resume-list__item">
+              <div class="resume-list__title">{{ a.title | default(value=a.name) }}</div>
+              {% if a.org %}<div class="resume-list__sub">{{ a.org }}{% if a.date %} · {{ a.date }}{% endif %}</div>{% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+      </div>
+    </div>
+
+    <footer class="resume-footer">© {{ now() | date(format="%Y") }} · All rights reserved.</footer>
+  </div>
+  <script>
+    (function(){
+      const btn=document.getElementById('resumeToggle');
+      const html=document.documentElement;
+      const saved=localStorage.getItem('resume-theme');
+      if(saved) html.setAttribute('data-theme', saved);
+      if(btn){
+        btn.addEventListener('click', ()=>{
+          const cur=html.getAttribute('data-theme')==='dark'?'light':'dark';
+          html.setAttribute('data-theme', cur);
+          localStorage.setItem('resume-theme', cur);
+        });
+      }
+      // palette dots mock
+      document.querySelectorAll('.resume-dot').forEach(d=>{
+        d.addEventListener('click', ()=>{
+          const c=d.classList.contains('resume-dot--blue')?'#3b82f6':d.classList.contains('resume-dot--purple')?'#8b5cf6':'#f59e0b';
+          document.querySelectorAll('.resume-skill__fill, .resume-exp__date').forEach(el=> el.style.background=c);
+          document.querySelectorAll('.resume-section__title').forEach(el=> el.style.borderBottomColor=c);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,7 +1,6 @@
 +++
 title = "你好，Elysia — 现代化 Zola 主题初体验"
 date = 2026-01-15
-description = "介绍 Elysia 的设计理念与核心特性"
 [taxonomies]
 categories = ["THEME", "zola"]
 tags = ["zola", "elysia", "design"]
@@ -12,116 +11,68 @@ sticky = true
 
 欢迎使用 **Elysia**！这是一篇置顶文章（日期较早的置顶会排在前面，因为多置顶按日期正序）。
 
-|名字|年龄|
-|--|--|
-|李逍遥|18|
+<!-- more -->
 
+## 本主题不支持封面图
 
-## 设计理念
+卡片式的布局使用封面图好看，不过本身也需要设计。之前自己使用过这 Hexo 主题 Stellar 和 Hugo 的主题 Reimu 设计的带图片的列表挺好的，喜欢的朋友可以去看看。
 
-- 充分利用屏幕可见区域，间距适当
-- 阅读就是享受：大字距、舒适行高、柔和配色
-- 亮暗模式 + 调色盘（素雅黑 / 鹅黄绿 / 活力橙 / 梦幻紫）
+这个主题不打算使用图片封面，比较节省流量吧😄也不需要可以寻找图片，但是文章内部是支持图片组件的，目前没有引入 fancybox，后面有需要再说。
 
-> GitHub Alerts 在此主题中开箱即用（`[markdown] admonitions = true`）。
+## zola 嵌套目录的局限性
 
-> [!NOTE]
-> 这是 GitHub 风格的 NOTE 提示，与 `note` 组件配色一致。
+目录嵌套较深时，子目录想要在父级列表中显示必须有 `_index.md` 文件，其中至少有一行内容 `transparent = true`，否则列表不会显示。这和 Hexo、Hugo 这些框架不太一样。
 
-> [!TIP]
-> 使用 `> [!TIP]` 即可，不要写 HTML。
+虽然不会被父级显示，但是 zola 是会编译该文章的，可以使用该文章的 url 直接访问，这样的页面官方称为“孤儿页”，访问孤儿页必须添加入口按钮才便于访问。
 
-> [!WARNING]
-> 警告样式会自动适配亮暗模式。
+## 利用好分类
 
-> [!IMPORTANT]
-> 警告样式会自动适配亮暗模式。
+由于 zola 孤儿页的存在，所以文章源文件适合一个目录平铺。所以建议给每篇文章进行分类，利用 zola 提供分类聚合，方便找到同一分类的文章。
 
-## 代码块演示
+如果有多个子目录且文章具备关联性，可以使用主题提供的 wiki 布局。
 
-代码块使用 **JetBrains Mono**，带艺术线条边框、行号、文件名居中、左下语言小写、右上复制按钮：
+## 使用 zola 写作的建议
 
-```rust,linenos,name=main.rs
-fn main() {
-    println!("Hello, Elysia!");
-    // 这一行很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长
-}
+### front matter
+
+博客文章的 front matter 中包含以下几项。zola 的分类和标签虽然内置支持，但必须使用 `taxonomies` key 方能生效。 
+
+```md
+<!--toml-->
++++
+title = "你好，Elysia — 现代化 Zola 主题初体验"
+date = 2026-01-15
+[taxonomies]
+categories = ["THEME", "ZOLA"]
+tags = ["zola", "elysia", "design"]
++++
+
+<!--yaml-->
+---
+title: 你好，Elysia — 现代化 Zola 主题初体验
+date: 2026-01-15
+taxonomies:
+  categories: ["THEME", "ZOLA"]
+  tags: ["zola", "elysia", "design"]
+---
 ```
 
-```python,linenos,name=app.py
-def hello(name: str) -> str:
-    return f"Hello {name} from Elysia"
+wiki 文章的 front matter 推荐：
+
+```md
+title = "01 · 认识 Elysia"
+date = 2026-03-01
+weight = 1
 ```
 
-## 表格横向滚动
+wiki 布局中 `weight` 字段进行文章排序，属于必填字段之一
 
-| 功能 | 说明 | 状态 |
-| --- | --- | --- |
-| 亮暗模式 | 跟随系统，可手动切换 | ✅ |
-| 调色盘 | 4 种配色 | ✅ |
-| 无感分页 | 滚动自动加载 | ✅ |
-| 加密文章 | 带锁图标，需密码 | ✅ |
-| 表格 | 内容过长自动横向滚动条，这个表格故意放一个很长的列来测试横向滚动是否正常：这是一段非常非常非常长的文本，用来撑开表格宽度，看看滚动条是否出现 | ✅ |
+### 文章摘要
 
-## Poetry
+zola 的文章摘要支持不错，可以使用 `description` front matter 定义，也可以使用 `<!-- more -->`，不管中间有没有空格都支持，这点儿比 hugo 要好。之前从 hexo 迁移到 hugo 时必须要改这个。
 
-{% <poetry title="静夜思" author="李白"> %}
-床前明月光，疑是地上霜。
+## 主题限制
 
-举头望明月，低头思故乡。
-{% </poetry> %}
+wiki 中的文章分类、标签不会出现在菜单中的分类、标签页面，wiki 相关文章自成一派。
 
-## Note 组件
-
-{% <note title="小贴士" color="green"> %}
-这是通过 `note` 组件渲染的卡片，支持 `red | green | yellow | orange | black`，默认为蓝色（GitHub info）。
-它与 GitHub Alert 共存，可按需选择。
-{% </note> %}
-
-{% <note title="注意" color="red"> %}
-红色强调，用于重要提醒。
-{% </note> %}
-
-## Tabs
-
-{% <tabs> %}
-<!-- tab bash -->
-```bash
-echo "Hello from bash"
-ls -la
-```
-<!-- tab fish -->
-```fish
-echo "Hello from fish"
-ls -la
-```
-<!-- tab powershell -->
-```powershell
-Write-Host "Hello from PowerShell"
-Get-ChildItem
-```
-{% </tabs> %}
-
-## 媒体组件
-
-视频（B站）：
-
-{{ <video bilibili="BV1n8Q7B7Ekz" width="100%" caption="演示视频" /> }}
-
-视频（YouTube）：
-
-{{ <video youtube="GoxJ4H8Chz8" width="80%" /> }}
-
-图片：
-
-{{ <image src="https://picsum.photos/800/400" caption="随机图片示例" /> }}
-
-链接卡片：
-
-{{ <link href="/about" title="关于本站" icon="👋" desc="了解 Elysia 的更多故事" /> }}
-
-{{ <link href="https://www.getzola.org" title="Zola 官网" icon="https://www.getzola.org/icons/apple-touch-icon.png" desc="一款用 Rust 编写的高性能静态站点生成器" /> }}
-
-## 友链预留
-
-友链数据在 `data/links.yaml` 中配置，使用 `{% raw %}{{ <links group="github" /> }}{% endraw %}` 按组渲染。
+简历页面也是单独的，不在博客列表里面。

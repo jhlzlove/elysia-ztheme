@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ section.title | default(value="归档") }}</h1>
+  {% if section.description %}<p>{{ section.description }}</p>{% endif %}
+</div>
+
+{# Aggregate root pages — 仅博客，排除 wiki；按当前语言获取 #}
+{% set _lang = lang | default(value=config.default_language) %}
+{% if section is defined and section.lang %}{% set _lang = section.lang %}{% endif %}
+{% set root = get_section(path="_index.md", lang=_lang) %}
+{% set raw_pages = root.pages %}
+{% if raw_pages | length == 0 %}{% set raw_pages = section.pages %}{% endif %}
+{% set_global pages = [] %}
+{% for p in raw_pages %}
+  {% if p.path is not starting_with(pat="/wiki/") and p.path is not starting_with(pat="/resume") and p.extra.style | default(value="blog") != "wiki" and p.extra.style | default(value="blog") != "resume" %}
+    {% set_global pages = [...pages, p] %}
+  {% endif %}
+{% endfor %}
+{% set_global last_year = "" %}
+<div class="archive-wrap">
+{% for p in pages | sort(attribute="date") | reverse %}
+  {% set y = p.date | date(format="%Y") %}
+  {% if y != last_year %}
+    <div class="archive-year">{{ y }}</div>
+    {% set_global last_year = y %}
+  {% endif %}
+  <div class="archive-item">
+    <time datetime="{{ p.date | date(format="%Y-%m-%d") }}">{{ p.date | date(format="%m-%d") }}</time>
+    <a href="{{ p.permalink | safe }}">{{ p.title }}</a>
+  </div>
+{% endfor %}
+</div>
+
+{% if pages | length == 0 %}
+  <div class="muted" style="text-align:center;padding:24px">暂无归档</div>
+{% endif %}
+{% endblock content %}

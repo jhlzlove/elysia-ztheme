@@ -6,5 +6,3 @@ template = "section.html"
 page_template = "page.html"
 transparent = false
 +++
-
-Wiki 风格示例，未来可通过 `extra.style = "wiki"` 实现不同布局。

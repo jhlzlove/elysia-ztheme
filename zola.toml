@@ -14,8 +14,6 @@ taxonomies = [
     {name = "tags", feed = true, paginate_by = 12, paginate_path = "page"},
 ]
 
-theme = "elysia"
-
 [markdown]
 render_emoji = true
 github_alerts = true
@@ -36,44 +34,86 @@ welcome = """
 >
 > 这里记录思考、分享知识，愿阅读成为一种享受。
 """
-
 # Footer (markdown supported)
-footer = "© 2026 Elysia · 由 [Zola](https://www.getzola.org) 驱动 · 主题 [Elysia](https://github.com/)"
+# <span id="jinrishici-sentence"></span> <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+footer = """
+本博客所有文章除特别声明外，均采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
+
+<uptime></uptime>
+<script>
+  setInterval(() => {
+    let startDate = new Date("2023-10-01")
+    let now = new Date();
+    // 计算时间差（以毫秒为单位）
+    let differenceInMs = now.getTime() - startDate.getTime();
+    // 转换为天数、小时数、分钟数和秒数
+    let days = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((differenceInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((differenceInMs % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((differenceInMs % (1000 * 60)) / 1000);
+    let uptimeTags = Array.from(document.getElementsByTagName("uptime"));
+    uptimeTags.forEach(ele => { ele.textContent = `🌱 本站已活了 ${days} 天 | ${hours} 时 | ${minutes} 分 | ${seconds} 秒 🌱` });
+  }, 1000);
+</script>
+© 2026 Elysia · 由 [Zola](https://www.getzola.org) 驱动 · 主题 [Elysia](https://github.com/)
+"""
+
+# ── Site filings / 备案信息（留空则不显示对应项目）──
+# 支持 icp、公安、萌国备案号
+[extra.icp]
+icp = ""
+police = ""
+mengguo = "20268080"
 
 # ── Top Navigation Buttons (wrap automatically, 4 per row on desktop) ──
 # icon is optional, can be emoji / svg name / url
+# 使用 Zola translations 实现多语言：仅需维护一套菜单，显示名称通过 translations 翻译
+# - 默认语言文案在 [translations] 中定义
+# - 其他语言在 [languages.<code>.translations] 中定义
+# - 模板通过 trans(key=item.name_key, lang=cur_lang) 获取当前语言名称
+# - URL 保持与语言无关的形式（如 "/"、"/wiki/"），模板按 cur_lang 自动加前缀
 [[extra.menus]]
-name = "博客"
+name_key = "menu_blog"
 url = "/"
 icon = "✍️"
 
 [[extra.menus]]
-name = "Wiki"
+name_key = "menu_wiki"
 url = "/wiki/"
 icon = "📚"
 
 [[extra.menus]]
-name = "归档"
+name_key = "menu_archive"
 url = "/archive/"
 icon = "🗂️"
 
 [[extra.menus]]
-name = "分类"
+name_key = "menu_categories"
 url = "/categories/"
 icon = "📁"
 
 [[extra.menus]]
-name = "标签"
+name_key = "menu_tags"
 url = "/tags/"
 icon = "🏷️"
 
 [[extra.menus]]
-name = "热力图"
+name_key = "menu_heatmap"
 url = "/heatmap/"
 icon = "🔥"
 
 [[extra.menus]]
-name = "友链"
+name_key = "menu_resume"
+url = "/resume/"
+icon = "📄"
+
+[[extra.menus]]
+name_key = "menu_friends"
+url = "/friends/"
+icon = "🔗"
+
+[[extra.menus]]
+name_key = "menu_links"
 url = "/links/"
 icon = "🔗"
 
@@ -94,19 +134,14 @@ url = "mailto:hello@example.com"
 icon = "mail"
 
 
-# ── Fonts ──
-# Leave url empty to use system / bundled fonts
-# Sizes support any CSS length (px, rem, em). Example: "16px" "0.95rem"
-[extra.fonts]
-body_name = "LXGW WenKai Screen"
-body_url = "https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-web/style.css"
-body_size = "16px"
-body_size_small = "15px"
-code_name = "JetBrains Mono"
-code_url = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
-code_size = "16px"
-article_size = "16px"
-toc_size = "13.5px"
+# ── Inject head — arbitrary <link> etc. ──
+# Example: { rel = "stylesheet", href = "https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-web/style.css" }
+[extra.inject]
+head = [
+  { rel = "stylesheet", href = "https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-web/style.css" },
+  { rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" },
+  { rel = "stylesheet", href = "https://fontsapi.zeoseven.com/442/main/result.css" },
+]
 
 # ── Style / Palette defaults ──
 # theme: "auto" | "light" | "dark"
@@ -114,6 +149,16 @@ toc_size = "13.5px"
 default_theme = "auto"
 # palette: "default" | "lime" | "orange" | "violet"
 default_palette = "default"
+
+# ── Fonts ──
+# root_size: global html font-size; body_size: article/body; code_block_size: code
+# body_family / code_block_family: full font stack as array (include defaults so source stays simple)
+[extra.style.fonts]
+root_size = "16px"
+body_size = "16px"
+code_block_size = "14px"
+body_family = ["LXGW WenKai Screen", "Inter", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif"]
+code_block_family = ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"]
 
 # ── Comments ──
 # enable 在 [extra.comments] 统一控制；各系统不再单独设 enable
@@ -187,6 +232,16 @@ code_line_numbers = true
 paginate_by = 5
 # Show reading time
 show_reading_time = true
+# Show welcome block in sidebar (欢迎语开关，默认 true)
+welcome = true
+
+# ── Article Expiry Warning — 文章过期提示 ──
+# 在文章头部显示过期提醒：根据 date/updated 与当前时间计算，超过 days 天即显示
+# 文案通过 Zola translations 管理：key 为 `article_expiry`，支持占位符 {days} {date} {diff}
+# 默认语言在 [translations] 中配置，其他语言在 [languages.<code>.translations] 中配置
+[extra.article_expiry]
+enable = true
+days = 90
 
 # ── KaTeX ── 设 enable = true 即启用 $...$ / $$...$$ 数学公式
 [extra.katex]
@@ -195,6 +250,22 @@ enable = true
 # css_url = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
 # js_url = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
 # auto_render_url = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+
+# ── Translations — 默认语言 (zh) ──
+# 增删菜单时：只需在 [[extra.menus]] 中改一套，同步在此与 [languages.en.translations] 中增删对应 key
+[translations]
+menu_blog = "博客"
+menu_wiki = "Wiki"
+menu_archive = "归档"
+menu_categories = "分类"
+menu_tags = "标签"
+menu_heatmap = "热力图"
+menu_resume = "简历"
+menu_friends = "友链"
+menu_links = "工具集"
+article_expiry = "本文最后更新于 {date}，已超过 {days} 天未更新，内容可能已过时，请注意甄别。"
+toc_title = "目录"
+toc_on_this_page = "本页目录"
 
 [languages.en]
 title = "Elysia EN"
@@ -205,7 +276,21 @@ taxonomies = [
     {name = "tags", feed = true},
 ]
 
+[languages.en.translations]
+menu_blog = "Blog"
+menu_wiki = "Wiki"
+menu_archive = "Archive"
+menu_categories = "Categories"
+menu_tags = "Tags"
+menu_heatmap = "Heatmap"
+menu_resume = "Resume"
+menu_friends = "Friends"
+menu_links = "Tools"
+article_expiry = "This article was last updated on {date} and has not been updated for over {days} days. The content may be outdated, please verify the information."
+toc_title = "On this page"
+toc_on_this_page = "On this page"
+
 [slugify]
 paths = "on"
-taxonomies = "on"
+taxonomies = "off"
 anchors = "on"
