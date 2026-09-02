@@ -1030,7 +1030,9 @@ html[data-theme="dark"] .tag:nth-child(5n+5){background:#082f49;color:#7dd3fc;bo
 .article__content h4{font-size:16px}
 .article__content p{margin:14px 0}
 .article__content a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--border-strong)}
+.article__content a:not(:has(img))::after{content:"";display:inline-block;width:.78em;height:.78em;margin-left:5px;background:currentColor;line-height:1;text-decoration:none;vertical-align:-.06em;opacity:.72;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M9 2h5v5M14 2 7 9'/%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M13 9v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M9 2h5v5M14 2 7 9'/%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M13 9v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4'/%3E%3C/svg%3E") center/contain no-repeat}
 .article__content a:hover{text-decoration-color:var(--accent)}
+.article__content a:hover::after{opacity:1}
 .article__content blockquote{
   margin:18px 0;
   padding:12px 16px;
