@@ -1,6 +1,6 @@
 +++
 title = "加密文章示例 — 需要密码才能阅读"
-date = 2026-03-10
+date = 2026-09-02
 description = "演示文章加密功能"
 [taxonomies]
 categories = ["SECRET"]

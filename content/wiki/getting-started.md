@@ -1,6 +1,6 @@
 +++
 title = "Wiki 入门 — 风格扩展示例"
-date = 2026-02-20
+date = 2026-09-02
 [taxonomies]
 categories = ["WIKI"]
 tags = ["wiki", "style"]
