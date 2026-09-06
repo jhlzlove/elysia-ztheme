@@ -9,7 +9,7 @@
   {% endif %}
 {% endif %}
 {% if is_wiki_subsection %}
-{# Wiki 子目录首页：目录中的文章直接作为章节列表展示 #}
+{# Wiki 子目录首页：左侧栏已展示目录，此处仅保留正文；移动端补充折叠目录 #}
 <div class="content-area">
   <div class="content-area__primary">
     <article class="article" data-page-style="{{ section.extra.style | default(value="wiki") }}">
@@ -27,6 +27,31 @@
         </div>
         {% endif %}
       </header>
+      {% if section.pages | length > 0 %}
+      <details class="wiki-mobile" id="wikiMobile">
+        <summary class="toc-mobile__summary">
+          <span class="toc-mobile__label">📚 {{ section.title }}</span>
+          <span class="toc-mobile__count">{{ section.pages | length }} 篇</span>
+        </summary>
+        <nav class="wiki-mobile__nav" aria-label="Wiki 目录">
+          {% set _m_wiki_root = "/wiki/" %}
+          {% if lang != config.default_language %}
+            {% set _m_wiki_root = "/" ~ lang ~ "/wiki/" %}
+          {% endif %}
+          <a class="wiki-mobile__back" href="{{ _m_wiki_root | safe }}">← 返回 Wiki</a>
+          <ol class="wiki-side-nav__list">
+            {% for p in section.pages %}
+            <li class="wiki-side-nav__item">
+              <a href="{{ p.permalink | safe }}">
+                <span class="wiki-side-nav__index">{{ loop.index }}</span>
+                <span class="wiki-side-nav__item-title">{{ p.title }}</span>
+              </a>
+            </li>
+            {% endfor %}
+          </ol>
+        </nav>
+      </details>
+      {% endif %}
       <div class="article__content" id="articleContent">
         {{ section.content | safe }}
       </div>
@@ -41,7 +66,44 @@
   {% if section.content %}<div style="margin-top:10px;color:var(--muted);font-size:14.5px">{{ section.content | safe }}</div>{% endif %}
 </div>
 
-{# Subsections: use same post-card style as article list #}
+{# Subsections + Pages：wiki 用统一双列圆角卡片网格（尺寸一致），其余保持 post-card 列表 #}
+{% set pages = section.pages %}
+{% if paginator %}{% set pages = paginator.pages %}{% endif %}
+
+{% if "wiki" in section.path %}
+<div class="wiki-grid" id="postList">
+  {% if section.subsections %}
+  {% for sub in section.subsections %}
+    {% set s = get_section(path=sub) %}
+    {% if s.title %}
+    <article class="wiki-card">
+      <div class="wiki-card__head">
+        <h2 class="wiki-card__title"><a class="wiki-card__link" href="{{ s.permalink | safe }}">{{ s.title }}</a></h2>
+        <span class="wiki-card__count">{{ s.pages | length }} 篇</span>
+      </div>
+      {% if s.description %}
+      <p class="wiki-card__desc">{{ s.description }}</p>
+      {% elif s.content %}
+      <p class="wiki-card__desc">{{ s.content | striptags | truncate(length=80) | safe }}</p>
+      {% endif %}
+    </article>
+    {% endif %}
+  {% endfor %}
+  {% endif %}
+  {% for page in pages %}
+  <article class="wiki-card">
+    <div class="wiki-card__head">
+      <h2 class="wiki-card__title"><a class="wiki-card__link" href="{{ page.permalink | safe }}">{{ page.title }}</a></h2>
+    </div>
+    {% set sum = page.summary | default(value="", boolean=true) %}
+    {% if sum == "" %}{% set sum = page.description | default(value="", boolean=true) %}{% endif %}
+    {% if sum != "" %}
+      <p class="wiki-card__desc">{{ sum | striptags | truncate(length=80) | safe }}</p>
+    {% endif %}
+  </article>
+  {% endfor %}
+</div>
+{% else %}
 {% if section.subsections %}
   <div class="post-list" style="margin-bottom:14px">
   {% for sub in section.subsections %}
@@ -62,9 +124,6 @@
   {% endfor %}
   </div>
 {% endif %}
-
-{% set pages = section.pages %}
-{% if paginator %}{% set pages = paginator.pages %}{% endif %}
 
 <div class="post-list" id="postList">
 {% for page in pages %}
@@ -93,6 +152,7 @@
   </article>
 {% endfor %}
 </div>
+{% endif %}
 
 {% if paginator and paginator.number_pagers > 1 %}
   <div class="pagination" id="pagination" data-next="{{ paginator.next | default(value="") | safe }}">
@@ -109,35 +169,11 @@
 {% endblock content %}
 
 {% block toc %}
-{% if is_wiki_subsection %}
-<aside class="toc-aside is-visible has-series" id="tocAside" aria-label="Table of contents">
-    {% set wiki_nav_title = section.title %}
-    <div class="series-nav" style="margin-bottom:14px">
-      <div class="series-nav__head">
-        <span class="series-nav__icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        </span>
-        <span class="series-nav__title">目录：{{ wiki_nav_title }}</span>
-        <span class="series-nav__count">{{ section.pages | length }} 篇</span>
-      </div>
-      <ol class="series-nav__list">
-        {% for p in section.pages %}
-          <li class="series-nav__item">
-            <a href="{{ p.permalink | safe }}">
-              <span class="series-nav__index">{{ loop.index }}</span>
-              <span class="series-nav__item-title">{{ p.title }}</span>
-            </a>
-          </li>
-        {% endfor %}
-      </ol>
-      <div class="series-nav__progress">
-        <div class="series-nav__bar"><div class="series-nav__bar-fill" style="width: 0%"></div></div>
-        <span class="series-nav__step">0 / {{ section.pages | length }}</span>
-      </div>
-    </div>
-    {% if section.toc | length > 0 %}
+{% if is_wiki_subsection and section.toc | length > 0 %}
+{# Wiki 目录已移至左侧栏，右侧仅保留本节正文大纲 #}
+<aside class="toc-aside is-visible" id="tocAside" aria-label="Table of contents">
     <nav class="toc" id="toc">
-      <div class="toc__title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h7"/></svg> {{ trans(key="toc_title", lang=lang) }}</div>
+      <div class="toc__title">{{ <icon name="toc" width="14" height="14"/> }} {{ trans(key="toc_title", lang=lang) }}</div>
       <ol class="toc__list">
         {% for h1 in section.toc %}
           <li>
@@ -159,7 +195,6 @@
         {% endfor %}
       </ol>
     </nav>
-    {% endif %}
   </aside>
 {% endif %}
 {% endblock toc %}

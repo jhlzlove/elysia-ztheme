@@ -17,10 +17,10 @@
       <header class="article__header">
         <div class="article__kicker">
           {% if page.extra.sticky or page.extra.top or page.extra.pinned %}
-            <span class="post-card__pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 2l2.4 7.2H22l-6.2 4.5 2.4 7.3L12 17l-6.2 4 2.4-7.3L2 9.2h7.6z"/></svg> 置顶</span>
+            <span class="post-card__pin">{{ <icon name="pin" width="14" height="14"/> }} 置顶</span>
           {% endif %}
           {% if page.extra.encrypted %}
-            <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 加密</span>
+            <span class="badge">{{ <icon name="lock" width="12" height="12"/> }} 加密</span>
           {% endif %}
           {% if page.taxonomies.categories %}
             {% for cat in page.taxonomies.categories %}<span class="tag tag--category">{{ cat }}</span>{% endfor %}
@@ -31,12 +31,46 @@
         </div>
         <h1 class="article__title">{{ page.title }}</h1>
         <div class="article__meta">
-          {% if page.date %}<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> {{ page.date | date(format="%Y-%m-%d") }}</span>{% endif %}
+          {% if page.date %}<span>{{ <icon name="clock" width="14" height="14"/> }} {{ page.date | date(format="%Y-%m-%d") }}</span>{% endif %}
           {% if page.updated %}<span>更新于 {{ page.updated | date(format="%Y-%m-%d") }}</span>{% endif %}
-          {% if config.extra.features.show_reading_time %}<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg> {{ page.reading_time }} 分钟 · {{ page.word_count }} 字</span>{% endif %}
+          {% if config.extra.features.show_reading_time %}<span>{{ <icon name="edit" width="14" height="14"/> }} {{ page.reading_time }} 分钟 · {{ page.word_count }} 字</span>{% endif %}
           {% if page.extra.author %}<span>作者 {{ page.extra.author }}</span>{% endif %}
         </div>
       </header>
+
+      {# ── Mobile Wiki 目录 — 仅 <1024 时显示，桌面端左侧栏已展示 ── #}
+      {# wiki 只收录项目：文章必属某个子项目，此处父级恒为项目目录 #}
+      {% if page.ancestors | length > 0 %}
+        {% set _m_parent_path = page.ancestors | last %}
+        {% if "wiki" in _m_parent_path and _m_parent_path != "wiki/_index.md" and "wiki/_index." not in _m_parent_path %}
+          {% set _m_parent = get_section(path=_m_parent_path) %}
+          {% if _m_parent and _m_parent.pages | length > 0 %}
+          {% set _m_wiki_root = "/wiki/" %}
+          {% if lang != config.default_language %}
+            {% set _m_wiki_root = "/" ~ lang ~ "/wiki/" %}
+          {% endif %}
+          <details class="wiki-mobile" id="wikiMobile">
+            <summary class="toc-mobile__summary">
+              <span class="toc-mobile__label">📚 {{ _m_parent.title }}</span>
+              <span class="toc-mobile__count">{{ _m_parent.pages | length }} 篇</span>
+            </summary>
+            <nav class="wiki-mobile__nav" aria-label="Wiki 目录">
+              <a class="wiki-mobile__back" href="{{ _m_wiki_root | safe }}">← 返回 Wiki</a>
+              <ol class="wiki-side-nav__list">
+                {% for p in _m_parent.pages %}
+                <li class="wiki-side-nav__item {% if p.permalink == page.permalink %}is-current{% endif %}">
+                  <a href="{{ p.permalink | safe }}">
+                    <span class="wiki-side-nav__index">{{ loop.index }}</span>
+                    <span class="wiki-side-nav__item-title">{{ p.title }}</span>
+                  </a>
+                </li>
+                {% endfor %}
+              </ol>
+            </nav>
+          </details>
+          {% endif %}
+        {% endif %}
+      {% endif %}
 
       {# ── Mobile TOC — 仅 <1024 时显示，桌面隐藏 ── #}
       {% if config.extra.features.toc | default(value=true) and page.toc | length > 0 %}
@@ -110,7 +144,7 @@
         {% set _expiry_rendered = _expiry_raw | replace(from="{days}", to=_expiry_days_s) | replace(from="{date}", to=_expiry_date_str) | replace(from="{diff}", to=_diff_build_s) %}
         <div id="articleExpiry" class="article-expiry" {% if _diff_build < _expiry_days %}hidden{% endif %} data-expiry-days="{{ _expiry_days }}" data-expiry-ts="{{ _expiry_ts }}" data-expiry-date="{{ _expiry_date_str }}" data-expiry-text="{{ _expiry_raw | escape_xml | safe }}" data-lang="{{ _cur_lang }}" role="status" aria-live="polite">
           <div class="article-expiry__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+            {{ <icon name="alert" width="18" height="18"/> }}
           </div>
           <div class="article-expiry__body">{{ _expiry_rendered }}</div>
         </div>
@@ -242,52 +276,10 @@
 
 {% block toc %}
 <aside class="toc-aside" id="tocAside" aria-label="Table of contents">
-    {% set wiki_nav_title = "" %}
-    {% set wiki_nav_section = "" %}
-    {% if page.ancestors | length > 0 %}
-      {% set parent_path = page.ancestors | last %}
-      {% set parent = get_section(path=parent_path) %}
-      {% if parent and parent.pages | length > 1 and "wiki" in parent_path %}
-        {% set_global wiki_nav_title = parent.title %}
-        {% set_global wiki_nav_section = parent %}
-      {% endif %}
-    {% endif %}
-    {% if wiki_nav_title and wiki_nav_section %}
-      {% set parent = wiki_nav_section %}
-      {% if parent and parent.pages | length > 0 %}
-        <div class="series-nav" style="margin-bottom:14px">
-          <div class="series-nav__head">
-            <span class="series-nav__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-            </span>
-            <span class="series-nav__title">目录：{{ wiki_nav_title }}</span>
-            <span class="series-nav__count">{{ parent.pages | length }} 篇</span>
-          </div>
-          <ol class="series-nav__list">
-            {% for p in parent.pages %}
-              <li class="series-nav__item {% if p.permalink == page.permalink %}is-current{% endif %}">
-                <a href="{{ p.permalink | safe }}">
-                  <span class="series-nav__index">{{ loop.index }}</span>
-                  <span class="series-nav__item-title">{{ p.title }}</span>
-                  {% if p.permalink == page.permalink %}<span class="series-nav__here">· 正在阅读</span>{% endif %}
-                </a>
-              </li>
-            {% endfor %}
-          </ol>
-          <div class="series-nav__progress">
-            {% set cur_idx = 0 %}
-            {% for p in parent.pages %}
-              {% if p.permalink == page.permalink %}{% set_global cur_idx = loop.index %}{% endif %}
-            {% endfor %}
-            <div class="series-nav__bar"><div class="series-nav__bar-fill" style="width: {{ cur_idx * 100 / (parent.pages | length) }}%"></div></div>
-            <span class="series-nav__step">{{ cur_idx }} / {{ parent.pages | length }}</span>
-          </div>
-        </div>
-      {% endif %}
-    {% endif %}
+    {# Wiki 目录已移至左侧栏，此处仅保留本页大纲，避免文章多时右侧过长 #}
     {% if config.extra.features.toc | default(value=true) and page.toc | length > 0 %}
     <nav class="toc" id="toc">
-      <div class="toc__title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h7"/></svg> {{ trans(key="toc_title", lang=lang) }}</div>
+      <div class="toc__title">{{ <icon name="toc" width="14" height="14"/> }} {{ trans(key="toc_title", lang=lang) }}</div>
       <ol class="toc__list">
         {% for h1 in page.toc %}
           <li>

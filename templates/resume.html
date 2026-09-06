@@ -226,9 +226,9 @@
         <div class="resume-summary">{{ extra.summary | default(value="拥有 4+ 年的开发经验，主要聚焦于 Java 领域") }}</div>
       </div>
       <div class="resume-contacts">
-        {% if extra.email %}<div class="resume-contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="m2 7 10 7 10-7"/></svg><a href="mailto:{{ extra.email }}">{{ extra.email }}</a></div>{% endif %}
-        {% if extra.phone %}<div class="resume-contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 5 12.07 19.79 19.79 0 0 1 1.93 3.44 2 2 0 0 1 3.91 1h3a2 2 0 0 1 2 1.72c.12 1.2.45 2.36.97 3.44a2 2 0 0 1-.57 2.12l-1.27 1.27a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.12-.57c1.08.52 2.24.85 3.44.97A2 2 0 0 1 22 14.92z"/></svg>{{ extra.phone }}</div>{% endif %}
-        {% if extra.location %}<div class="resume-contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-11a7 7 0 1 0-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="3"/></svg>{{ extra.location }}</div>{% endif %}
+        {% if extra.email %}<div class="resume-contact">{{ <icon name="mail"/> }}<a href="mailto:{{ extra.email }}">{{ extra.email }}</a></div>{% endif %}
+        {% if extra.phone %}<div class="resume-contact">{{ <icon name="phone"/> }}{{ extra.phone }}</div>{% endif %}
+        {% if extra.location %}<div class="resume-contact">{{ <icon name="location"/> }}{{ extra.location }}</div>{% endif %}
       </div>
     </header>
 

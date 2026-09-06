@@ -1,0 +1,6 @@
+<!-- 外链箭头：仅供 CSS mask 引用（static/css/style.css 文章外链装饰）。
+  mask 引用外部 sprite 的 fragment（icons.svg#xxx）兼容性差，故独立成文件。 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <path fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 2h5v5M14 2 7 9"/>
+  <path fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 9v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4"/>
+</svg>

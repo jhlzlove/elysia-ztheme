@@ -508,8 +508,18 @@
       copy.type='button';
       copy.setAttribute('aria-label','复制');
       copy.title='复制';
-      const iconCopy='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v3"/></svg>';
-      const iconDone='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
+      // 图标来自 static/icons.svg sprite（base.html 注入 window.ELYSIA_ICONS_URL）
+      const spriteUrl = (function(){
+        if(window.ELYSIA_ICONS_URL) return window.ELYSIA_ICONS_URL;
+        var u = document.querySelector('use[href*="icons.svg"]');
+        if(u){
+          var h = u.getAttribute('href') || '';
+          if(h) return h.split('#')[0];
+        }
+        return 'icons.svg';
+      })();
+      const iconCopy='<svg viewBox="0 0 24 24" aria-hidden="true"><use href="'+spriteUrl+'#i-copy"></use></svg>';
+      const iconDone='<svg viewBox="0 0 24 24" aria-hidden="true"><use href="'+spriteUrl+'#i-check"></use></svg>';
       copy.innerHTML=iconCopy;
       copy.addEventListener('click', async ()=>{
         try{

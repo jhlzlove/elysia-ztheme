@@ -19,7 +19,7 @@
   data-index-name="{{ config.extra.algolia.index_name | safe }}"
   data-hits-per-page="{{ config.extra.algolia.hits_per_page | default(value=12) }}">
   <div class="search-page__wrap">
-    <svg class="search-page__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    {{ <icon name="search" class="search-page__icon"/> }}
     <input id="searchPageInput" class="search-page__input" type="search" placeholder="{{ config.extra.algolia.placeholder | default(value="输入关键词搜索…") }}" autocomplete="off" spellcheck="false" aria-label="搜索">
   </div>
   <div id="searchPageStats" class="search-page__stats" aria-live="polite"></div>

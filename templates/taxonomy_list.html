@@ -62,12 +62,12 @@
   <details class="cat-dir__group">
     <summary class="cat-dir__summary">
       <span class="cat-dir__icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/><path d="M3 7l3 3"/></svg>
+        {{ <icon name="folder"/> }}
       </span>
       <span class="cat-dir__name">{{ item.name }}</span>
       <span class="cat-dir__count">{{ item.count }} 篇</span>
       <span class="cat-dir__arrow" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        {{ <icon name="chevron-down"/> }}
       </span>
       <a class="cat-dir__link" href="{{ item.permalink | safe }}" aria-label="查看分类 {{ item.name }}" onclick="event.stopPropagation()">→</a>
     </summary>
@@ -77,11 +77,11 @@
         <a class="cat-dir__file" href="{{ page.permalink | safe }}">
           <span class="cat-dir__file-icon">
             {% if page.extra.encrypted %}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              {{ <icon name="lock"/> }}
             {% elif page.extra.sticky or page.extra.top or page.extra.pinned %}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.2H22l-6.2 4.5 2.4 7.3L12 17l-6.2 4 2.4-7.3L2 9.2h7.6z"/></svg>
+              {{ <icon name="pin"/> }}
             {% else %}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M10 13H8"/><path d="M16 17H8"/><path d="M13 13h1"/></svg>
+              {{ <icon name="file"/> }}
             {% endif %}
           </span>
           <span class="cat-dir__file-title">{{ page.title }}</span>

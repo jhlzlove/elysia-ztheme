@@ -64,10 +64,10 @@
     <article class="post-card" data-pinned="true">
       <div class="post-card__top">
         <span class="post-card__pin" title="置顶">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.2H22l-6.2 4.5 2.4 7.3L12 17l-6.2 4 2.4-7.3L2 9.2h7.6z"/><path d="M12 17v5" stroke-linecap="round"/></svg>
+          {{ <icon name="pin"/> }}
           置顶
         </span>
-        {% if page.extra.encrypted %}<span class="post-card__lock" title="加密"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 加密</span>{% endif %}
+        {% if page.extra.encrypted %}<span class="post-card__lock" title="加密">{{ <icon name="lock" width="14" height="14"/> }} 加密</span>{% endif %}
         {% if page.taxonomies.categories %}<span>·</span>{% for cat in page.taxonomies.categories %}<span style="text-transform:uppercase;letter-spacing:.06em;font-weight:600">{{ cat }}</span>{% if not loop.last %}<span style="margin:0 2px">·</span>{% endif %}{% endfor %}{% endif %}
       </div>
       <h2 class="post-card__title"><a href="{{ page.permalink | safe }}">{{ page.title }}</a></h2>
@@ -86,7 +86,7 @@
           {% endif %}
         </div>
         <time class="post-card__time" datetime="{{ page.date | date(format="%Y-%m-%d") }}">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          {{ <icon name="clock" width="14" height="14"/> }}
           {{ page.date | date(format="%Y-%m-%d") }}
           {% if config.extra.features.show_reading_time and page.reading_time %}· {{ page.reading_time }} min{% endif %}
         </time>
@@ -103,7 +103,7 @@
   {% if is_pinned %}{% continue %}{% endif %}
   <article class="post-card">
     <div class="post-card__top">
-      {% if page.extra.encrypted %}<span class="post-card__lock" title="加密"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 加密</span>{% endif %}
+      {% if page.extra.encrypted %}<span class="post-card__lock" title="加密">{{ <icon name="lock" width="14" height="14"/> }} 加密</span>{% endif %}
       {% if page.taxonomies.categories %}{% for cat in page.taxonomies.categories %}<span style="text-transform:uppercase;letter-spacing:.06em;font-weight:600">{{ cat }}</span>{% if not loop.last %}<span style="margin:0 4px">·</span>{% endif %}{% endfor %}{% endif %}
     </div>
     <h2 class="post-card__title"><a href="{{ page.permalink | safe }}">{{ page.title }}</a></h2>

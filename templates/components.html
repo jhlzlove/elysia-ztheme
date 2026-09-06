@@ -9,7 +9,7 @@
 {% elif c == "black" %}{% set cls = "black" -%}
 {% elif c == "blue" %}{% set cls = "blue" -%}
 {% endif -%}
-<div class="callout callout--{{ cls }}" role="note" data-component="note">{% if title %}<div class="callout__head"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm6.5-.25A.75.75 0 0 1 7 8v2.5a.75.75 0 0 1-1.5 0V8A.75.75 0 0 1 6.5 7.75zm0-2.75A.75.75 0 1 1 8 4a.75.75 0 0 1-1.5.75z"/></svg><span>{{ title }}</span></div>{% endif %}<div class="callout__body">{{ body | markdown | safe }}</div></div>
+<div class="callout callout--{{ cls }}" role="note" data-component="note">{% if title %}<div class="callout__head">{{ <icon name="callout" width="16" height="16"/> }}<span>{{ title }}</span></div>{% endif %}<div class="callout__body">{{ body | markdown | safe }}</div></div>
 {% endcomponent note -%}
 
 {% component video(bilibili = "", youtube = "", src = "", width = "100%", caption = "", autoplay = "") -%}
@@ -42,8 +42,8 @@
   {% if caption and caption != title %}{% set srclabel = caption %}{% endif -%}
   <div class="audio-player" data-src="{{ src | safe }}" data-autoplay="{{ ap }}">
     <button class="audio-player__play" type="button" aria-label="Play">
-      <svg class="audio-player__icon--play" viewBox="0 0 24 24" fill="none" width="16" height="16"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>
-      <svg class="audio-player__icon--pause" viewBox="0 0 24 24" fill="none" width="16" height="16" style="display:none"><rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor"/><rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor"/></svg>
+      {{ <icon name="play" class="audio-player__icon--play" width="16" height="16"/> }}
+      {{ <icon name="pause" class="audio-player__icon--pause" width="16" height="16" style="display:none"/> }}
     </button>
     <div class="audio-player__center">
       <div class="audio-player__title"><span class="audio-player__name">{{ title }}</span> <span class="audio-player__source">{{ srclabel }}</span></div>
@@ -103,3 +103,14 @@
 {% endcomponent poetry -%}
 
 {% component tabs() -%}{% set raw = body | trim -%}{% set parts = raw | split(pat="<!-- tab ") -%}<div class="tabs" data-component="tabs" role="tablist"><div class="tabs__nav" role="tablist">{% for part in parts %}{% if loop.index0 == 0 %}{% continue %}{% endif %}{% set seg = part | split(pat="-->") %}{% set label = seg[0] | trim %}<button class="tabs__btn {% if loop.index == 2 %}is-active{% endif %}" role="tab" aria-selected="{% if loop.index == 2 %}true{% else %}false{% endif %}" data-index="{{ loop.index0 }}">{{ label | lower }}</button>{% endfor %}</div><div class="tabs__panels">{% for part in parts %}{% if loop.index0 == 0 %}{% continue %}{% endif %}{% set seg = part | split(pat="-->") %}{% set label = seg[0] | trim %}{% set content = seg[1] | default(value="") | trim %}<div class="tabs__panel {% if loop.index == 2 %}is-active{% endif %}" role="tabpanel">{{ content | markdown | safe }}</div>{% endfor %}</div></div>{% endcomponent tabs -%}
+
+{# ── Icon：全站 UI 图标统一经由 static/icons.svg sprite 渲染 ──────────
+  用法：{{ <icon name="search" class="search__icon" /> }}
+  参数全为可选字符串：name（sprite 中 i-<name>，不含前缀）、class、
+  width / height（原先写过内联宽高的调用请透传）、id / style
+  （主题切换、播放器等需 JS 按 id / class 控制显隐的图标）、label
+  （传入后输出 role="img" + aria-label，否则为装饰性 aria-hidden）。
+  新增图标只需在 static/icons.svg 追加 <symbol>，改动后同步下行 ?v=。 #}
+{% component icon(name = "", class = "", width = "", height = "", id = "", style = "", label = "") -%}
+<svg{% if id %} id="{{ id }}"{% endif %}{% if class %} class="{{ class }}"{% endif %}{% if width %} width="{{ width }}"{% endif %}{% if height %} height="{{ height }}"{% endif %}{% if style %} style="{{ style }}"{% endif %} {% if label %}role="img" aria-label="{{ label }}"{% else %}aria-hidden="true"{% endif %}><use href="{{ get_url(path="icons.svg") | safe }}?v=20260907#i-{{ name }}"></use></svg>
+{% endcomponent icon -%}

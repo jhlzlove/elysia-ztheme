@@ -396,7 +396,7 @@ html[data-palette="violet"][data-theme="dark"]{
   gap:14px;
   padding:8px 0 4px;
   flex-shrink:0;
-  margin-bottom:clamp(18px, 2.2vw, 26px);
+  margin-bottom:0;
 }
 .brand__avatar{
   width:88px;height:88px;
@@ -1028,7 +1028,7 @@ html[data-theme="dark"] .tag:nth-child(5n+5){background:#082f49;color:#7dd3fc;bo
 .article__content h4{font-size:16px}
 .article__content p{margin:14px 0}
 .article__content a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--border-strong)}
-.article__content a:not(:has(img))::after{content:"";display:inline-block;width:.78em;height:.78em;margin-left:5px;background:currentColor;line-height:1;text-decoration:none;vertical-align:-.06em;opacity:.72;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M9 2h5v5M14 2 7 9'/%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M13 9v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M9 2h5v5M14 2 7 9'/%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M13 9v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4'/%3E%3C/svg%3E") center/contain no-repeat}
+.article__content a:not(:has(img))::after{content:"";display:inline-block;width:.78em;height:.78em;margin-left:5px;background:currentColor;line-height:1;text-decoration:none;vertical-align:-.06em;opacity:.72;-webkit-mask:url("../icons/external.svg") center/contain no-repeat;mask:url("../icons/external.svg") center/contain no-repeat}
 .article__content a:hover{text-decoration-color:var(--accent)}
 .article__content a:hover::after{opacity:1}
 .article__content blockquote{
@@ -2549,7 +2549,6 @@ html[data-theme="dark"] .heatmap__cell[data-level="4"]{background:#39d353}
     background:var(--bg);
     border-bottom:none;
   }
-  .sidebar .brand{padding-right:48px}
   /* panel — 开放式，自然融入，无卡片悬浮 */
   .sidebar__panel{
     position:static;
@@ -2737,3 +2736,295 @@ html[data-theme="dark"] .heatmap__cell[data-level="4"]{background:#39d353}
 
 /* Focus ring for keyboard */
 *:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ─────────────────────────────────────────
+   9. Wiki 左侧目录（进入 wiki 子项目时替代全局菜单）
+   布局：左栏 = 目录（含返回 Wiki），右栏 = 本页大纲
+───────────────────────────────────────── */
+.wiki-side-nav{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  border:none;
+  border-radius:0;
+  background:transparent;
+  padding:0;
+}
+.wiki-side-nav__back{
+  display:inline-flex;
+  align-items:center;
+  align-self:flex-start;
+  gap:6px;
+  font-size:13px;
+  font-weight:500;
+  color:var(--muted);
+  text-decoration:none;
+  padding:4px 2px;
+  border:none;
+  border-radius:0;
+  background:transparent;
+  margin-bottom:8px;
+}
+.wiki-side-nav__back:hover{
+  color:var(--accent);
+  background:transparent;
+  border-color:transparent;
+  text-decoration:none;
+}
+.wiki-side-nav__head{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:2px 2px 10px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:6px;
+}
+.wiki-side-nav__title{
+  font-size:13px;
+  font-weight:700;
+  color:var(--fg);
+  flex:1;
+  min-width:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  text-decoration:none;
+}
+a.wiki-side-nav__title:hover{
+  color:var(--accent);
+  text-decoration:none;
+}
+.wiki-side-nav__count{
+  font-size:11px;
+  color:var(--muted);
+  background:transparent;
+  border:none;
+  padding:0;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.wiki-side-nav__list{
+  list-style:none;
+  margin:0;
+  padding:4px 0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.wiki-side-nav__item{
+  border-left:2px solid transparent;
+  border-radius:0;
+}
+.wiki-side-nav__item.is-current{
+  border-left-color:var(--accent);
+  background:transparent;
+}
+.wiki-side-nav__item a{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 8px;
+  font-size:13px;
+  line-height:1.4;
+  color:var(--fg);
+  text-decoration:none;
+  border-radius:6px;
+  min-width:0;
+}
+.wiki-side-nav__item:not(.is-current) a:hover{
+  color:var(--accent);
+  background:var(--bg-muted);
+}
+.wiki-side-nav__item.is-current a{
+  color:var(--fg);
+  font-weight:600;
+}
+.wiki-side-nav__index{
+  flex:0 0 auto;
+  min-width:1.6em;
+  text-align:right;
+  background:transparent;
+  border:none;
+  font-size:11.5px;
+  font-weight:500;
+  color:var(--muted);
+  font-variant-numeric:tabular-nums;
+}
+.wiki-side-nav__item.is-current .wiki-side-nav__index{
+  background:transparent;
+  color:var(--accent);
+  border-color:transparent;
+}
+.wiki-side-nav__index--folder{
+  background:transparent;
+  border:none;
+  font-size:13px;
+  width:auto;
+  flex-basis:auto;
+}
+.wiki-side-nav__item-title{
+  flex:1;
+  min-width:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.wiki-side-nav__here{
+  font-size:11px;
+  color:var(--accent);
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.wiki-side-nav__progress{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding-top:10px;
+  margin-top:6px;
+  border-top:1px solid var(--border);
+}
+.wiki-side-nav__bar{
+  flex:1;
+  height:6px;
+  background:var(--bg-muted);
+  border:1px solid var(--border);
+  border-radius:999px;
+  overflow:hidden;
+  min-width:0;
+}
+.wiki-side-nav__bar-fill{
+  height:100%;
+  background:var(--accent);
+  border-radius:999px;
+  transition:width .4s;
+}
+.wiki-side-nav__step{
+  font-size:11px;
+  color:var(--muted);
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+
+/* ── Wiki 移动端折叠目录：桌面隐藏，<1024 显示 ── */
+.wiki-mobile{
+  display:none;
+  margin:12px 0 20px;
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm, 10px);
+  background:var(--bg-soft);
+  overflow:hidden;
+}
+.wiki-mobile[open]{border-color:var(--border-strong)}
+.wiki-mobile__nav{
+  padding:0 8px 10px;
+  border-top:1px solid var(--border);
+  max-height:320px;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+}
+@media (max-width:1023px){
+  .wiki-mobile{display:block}
+}
+/* ── Wiki 移动端折叠目录内的返回链接 ── */
+.wiki-mobile__back{
+  display:flex;
+  align-items:center;
+  padding:10px 10px 2px;
+  font-size:13px;
+  color:var(--muted);
+  text-decoration:none;
+}
+.wiki-mobile__back:hover{color:var(--accent);text-decoration:none}
+/* ─────────────────────────────────────────
+   10. Wiki 项目卡片（/wiki/ 子目录双列网格）
+───────────────────────────────────────── */
+.wiki-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:24px;
+  margin-bottom:24px;
+}
+.wiki-card{
+  position:relative;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px 24px;
+  transition:border-color .18s ease, box-shadow .18s ease;
+}
+.wiki-card:hover{
+  border-color:var(--accent);
+  box-shadow:var(--shadow);
+}
+.wiki-card__head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+.wiki-card__title{
+  margin:0;
+  font-size:18px;
+  font-weight:700;
+  letter-spacing:.01em;
+  line-height:1.4;
+  min-width:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.wiki-card__link{color:var(--fg);text-decoration:none}
+.wiki-card__link::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+}
+.wiki-card:hover .wiki-card__link{color:var(--accent)}
+.wiki-card__count{
+  flex-shrink:0;
+  font-size:13px;
+  color:var(--muted);
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+.wiki-card__desc{
+  margin:0;
+  font-size:14.5px;
+  line-height:1.75;
+  color:var(--muted);
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  /* 预留满两行高度，内容不足时卡片依然等高 */
+  min-height:calc(1.75em * 2);
+}
+@media (max-width:640px){
+  .wiki-grid{grid-template-columns:1fr;gap:14px}
+  .wiki-card{padding:18px 20px}
+  .wiki-card__title{font-size:17px}
+}
+/* ── 移动端：顶栏无品牌区只留列表，汉堡按钮浮动于内容右上；弹框内品牌与菜单一体显示 ── */
+@media (max-width:768px){
+  .sidebar{
+    padding:0;
+    min-height:0;
+    background:transparent;
+    border-bottom:none;
+  }
+  .sidebar .drawer-btn{
+    position:fixed;
+    top:12px;
+    right:12px;
+    z-index:50;
+    background:var(--bg-soft);
+    border:1px solid var(--border);
+    border-radius:10px;
+    box-shadow:var(--shadow);
+  }
+}
+@media print{
+  .wiki-side-nav, .wiki-mobile{display:none !important}
+}
