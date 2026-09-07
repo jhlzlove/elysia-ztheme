@@ -699,52 +699,33 @@
     });
   }
 
-  // ── Encryption ── 刷新后需重新输入：不持久化，仅内存态
+  // ── Encryption ── 解密由 static/js/site-decrypt.js（SSG 通用，无主题依赖）执行；此处仅做两件事：
+  // 1) 未走加密脚本的页面（锁面板无载荷，如本地预览）→ 直接展示正文；
+  // 2) 监听 site-encrypt:unlocked → 解密成功后重初始化组件。
   function initEncryption(){
     const box=document.getElementById('encryptedBox');
     const content=document.getElementById('articleContent');
-    const input=document.getElementById('encryptedInput');
-    const btn=document.getElementById('encryptedBtn');
-    const err=document.getElementById('encryptedError');
-    const form=document.getElementById('encryptedForm');
-    if(!box||!content) return;
-    const pwd = box.getAttribute('data-password')||'';
-    if(!pwd){
+    if(box && !box.hasAttribute('data-site-encrypt')){
       box.style.display='none';
-      content.hidden=false;
-      return;
+      if(content) content.hidden=false;
     }
-    // 强制每次刷新均需输入：清除历史残留的 localStorage/sessionStorage，并不再写入
+    // 清理历史残留（旧版明文密码键）
     try{
       const legacyKey='elysia-pwd-'+location.pathname;
       localStorage.removeItem(legacyKey);
       sessionStorage.removeItem(legacyKey);
     }catch(e){}
-    // 确保初始为锁定态
-    box.style.display='';
-    content.hidden=true;
-    if(err) err.classList.remove('is-visible');
-    function unlock(){
-      const val=(input.value||'').trim();
-      if(val===pwd){
-        box.style.display='none';
-        content.hidden=false;
-        if(err) err.classList.remove('is-visible');
-        // re-init code blocks after reveal
-        initCodeBlocks();
-        initTabs();
-        try{ initVideo(); }catch(e){}
-        try{ initAudioPlayers(); }catch(e){}
-      } else {
-        if(err) err.classList.add('is-visible');
-        input.focus();
-        input.select();
-      }
-    }
-    if(form){
-      form.addEventListener('submit', (e)=>{ e.preventDefault(); unlock(); });
-    }
-    if(btn) btn.addEventListener('click', (e)=>{ e.preventDefault(); unlock(); });
+    document.addEventListener('site-encrypt:unlocked', (e)=>{
+      try{
+        const t=e && e.detail && e.detail.target;
+        if(t && content && t===content){
+          initCodeBlocks();
+          initTabs();
+          try{ initVideo(); }catch(err){}
+          try{ initAudioPlayers(); }catch(err2){}
+        }
+      }catch(err){}
+    });
   }
 
   // ── TOC spy ── 桌面与移动端共用，高亮同步

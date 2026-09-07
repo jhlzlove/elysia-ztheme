@@ -9,10 +9,10 @@ tags = ["encrypt", "demo"]
 [extra]
 encrypted = true
 password = "elysia"
-password_hint = "主题名小写"
+password_hint = "6 位数字"
 +++
 
-这是加密的正文，只有输入正确密码（`elysia`）后才会显示。
+这是加密的正文，只有输入正确密码（`123456`）后才会显示。
 
 ## 隐藏内容
 
@@ -30,5 +30,5 @@ console.log(secret);
 > 加密仅为静态站点的轻量混淆，不适合高度敏感信息。
 
 {% <note title="提示" color="yellow"> %}
-密码通过 front matter 的 `extra.password` 配置，并以 `data-password` 属性渲染，前端比对。适合简单的访问控制。
+密码别名通过 front matter 的 `extra.password` 配置（如 `key1`），真密码只存放在加密脚本的 `encrypt.toml` 中；构建后脚本对正文做 AES-GCM 加密，前端解密。适合简单的访问控制。
 {% </note> %}

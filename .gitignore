@@ -5,3 +5,6 @@ public
 content/wiki/
 !content/wiki/guide
 !content/wiki/*.md
+encrypt.toml
+*.exe
+target/

@@ -73,8 +73,11 @@
       <h2 class="post-card__title"><a href="{{ page.permalink | safe }}">{{ page.title }}</a></h2>
       {% set sum = page.summary | default(value="", boolean=true) %}
       {% if sum == "" %}{% set sum = page.description | default(value="", boolean=true) %}{% endif %}
+      {# 加密文章不渲染摘要防泄漏（锁徽标已在卡片顶部展示） #}
+      {% if not page.extra.encrypted | default(value=false) %}
       {% if sum != "" %}
         <div class="post-card__summary">{{ sum | striptags | truncate(length=150) | safe }}</div>
+      {% endif %}
       {% endif %}
       <div class="post-card__meta">
         <div class="post-card__tags">
@@ -109,8 +112,11 @@
     <h2 class="post-card__title"><a href="{{ page.permalink | safe }}">{{ page.title }}</a></h2>
     {% set sum2 = page.summary | default(value="", boolean=true) %}
     {% if sum2 == "" %}{% set sum2 = page.description | default(value="", boolean=true) %}{% endif %}
+    {# 加密文章不渲染摘要防泄漏（锁徽标已在卡片顶部展示） #}
+    {% if not page.extra.encrypted | default(value=false) %}
     {% if sum2 != "" %}
       <div class="post-card__summary">{{ sum2 | striptags | truncate(length=150) | safe }}</div>
+    {% endif %}
     {% endif %}
     <div class="post-card__meta">
       <div class="post-card__tags">

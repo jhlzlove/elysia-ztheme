@@ -11,6 +11,8 @@
 {% endblock head %}
 
 {% block content %}
+{# 加密判定提前：移动端 TOC / 大纲抑制与正文锁共用（别名方案，真密码不进 HTML） #}
+{% set is_encrypted = page.extra.encrypted | default(value=false) %}
 <div class="content-area">
   <div class="content-area__primary">
     <article class="article" data-page-style="{{ page.extra.style | default(value="blog") }}">
@@ -72,8 +74,8 @@
         {% endif %}
       {% endif %}
 
-      {# ── Mobile TOC — 仅 <1024 时显示，桌面隐藏 ── #}
-      {% if config.extra.features.toc | default(value=true) and page.toc | length > 0 %}
+      {# ── Mobile TOC — 仅 <1024 时显示，桌面隐藏；加密文章抑制大纲防标题泄漏 ── #}
+      {% if not is_encrypted and config.extra.features.toc | default(value=true) and page.toc | length > 0 %}
       <details class="toc-mobile" id="tocMobile">
         <summary class="toc-mobile__summary">
           <span class="toc-mobile__label">{{ trans(key="toc_on_this_page", lang=lang) }}</span>
@@ -151,9 +153,8 @@
       {% endif %}
 
       {# ── Encrypted wrapper ── #}
-      {% set is_encrypted = page.extra.encrypted | default(value=false) %}
       {% if is_encrypted %}
-        <div class="encrypted" id="encryptedBox" data-password="{{ page.extra.password | default(value="") | safe }}" data-hint="{{ page.extra.password_hint | default(value="") | safe }}">
+        <div class="encrypted" id="encryptedBox" data-password-key="{{ page.extra.password | default(value="") | safe }}" data-hint="{{ page.extra.password_hint | default(value="") | safe }}">
           <div class="encrypted__icon">🔒</div>
           <div class="encrypted__title">文章已加密</div>
           <div class="encrypted__desc">请输入密码以查看正文{% if page.extra.password_hint %}（提示：{{ page.extra.password_hint }}）{% endif %}</div>
@@ -161,7 +162,7 @@
             <input class="encrypted__input" id="encryptedInput" type="password" placeholder="输入密码" autocomplete="off" aria-label="密码">
             <button class="encrypted__btn" id="encryptedBtn" type="submit">解锁</button>
           </form>
-          <div class="encrypted__error" id="encryptedError">密码错误，请重试</div>
+          <div class="encrypted__error" id="encryptedError" role="alert">密码错误，请重试</div>
         </div>
         <div class="article__content" id="articleContent" hidden>
           {{ page.content | safe }}
@@ -276,8 +277,10 @@
 
 {% block toc %}
 <aside class="toc-aside" id="tocAside" aria-label="Table of contents">
-    {# Wiki 目录已移至左侧栏，此处仅保留本页大纲，避免文章多时右侧过长 #}
-    {% if config.extra.features.toc | default(value=true) and page.toc | length > 0 %}
+    {# Wiki 目录已移至左侧栏，此处仅保留本页大纲，避免文章多时右侧过长；加密文章抑制大纲防标题泄漏 #}
+    {# 注：本 block 与 content block 作用域隔离，不可复用 is_encrypted，直接读 page.extra #}
+    {% set toc_locked = page.extra.encrypted | default(value=false) %}
+    {% if not toc_locked and config.extra.features.toc | default(value=true) and page.toc | length > 0 %}
     <nav class="toc" id="toc">
       <div class="toc__title">{{ <icon name="toc" width="14" height="14"/> }} {{ trans(key="toc_title", lang=lang) }}</div>
       <ol class="toc__list">
