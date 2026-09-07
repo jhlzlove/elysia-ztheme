@@ -1,10 +1,5 @@
 name: ci
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
 # On every push this script is executed
 on:
   push:
@@ -24,24 +19,33 @@ jobs:
         env:
           BUILD_ONLY: true
 
-      - uses: jhlzlove/ssg-encrypt@main
+      - name: Encrypt private content
+        uses: jhlzlove/ssg-encrypt@main
         with:
           selector: "#encryptedBox"
           content-selector: "#articleContent"
         env:
           SITE_ENCRYPT_PASSWORDS: ${{ secrets.ENCRYPT_PASSWORDS }}
 
-  build_and_deploy:
+      - name: Upload Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - name: Checkout main
-        uses: actions/checkout@v4
-      - name: Build and deploy
-        uses: shalzz/zola-deploy-action@v0.23.4
-        env:
-          PAGES_BRANCH: pages
-          # Provide personal access token
-          # TOKEN: ${{ secrets.TOKEN }}
-          # Or if publishing to the same repo, use the automatic token
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
