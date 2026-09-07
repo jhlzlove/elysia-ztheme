@@ -1,149 +1,272 @@
-# The URL the site will be built for
-base_url = "https://jhlzlove.github.io/elysia-ztheme"
-# site name
-title = "Elysia theme for zola"
-# site default language
-default_language = "zh-CN"
-author = "jhlz + AI"
-description = "A simple Zola theme powered entirely by AI."
-
-theme = "elysia"
-
+# Zola configuration — Elysia Theme (modern minimalist)
+base_url = "http://localhost:3000"
+title = "诗酒趁年华"
+description = "A modern, minimalist Zola theme — Reading is enjoyment."
+default_language = "zh"
 compile_sass = false
-
+build_search_index = false
 generate_feeds = true
 feed_filenames = ["atom.xml"]
+minify_html = false
 
 taxonomies = [
-    { name = "categories", feed = false },
-    { name = "tags", feed = false },
+    {name = "categories", feed = true, paginate_by = 12, paginate_path = "page"},
+    {name = "tags", feed = true, paginate_by = 12, paginate_path = "page"},
 ]
 
 [markdown]
 render_emoji = true
+github_alerts = true
+bottom_footnotes = true
 
 [markdown.highlighting]
-light_theme = "github-light"
-dark_theme = "github-dark"
+theme = "catppuccin-mocha"
 style = "class"
-line_numbers = true
-error_on_missing_language = false
 
-
-####################### 自定义配置 #######################
 [extra]
-# 导航栏配置
-menu = [
-    { name = "博客", url = "/post" },
-    { name = "项目", url = "/wiki" },
-    { name = "友链", url = "/friend" },
-    { name = "关于", url = "/about" },
-]
+# ── Site Identity ──
+avatar = "/avatar.jpg"
+avatar_alt = "Elysia"
+site_motto = "不修来世不修仙 且留大道在人间"
 
-# 社交链接（icon 使用 SVG path 数据，name 鼠标悬浮显示）
-social = [
-    { name = "GitHub", url = "https://github.com", icon = "github" },
-    { name = "bilibili", url = "https://bilibili.com/", icon = "bilibili" },
-    { name = "RSS", url = "/atom.xml", icon = "rss" },
-]
+# Footer (markdown supported)
+# <span id="jinrishici-sentence"></span> <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+footer = """
+本博客所有文章除特别声明外，均采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
 
-# 主题相关配置
-# sidebar_position: 侧边栏位置，"left" 居左，"right" 居右（默认）
-sidebar = { logo = "/avatar.jpg", position = "left" }
-# 站点摘要字数
-truncate_at = 100
-# 目录显示层级，默认 4
-toc_depth = 4
+© 2026 Elysia · 由 [Zola](https://www.getzola.org) 驱动 · 主题 [Elysia](https://github.com/jhlzlove/zola-theme-elysia)
+"""
 
-# 注入外部链接（如字体、图标库等）
-# 在此处添加 <link> 标签注入到 <head>，例如 Google Fonts
+# ── Site filings / 备案信息（留空则不显示对应项目）──
+# 支持 icp、公安、萌国备案号
+[extra.icp]
+icp = ""
+police = ""
+mengguo = "20268080"
+
+# ── Top Navigation Buttons (wrap automatically, 4 per row on desktop) ──
+# icon is optional, can be emoji / svg name / url
+# 使用 Zola translations 实现多语言：仅需维护一套菜单，显示名称通过 translations 翻译
+# - 默认语言文案在 [translations] 中定义
+# - 其他语言在 [languages.<code>.translations] 中定义
+# - 模板通过 trans(key=item.name_key, lang=cur_lang) 获取当前语言名称
+# - URL 保持与语言无关的形式（如 "/"、"/wiki/"），模板按 cur_lang 自动加前缀
+[[extra.menus]]
+name_key = "menu_blog"
+url = "/"
+icon = "✍️"
+
+[[extra.menus]]
+name_key = "menu_wiki"
+url = "/wiki/"
+icon = "📚"
+
+[[extra.menus]]
+name_key = "menu_archive"
+url = "/archive/"
+icon = "🗂️"
+
+[[extra.menus]]
+name_key = "menu_categories"
+url = "/categories/"
+icon = "📁"
+
+[[extra.menus]]
+name_key = "menu_tags"
+url = "/tags/"
+icon = "🏷️"
+
+[[extra.menus]]
+name_key = "menu_heatmap"
+url = "/heatmap/"
+icon = "🔥"
+
+[[extra.menus]]
+name_key = "menu_resume"
+url = "/resume/"
+icon = "📄"
+
+[[extra.menus]]
+name_key = "menu_friends"
+url = "/friends/"
+icon = "🔗"
+
+[[extra.menus]]
+name_key = "menu_links"
+url = "/links/"
+icon = "🔗"
+
+# ── Social Icons (bottom) ──
+[[extra.socials]]
+name = "GitHub"
+url = "https://github.com"
+icon = "github"
+
+[[extra.socials]]
+name = "RSS"
+url = "/atom.xml"
+icon = "rss"
+
+[[extra.socials]]
+name = "Email"
+url = "mailto:hello@example.com"
+icon = "mail"
+
+
+# ── Inject head — arbitrary <link> etc. ──
+# Example: { rel = "stylesheet", href = "https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-web/style.css" }
 [extra.inject]
-links = [
-    # 鸿蒙字体
-    { rel="stylesheet", href="https://s1.hdslb.com/bfs/static/jinkela/long/font/medium.css" },
-    { rel="stylesheet", href="https://unpkg.com/jetbrains-mono@latest/css/jetbrains-mono.css" }
+head = [
+  { rel = "stylesheet", href = "https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-web/style.css" },
+  { rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" },
+  { rel = "stylesheet", href = "https://fontsapi.zeoseven.com/442/main/result.css" },
 ]
 
-# 字体配置
-# body: 网站正文字体名称，需与 inject 中导入的字体一致，留空使用系统默认
-# code: 代码块字体名称，需与 inject 中导入的字体一致，留空使用系统默认
-[extra.font]
-body = "HarmonyOS_Medium"
-code = "jetbrains mono"
-body_size = "17.5px"
-code_size = "16px"
+# ── Style / Palette defaults ──
+# theme: "auto" | "light" | "dark"
+[extra.style]
+default_theme = "auto"
+# palette: "default" | "lime" | "orange" | "violet"
+default_palette = "default"
 
-# link shortcode 元数据 API
-# 当 link 标签未提供 title/icon/desc 时，自动调用此 API 获取网站元数据
-# {url} 会被替换为实际链接
-# https://github.com/xaoxuu/site-info-api
-[extra.link]
-meta_api = ""
+# ── Fonts ──
+# root_size: global html font-size; body_size: article/body; code_block_size: code
+# body_family / code_block_family: full font stack as array (include defaults so source stays simple)
+[extra.style.fonts]
+root_size = "16px"
+body_size = "16px"
+code_block_size = "14px"
+body_family = ["LXGW WenKai Screen", "Inter", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif"]
+code_block_family = ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"]
 
-# 自定义 footer 内容，支持 Markdown 和 HTML
-# 可用占位符：{author} 作者名，{year} 当前年份，{title} 站点标题
-[extra.footer]
-# 文本不能有缩进
-content = """
-<span id="jinrishici-sentence"></span> <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script> 本站由 [@{author}](/) 创建。
-本博客所有文章除特别声明外，均采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。<br>
-<uptime></uptime>
-<script>
-  setInterval(() => {
-    let startDate = new Date("2026-04-16")
-    let now = new Date();
-    // 计算时间差（以毫秒为单位）
-    let differenceInMs = now.getTime() - startDate.getTime();
-    // 转换为天数、小时数、分钟数和秒数
-    let days = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
-    let hours = Math.floor((differenceInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    let minutes = Math.floor((differenceInMs % (1000 * 60 * 60)) / (1000 * 60));
-    let seconds = Math.floor((differenceInMs % (1000 * 60)) / 1000);
-    let uptimeTags = Array.from(document.getElementsByTagName("uptime"));
-    uptimeTags.forEach(ele => { ele.textContent = `🌱 本站已活了 ${days} 天 | ${hours} 时 | ${minutes} 分 | ${seconds} 秒 🌱` });
-  }, 1000);
-</script>
-"""
+# ── Comments ──
+# enable 在 [extra.comments] 统一控制；各系统不再单独设 enable
+# provider: "giscus" | "artalk" | "waline" | "none"
+[extra.comments]
+enable = false
+provider = "giscus"   # e.g. "artalk"
+comment_title = "欢迎评论 — 留下你的想法"
 
-# 侧边栏自定义内容，支持 Markdown 和 HTML
-# 可用占位符：{author} 作者名，{year} 当前年份，{title} 站点标题
-[extra.sidebar_widget]
-# 文本不能有缩进
-content = """
-👋 Hi，welcome **{title}**！
+# ── Giscus ──
+[extra.giscus]
+repo = "jhlzlove/jhlzlove.github.io"
+repo_id = "R_kgDOGiQvcQ"
+category = "DIC_kwDOGiQvcc4CN8Z2"
+category_id = ""
+mapping = "pathname"
+strict = "0"
+reactions_enabled = "1"
+emit_metadata = "0"
+input_position = "top"
+theme = "preferred_color_scheme"
+lang = "zh-CN"
+loading = "lazy"
 
-A Zola theme inspired by [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) and [Reimu](https://github.com/D-Sketon/hugo-theme-reimu).
-<img src="https://api.szfx.top/info-card/?word=%E6%AC%A2%E8%BF%8E%E6%97%85%E8%A1%8C%E8%80%85" style="border-radius: 10px"/>
-"""
+# ── Artalk ── https://artalk.js.org
+[extra.artalk]
+server = ""          # e.g. "https://artalk.example.com"
+site = ""            # site name, optional
+placeholder = ""     # placeholder text
+no_comment = ""      # text when no comments
+emit_own = false
+page_key = ""        # leave empty to use pathname
+gravatar_mirror = ""
+avatar_mirror = ""
 
-# 版权协议配置
-# enable: 是否在文章底部显示版权信息
-# license_name: 许可协议名称，例如 "CC BY-NC-SA 4.0"
-# license_url: 许可协议链接
-[extra.copyright]
+# ── Waline ── https://waline.js.org
+[extra.waline]
+serverURL = ""       # e.g. "https://waline.example.com"
+lang = "zh-CN"
+dark = "auto"        # "auto" | css selector
+emoji = ["https://unpkg.com/@waline/emojis@1.1.0/bilibili"]
+meta = ["nick", "mail", "link"]
+requiredMeta = ["nick", "mail"]
+login = "false"
+placeholder = ""
+
+# ── Algolia Search ──
+[extra.algolia]
 enable = true
-license_name = "CC BY-NC-SA 4.0"
-license_url = "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+# Get from https://dashboard.algolia.com
+app_id = "CCI6NCGAK0"          # e.g. "LATENCY"
+api_key = "b2aa1cb7c425b70cd34bac3137a2156f"         # search-only API key
+index_name = "jhlzloveio"      # e.g. "elysia"
+hits_per_page = 8
+placeholder = "搜索文章..."
+show_powered_by = true
+# Optional: customize hits display (title, url, summary, content)
+# attribute_for_highlight = ["title", "content"]
 
-# 评论系统配置，目前只支持 giscus
-[extra.comment]
-enable = false # 是否启用评论
-type = "giscus" # 评论系统类型，目前支持 "giscus"
+# ── Features ──
+[extra.features]
+# Show year progress bar
+year_progress = true
+# Enable TOC on pages
+toc = true
+# Show line numbers in code blocks (true by default)
+code_line_numbers = true
+# Articles per page
+paginate_by = 5
+# Show reading time
+show_reading_time = true
 
-# giscus 具体配置
-[extra.comment.giscus]
-repo = "yourname/repo" # 仓库名
-repo_id = "xxx" # 仓库 ID
-category = "General" # 讨论类别
-category_id = "xxx" # 讨论类别 ID
-mapping = "pathname" # 页面与讨论的映射关系
-strict = "0" # 严格模式
-reactions_enabled = "1" # 是否启用表情回应
-emit_metadata = "0" # 是否导出元数据
-input_position = "bottom" # 输入框位置
-theme = "preferred_color_scheme" # 评论主题
-lang = "zh-CN" # 语言
 
-[extra.theme]
-name = "elysia"
-version = "0.0.1"
+# ── Article Expiry Warning — 文章过期提示 ──
+# 在文章头部显示过期提醒：根据 date/updated 与当前时间计算，超过 days 天即显示
+# 文案通过 Zola translations 管理：key 为 `article_expiry`，支持占位符 {days} {date} {diff}
+# 默认语言在 [translations] 中配置，其他语言在 [languages.<code>.translations] 中配置
+[extra.article_expiry]
+enable = true
+days = 90
+
+# ── KaTeX ── 设 enable = true 即启用 $...$ / $$...$$ 数学公式
+[extra.katex]
+enable = true
+# 可选：自定义 CDN，默认 jsDelivr 0.16.9
+# css_url = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+# js_url = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+# auto_render_url = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+
+# ── Translations — 默认语言 (zh) ──
+# 增删菜单时：只需在 [[extra.menus]] 中改一套，同步在此与 [languages.en.translations] 中增删对应 key
+[translations]
+menu_blog = "博客"
+menu_wiki = "Wiki"
+menu_archive = "归档"
+menu_categories = "分类"
+menu_tags = "标签"
+menu_heatmap = "热力图"
+menu_resume = "简历"
+menu_friends = "友链"
+menu_links = "工具集"
+article_expiry = "本文最后更新于 {date}，已超过 {days} 天未更新，内容可能已过时，请注意甄别。"
+toc_title = "目录"
+toc_on_this_page = "本页目录"
+
+[languages.en]
+title = "Elysia EN"
+description = "A modern minimalist Zola theme — Reading is enjoyment."
+generate_feeds = true
+taxonomies = [
+    {name = "categories", feed = true},
+    {name = "tags", feed = true},
+]
+
+[languages.en.translations]
+menu_blog = "Blog"
+menu_wiki = "Wiki"
+menu_archive = "Archive"
+menu_categories = "Categories"
+menu_tags = "Tags"
+menu_heatmap = "Heatmap"
+menu_resume = "Resume"
+menu_friends = "Friends"
+menu_links = "Tools"
+article_expiry = "This article was last updated on {date} and has not been updated for over {days} days. The content may be outdated, please verify the information."
+toc_title = "On this page"
+toc_on_this_page = "On this page"
+
+[slugify]
+paths = "on"
+taxonomies = "off"
+anchors = "on"

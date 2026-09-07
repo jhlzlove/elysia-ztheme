@@ -1,1 +1,10 @@
-config.toml
+other.md
+content/blog/
+!content/blog/*.md
+public
+content/wiki/
+!content/wiki/guide
+!content/wiki/*.md
+encrypt.toml
+*.exe
+target/

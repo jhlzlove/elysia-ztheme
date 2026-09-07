@@ -1,4 +1,8 @@
 +++
-title = "Wiki 项目"
-template = "wiki-index.html"
+title = "Wiki"
+description = "知识库 · 文档式布局"
+sort_by = "date"
+template = "section.html"
+page_template = "page.html"
+transparent = false
 +++

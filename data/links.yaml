@@ -1,17 +1,22 @@
 github:
-  - title: rust
-    url: https://github.com/rust-lang/rust
-    icon: https://github.com/favicon.ico
-    cover: https://tse2.mm.bing.net/th/id/OIP.V2D3Mkdt96xldo2nnXHVmwHaH-?rs=1&pid=ImgDetMain&o=7&rm=3
-    desc: The Rust Programming Language
-  - title: dbeaver
-    url: https://dbeaver.io/
-    icon: https://dbeaver.io/favicon.ico
-    cover: /images/default_cover.png
-    desc: Free multi-platform database tool
-  - title: jhlzlove
-    url: https://jhlzlove.github.io/
-    icon:
-    cover:
-    desc: Free multi-platform database tool
-
+  - title: Zola
+    url: https://github.com/getzola/zola
+    icon: https://www.getzola.org/icons/apple-touch-icon.png
+    cover: https://picsum.photos/seed/zola/600/300
+    desc: 高性能静态站点生成器，Rust 编写，单二进制极速构建
+  - title: Tera
+    url: https://github.com/Keats/tera
+    icon: https://avatars.githubusercontent.com/u/10832834?s=200&v=4
+    cover: https://picsum.photos/seed/tera/600/300
+    desc: Jinja2 风格的 Rust 模板引擎，Zola 的核心
+  - title: shadcn/ui
+    url: https://github.com/shadcn/ui
+    icon: https://avatars.githubusercontent.com/u/139895814?s=200&v=4
+    cover: https://picsum.photos/seed/shadcn/600/300
+    desc: 素雅黑配色的组件灵感来源，简洁美观
+other:
+  - title: 示例站点
+    url: https://example.com
+    icon: ""
+    cover: https://picsum.photos/seed/example/600/300
+    desc: 示例外链，展示封面图效果

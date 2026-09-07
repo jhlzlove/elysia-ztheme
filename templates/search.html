@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}搜索 — {{ config.title }}{% endblock title %}
+
+{% block head %}
+<meta name="robots" content="noindex">
+{% endblock head %}
+
+{% block content %}
+<div class="page-header">
+  <h1>搜索</h1>
+  <p>基于 Algolia 的全站搜索，输入关键词实时检索</p>
+</div>
+
+{% if config.extra.algolia and config.extra.algolia.enable and config.extra.algolia.app_id and config.extra.algolia.api_key and config.extra.algolia.index_name %}
+<div class="search-page" data-algolia-page
+  data-app-id="{{ config.extra.algolia.app_id | safe }}"
+  data-api-key="{{ config.extra.algolia.api_key | safe }}"
+  data-index-name="{{ config.extra.algolia.index_name | safe }}"
+  data-hits-per-page="{{ config.extra.algolia.hits_per_page | default(value=12) }}">
+  <div class="search-page__wrap">
+    {{ <icon name="search" class="search-page__icon"/> }}
+    <input id="searchPageInput" class="search-page__input" type="search" placeholder="{{ config.extra.algolia.placeholder | default(value="输入关键词搜索…") }}" autocomplete="off" spellcheck="false" aria-label="搜索">
+  </div>
+  <div id="searchPageStats" class="search-page__stats" aria-live="polite"></div>
+  <div id="searchPageResults" class="search__results" style="position:static;max-height:none;box-shadow:none;border:none;padding:0;background:transparent" role="listbox" aria-label="搜索结果"></div>
+  {% if config.extra.algolia.show_powered_by | default(value=true) %}
+  <div class="search__powered" style="margin-top:12px">Search by <a href="https://www.algolia.com" target="_blank" rel="noopener">Algolia</a></div>
+  {% endif %}
+</div>
+
+<div class="notice" style="margin-top:18px">
+  <p class="muted" style="font-size:13px;margin:0">提示：按 <kbd>/</kbd> 快速聚焦侧边栏搜索；本页支持 <code>?q=关键词</code> 直达。</p>
+</div>
+{% else %}
+<div class="notice">
+  <p><strong>Algolia 未启用</strong></p>
+  <p class="muted" style="font-size:13px">请在 <code>zola.toml</code> 中配置：</p>
+  <pre style="background:var(--bg-muted);border:1px solid var(--border);padding:12px;border-radius:8px;overflow:auto;font-size:12px"><code>[extra.algolia]
+enable = true
+app_id = "YOUR_APP_ID"
+api_key = "YOUR_SEARCH_ONLY_KEY"
+index_name = "YOUR_INDEX"
+hits_per_page = 8
+placeholder = "搜索文章..."</code></pre>
+  <p class="muted" style="font-size:13px">并使用 <code>algolia-indexer</code> 或自定义脚本将 <code>content</code> 推送至 Algolia。推送字段建议：<code>title, url, content, summary, date, tags, categories</code>。</p>
+</div>
+{% endif %}
+
+{% if section and section.content %}
+<div class="prose" style="margin-top:18px">{{ section.content | safe }}</div>
+{% endif %}
+{% endblock content %}

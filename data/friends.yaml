@@ -1,0 +1,18 @@
+developer:
+  - name: Zola
+    url: https://www.getzola.org
+    icon: https://www.getzola.org/icons/apple-touch-icon.png
+    desc: 官方文档与社区
+  - name: GitHub
+    url: https://github.com
+    icon: https://github.githubassets.com/favicons/favicon.svg
+    desc: 代码托管
+  - name: Elysia
+    url: https://example.com
+    icon: ""
+    desc: 本站示例友链
+design:
+  - name: shadcn
+    url: https://ui.shadcn.com
+    icon: ""
+    desc: 设计灵感

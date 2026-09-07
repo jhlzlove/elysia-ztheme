@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} — {{ config.title }}{% endblock title %}
+
+{% block head %}
+  {% if page.extra.style %}<meta name="elysia-style" content="{{ page.extra.style }}">{% endif %}
+  <meta property="og:title" content="{{ page.title }}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="{{ page.permalink | safe }}">
+  {% if page.description %}<meta property="og:description" content="{{ page.description }}">{% endif %}
+{% endblock head %}
+
+{% block content %}
+{# 加密判定提前：移动端 TOC / 大纲抑制与正文锁共用（别名方案，真密码不进 HTML） #}
+{% set is_encrypted = page.extra.encrypted | default(value=false) %}
+<div class="content-area">
+  <div class="content-area__primary">
+    <article class="article" data-page-style="{{ page.extra.style | default(value="blog") }}">
+      <header class="article__header">
+        <div class="article__kicker">
+          {% if page.extra.sticky or page.extra.top or page.extra.pinned %}
+            <span class="post-card__pin">{{ <icon name="pin" width="14" height="14"/> }} 置顶</span>
+          {% endif %}
+          {% if page.extra.encrypted %}
+            <span class="badge">{{ <icon name="lock" width="12" height="12"/> }} 加密</span>
+          {% endif %}
+          {% if page.taxonomies.categories %}
+            {% for cat in page.taxonomies.categories %}<span class="tag tag--category">{{ cat }}</span>{% endfor %}
+          {% endif %}
+          {% if page.taxonomies.tags %}
+            {% for tag in page.taxonomies.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+          {% endif %}
+        </div>
+        <h1 class="article__title">{{ page.title }}</h1>
+        <div class="article__meta">
+          {% if page.date %}<span>{{ <icon name="clock" width="14" height="14"/> }} {{ page.date | date(format="%Y-%m-%d") }}</span>{% endif %}
+          {% if page.updated %}<span>更新于 {{ page.updated | date(format="%Y-%m-%d") }}</span>{% endif %}
+          {% if config.extra.features.show_reading_time %}<span>{{ <icon name="edit" width="14" height="14"/> }} {{ page.reading_time }} 分钟 · {{ page.word_count }} 字</span>{% endif %}
+          {% if page.extra.author %}<span>作者 {{ page.extra.author }}</span>{% endif %}
+        </div>
+      </header>
+
+      {# ── Mobile Wiki 目录 — 仅 <1024 时显示，桌面端左侧栏已展示 ── #}
+      {# wiki 只收录项目：文章必属某个子项目，此处父级恒为项目目录 #}
+      {% if page.ancestors | length > 0 %}
+        {% set _m_parent_path = page.ancestors | last %}
+        {% if "wiki" in _m_parent_path and _m_parent_path != "wiki/_index.md" and "wiki/_index." not in _m_parent_path %}
+          {% set _m_parent = get_section(path=_m_parent_path) %}
+          {% if _m_parent and _m_parent.pages | length > 0 %}
+          {% set _m_wiki_root = "/wiki/" %}
+          {% if lang != config.default_language %}
+            {% set _m_wiki_root = "/" ~ lang ~ "/wiki/" %}
+          {% endif %}
+          <details class="wiki-mobile" id="wikiMobile">
+            <summary class="toc-mobile__summary">
+              <span class="toc-mobile__label">📚 {{ _m_parent.title }}</span>
+              <span class="toc-mobile__count">{{ _m_parent.pages | length }} 篇</span>
+            </summary>
+            <nav class="wiki-mobile__nav" aria-label="Wiki 目录">
+              <a class="wiki-mobile__back" href="{{ _m_wiki_root | safe }}">← 返回 Wiki</a>
+              <ol class="wiki-side-nav__list">
+                {% for p in _m_parent.pages %}
+                <li class="wiki-side-nav__item {% if p.permalink == page.permalink %}is-current{% endif %}">
+                  <a href="{{ p.permalink | safe }}">
+                    <span class="wiki-side-nav__index">{{ loop.index }}</span>
+                    <span class="wiki-side-nav__item-title">{{ p.title }}</span>
+                  </a>
+                </li>
+                {% endfor %}
+              </ol>
+            </nav>
+          </details>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+
+      {# ── Mobile TOC — 仅 <1024 时显示，桌面隐藏；加密文章抑制大纲防标题泄漏 ── #}
+      {% if not is_encrypted and config.extra.features.toc | default(value=true) and page.toc | length > 0 %}
+      <details class="toc-mobile" id="tocMobile">
+        <summary class="toc-mobile__summary">
+          <span class="toc-mobile__label">{{ trans(key="toc_on_this_page", lang=lang) }}</span>
+          <span class="toc-mobile__count">{{ page.toc | length }}</span>
+        </summary>
+        <nav class="toc toc--mobile" aria-label="Table of contents">
+          <ol class="toc__list">
+            {% for h1 in page.toc %}
+              <li>
+                <a href="{{ h1.permalink | safe }}">{{ h1.title }}</a>
+                {% if h1.children %}
+                  <ol class="toc__list toc__list--h3">
+                    {% for h2 in h1.children %}
+                      <li><a href="{{ h2.permalink | safe }}">{{ h2.title }}</a></li>
+                    {% endfor %}
+                  </ol>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ol>
+        </nav>
+      </details>
+      {% endif %}
+
+      {# ── Article Expiry Warning — via Zola translations (key: article_expiry) ── #}
+      {# 配置：[extra.article_expiry] enable/days；文案在 [translations] / [languages.<code>.translations]；占位符 {days} {date} {diff} #}
+      {# 单页覆盖：page.extra.expiry = false 关闭；page.extra.expiry_days 覆盖天数；page.extra.expiry_text 覆盖文案 #}
+      {% set _expiry_enable = false %}
+      {% if config.extra.article_expiry is defined and config.extra.article_expiry.enable is defined %}
+        {% set_global _expiry_enable = config.extra.article_expiry.enable %}
+      {% endif %}
+      {% if page.extra.expiry is defined %}
+        {% if page.extra.expiry == false %}
+          {% set_global _expiry_enable = false %}
+        {% elif page.extra.expiry == true %}
+          {% set_global _expiry_enable = true %}
+        {% endif %}
+      {% endif %}
+      {% if _expiry_enable and page.date %}
+        {% set _expiry_days = 90 %}
+        {% if config.extra.article_expiry is defined and config.extra.article_expiry.days is defined %}
+          {% set_global _expiry_days = config.extra.article_expiry.days %}
+        {% endif %}
+        {% if page.extra.expiry_days is defined %}
+          {% set_global _expiry_days = page.extra.expiry_days %}
+        {% endif %}
+        {% set _expiry_date = page.date %}
+        {% if page.updated is defined and page.updated %}
+          {% set_global _expiry_date = page.updated %}
+        {% endif %}
+        {% set _expiry_date_str = _expiry_date | date(format="%Y-%m-%d") %}
+        {% set _expiry_ts = _expiry_date | date(format="%s") | int %}
+        {% set _cur_lang = lang | default(value=config.default_language) %}
+        {% if page.lang is defined and page.lang %}{% set_global _cur_lang = page.lang %}{% endif %}
+        {% set _expiry_raw = "" %}
+        {% if page.extra.expiry_text is defined and page.extra.expiry_text %}
+          {% set_global _expiry_raw = page.extra.expiry_text %}
+        {% else %}
+          {% set_global _expiry_raw = trans(key="article_expiry", lang=_cur_lang) %}
+        {% endif %}
+        {# 构建期差值：用于首屏与 noscript 兜底 — Tera 无 floor，直接取整 via split #}
+        {% set _now_ts = now() | date(format="%s") | int %}
+        {% set _diff_build_f = (_now_ts - _expiry_ts) / 86400 %}
+        {% set _diff_build_s = (_diff_build_f ~ "") | split(pat=".") | first %}
+        {% set _diff_build = _diff_build_s | int %}
+        {% if _diff_build < 0 %}{% set_global _diff_build = 0 %}{% set_global _diff_build_s = "0" %}{% endif %}
+        {% set _expiry_days_s = _expiry_days ~ "" %}
+        {% set _expiry_rendered = _expiry_raw | replace(from="{days}", to=_expiry_days_s) | replace(from="{date}", to=_expiry_date_str) | replace(from="{diff}", to=_diff_build_s) %}
+        <div id="articleExpiry" class="article-expiry" {% if _diff_build < _expiry_days %}hidden{% endif %} data-expiry-days="{{ _expiry_days }}" data-expiry-ts="{{ _expiry_ts }}" data-expiry-date="{{ _expiry_date_str }}" data-expiry-text="{{ _expiry_raw | escape_xml | safe }}" data-lang="{{ _cur_lang }}" role="status" aria-live="polite">
+          <div class="article-expiry__icon" aria-hidden="true">
+            {{ <icon name="alert" width="18" height="18"/> }}
+          </div>
+          <div class="article-expiry__body">{{ _expiry_rendered }}</div>
+        </div>
+      {% endif %}
+
+      {# ── Encrypted wrapper ── #}
+      {% if is_encrypted %}
+        <div class="encrypted" id="encryptedBox" data-password-key="{{ page.extra.password | default(value="") | safe }}" data-hint="{{ page.extra.password_hint | default(value="") | safe }}">
+          <div class="encrypted__icon">🔒</div>
+          <div class="encrypted__title">文章已加密</div>
+          <div class="encrypted__desc">请输入密码以查看正文{% if page.extra.password_hint %}（提示：{{ page.extra.password_hint }}）{% endif %}</div>
+          <form class="encrypted__form" id="encryptedForm" onsubmit="return false">
+            <input class="encrypted__input" id="encryptedInput" type="password" placeholder="输入密码" autocomplete="off" aria-label="密码">
+            <button class="encrypted__btn" id="encryptedBtn" type="submit">解锁</button>
+          </form>
+          <div class="encrypted__error" id="encryptedError" role="alert">密码错误，请重试</div>
+        </div>
+        <div class="article__content" id="articleContent" hidden>
+          {{ page.content | safe }}
+        </div>
+      {% else %}
+        <div class="article__content" id="articleContent">
+          {{ page.content | safe }}
+        </div>
+      {% endif %}
+    </article>
+
+    {# ── Backlinks / neighbours — 仅在博客文章中计算，排除简历和 Wiki ── #}
+    {% set _lang = lang | default(value=config.default_language) %}
+    {% set _blog_root = get_section(path="_index.md", lang=_lang) %}
+    {% set_global _blog_pages = [] %}
+    {% for p in _blog_root.pages %}
+      {% if p.path is not starting_with(pat="/wiki/") and p.path is not starting_with(pat="/resume") and p.extra.style | default(value="blog") != "wiki" and p.extra.style | default(value="blog") != "resume" %}
+        {% set_global _blog_pages = [..._blog_pages, p] %}
+      {% endif %}
+    {% endfor %}
+    {% set_global _current_index = -1 %}
+    {% for p in _blog_pages %}
+      {% if p.permalink == page.permalink %}{% set_global _current_index = loop.index0 %}{% endif %}
+    {% endfor %}
+    {% set _previous = false %}
+    {% set _next = false %}
+    {% if _current_index > 0 %}{% set _previous = _blog_pages[_current_index - 1] %}{% endif %}
+    {% if _current_index >= 0 and _current_index + 1 < _blog_pages | length %}{% set _next = _blog_pages[_current_index + 1] %}{% endif %}
+    {% if _previous or _next %}
+    <div class="post-nav">
+      {% if _previous %}<a class="post-card post-nav__card" href="{{ _previous.permalink | safe }}"><div class="post-nav__label">上一篇</div><div class="post-nav__title">{{ _previous.title }}</div></a>{% endif %}
+      {% if _next %}<a class="post-card post-nav__card post-nav__card--next" href="{{ _next.permalink | safe }}"><div class="post-nav__label">下一篇</div><div class="post-nav__title">{{ _next.title }}</div></a>{% endif %}
+    </div>
+    {% endif %}
+
+    {# ── Comments — unified provider: giscus | artalk | waline | none ── #}
+    {% set comments_disabled_by_page = false %}
+    {% if page.extra.comments is defined and page.extra.comments == false %}{% set_global comments_disabled_by_page = true %}{% endif %}
+    {% set comments_global_enabled = true %}
+    {% if config.extra.comments and config.extra.comments.enable is defined and config.extra.comments.enable == false %}{% set_global comments_global_enabled = false %}{% endif %}
+    {% if not comments_disabled_by_page and comments_global_enabled %}
+      {# decide provider — enable 统一在 [extra.comments]，各系统不再单独 enable #}
+      {% if config.extra.comments and config.extra.comments.provider is defined and config.extra.comments.provider != "" %}
+        {% set provider = config.extra.comments.provider | lower %}
+      {% elif config.extra.artalk and config.extra.artalk.server is defined and config.extra.artalk.server != "" %}
+        {% set provider = "artalk" %}
+      {% elif config.extra.waline and config.extra.waline.serverURL is defined and config.extra.waline.serverURL != "" %}
+        {% set provider = "waline" %}
+      {% elif config.extra.giscus and config.extra.giscus.repo is defined and config.extra.giscus.repo != "" and config.extra.giscus.repo != "user/repo" %}
+        {% set provider = "giscus" %}
+      {% else %}
+        {% set provider = "none" %}
+      {% endif %}
+
+      {% if provider == "giscus" and config.extra.giscus and config.extra.giscus.repo is defined and config.extra.giscus.repo != "" %}
+      <div class="comment-wrap giscus-wrap">
+        {% if config.extra.comments and config.extra.comments.comment_title %}<div class="comment-title">{{ config.extra.comments.comment_title }}</div>{% endif %}
+        <div class="giscus" id="giscus-mount"></div>
+        <script src="https://giscus.app/client.js"
+                data-repo="{{ config.extra.giscus.repo }}"
+                data-repo-id="{{ config.extra.giscus.repo_id }}"
+                data-category="{{ config.extra.giscus.category }}"
+                data-category-id="{{ config.extra.giscus.category_id }}"
+                data-mapping="{{ config.extra.giscus.mapping | default(value="pathname") }}"
+                data-strict="{{ config.extra.giscus.strict | default(value="0") }}"
+                data-reactions-enabled="{{ config.extra.giscus.reactions_enabled | default(value="1") }}"
+                data-emit-metadata="{{ config.extra.giscus.emit_metadata | default(value="0") }}"
+                data-input-position="{{ config.extra.giscus.input_position | default(value="bottom") }}"
+                data-theme="{{ config.extra.giscus.theme | default(value="preferred_color_scheme") }}"
+                data-lang="{{ config.extra.giscus.lang | default(value="zh-CN") }}"
+                crossorigin="anonymous" async>
+        </script>
+      </div>
+      {% elif provider == "artalk" and config.extra.artalk and config.extra.artalk.server is defined and config.extra.artalk.server != "" %}
+      <div class="comment-wrap artalk-wrap">
+        {% if config.extra.comments and config.extra.comments.comment_title %}<div class="comment-title">{{ config.extra.comments.comment_title }}</div>{% endif %}
+        <div id="artalk"></div>
+        <script>
+          window.ARTALK_CONFIG = {
+            server: "{{ config.extra.artalk.server | safe }}",
+            site: "{{ config.extra.artalk.site | default(value=config.title) | safe }}",
+            placeholder: "{{ config.extra.artalk.placeholder | default(value="") | safe }}",
+            noComment: "{{ config.extra.artalk.no_comment | default(value="") | safe }}",
+            pageKey: "{{ config.extra.artalk.page_key | default(value="") | safe }}" || location.pathname,
+            gravatarMirror: "{{ config.extra.artalk.gravatar_mirror | default(value="") | safe }}",
+            avatarMirror: "{{ config.extra.artalk.avatar_mirror | default(value="") | safe }}"
+          };
+        </script>
+      </div>
+      {% elif provider == "waline" and config.extra.waline and config.extra.waline.serverURL is defined and config.extra.waline.serverURL != "" %}
+      <div class="comment-wrap waline-wrap">
+        {% if config.extra.comments and config.extra.comments.comment_title %}<div class="comment-title">{{ config.extra.comments.comment_title }}</div>{% endif %}
+        <div id="waline"></div>
+        <script>
+          window.WALINE_CONFIG = {
+            serverURL: "{{ config.extra.waline.serverURL | safe }}",
+            lang: "{{ config.extra.waline.lang | default(value="zh-CN") | safe }}",
+            dark: "{{ config.extra.waline.dark | default(value="auto") | safe }}",
+            login: "{{ config.extra.waline.login | default(value="enable") | safe }}",
+            placeholder: "{{ config.extra.waline.placeholder | default(value="") | safe }}"
+          };
+          {% if config.extra.waline.emoji %}{% set ej = config.extra.waline.emoji %}window.WALINE_CONFIG.emoji = [{% for e in ej %}"{{ e | safe }}"{% if not loop.last %},{% endif %}{% endfor %}];{% endif %}
+          window.WALINE_CONFIG.meta = [{% for m in config.extra.waline.meta | default(value=["nick","mail","link"]) %}"{{ m }}"{% if not loop.last %},{% endif %}{% endfor %}];
+          window.WALINE_CONFIG.requiredMeta = [{% for m in config.extra.waline.requiredMeta | default(value=["nick","mail"]) %}"{{ m }}"{% if not loop.last %},{% endif %}{% endfor %}];
+        </script>
+      </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}
+
+{% block toc %}
+<aside class="toc-aside" id="tocAside" aria-label="Table of contents">
+    {# Wiki 目录已移至左侧栏，此处仅保留本页大纲，避免文章多时右侧过长；加密文章抑制大纲防标题泄漏 #}
+    {# 注：本 block 与 content block 作用域隔离，不可复用 is_encrypted，直接读 page.extra #}
+    {% set toc_locked = page.extra.encrypted | default(value=false) %}
+    {% if not toc_locked and config.extra.features.toc | default(value=true) and page.toc | length > 0 %}
+    <nav class="toc" id="toc">
+      <div class="toc__title">{{ <icon name="toc" width="14" height="14"/> }} {{ trans(key="toc_title", lang=lang) }}</div>
+      <ol class="toc__list">
+        {% for h1 in page.toc %}
+          <li>
+            <a href="{{ h1.permalink | safe }}">{{ h1.title }}</a>
+            {% if h1.children %}
+              <ol class="toc__list toc__list--h3">
+                {% for h2 in h1.children %}
+                  <li><a href="{{ h2.permalink | safe }}">{{ h2.title }}</a>
+                    {% if h2.children %}
+                      <ol class="toc__list toc__list--h4">
+                        {% for h3 in h2.children %}<li><a href="{{ h3.permalink | safe }}">{{ h3.title }}</a></li>{% endfor %}
+                      </ol>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ol>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+    </nav>
+    {% endif %}
+  </aside>
+{% endblock toc %}
+
+{% block scripts %}
+{# Re-evaluate provider for script loading — enable 统一在 [extra.comments] #}
+{% set _provider = "" %}
+{% set _comments_enabled = true %}
+{% if config.extra.comments and config.extra.comments.enable is defined and config.extra.comments.enable == false %}{% set_global _comments_enabled = false %}{% endif %}
+{% if config.extra.comments and config.extra.comments.provider is defined and config.extra.comments.provider != "" %}
+  {% set_global _provider = config.extra.comments.provider | lower %}
+{% elif config.extra.artalk and config.extra.artalk.server is defined and config.extra.artalk.server != "" %}
+  {% set_global _provider = "artalk" %}
+{% elif config.extra.waline and config.extra.waline.serverURL is defined and config.extra.waline.serverURL != "" %}
+  {% set_global _provider = "waline" %}
+{% elif config.extra.giscus and config.extra.giscus.repo is defined and config.extra.giscus.repo != "" and config.extra.giscus.repo != "user/repo" %}
+  {% set_global _provider = "giscus" %}
+{% else %}
+  {% set_global _provider = "none" %}
+{% endif %}
+{% if not _comments_enabled %}{% set_global _provider = "none" %}{% endif %}
+{% set _page_comments_off = false %}
+{% if page.extra.comments is defined and page.extra.comments == false %}{% set_global _page_comments_off = true %}{% endif %}
+{% if not _page_comments_off and _comments_enabled %}
+  {# giscus 已在 content 块内通过 <script> 同步渲染，无需在此重复加载 #}
+  {% if _provider == "artalk" and config.extra.artalk and config.extra.artalk.server is defined and config.extra.artalk.server != "" %}
+<link rel="stylesheet" href="https://unpkg.com/artalk@2/dist/Artalk.css">
+<script src="https://unpkg.com/artalk@2/dist/Artalk.js" defer></script>
+<script defer>
+document.addEventListener('DOMContentLoaded', function(){
+  if(window.Artalk && window.ARTALK_CONFIG){
+    try{
+      var cfg = window.ARTALK_CONFIG;
+      Artalk.init({
+        el: '#artalk',
+        pageKey: cfg.pageKey || location.pathname,
+        pageTitle: document.title,
+        server: cfg.server,
+        site: cfg.site || document.title,
+        placeholder: cfg.placeholder || '',
+        noComment: cfg.noComment || '',
+        gravatar: { mirror: cfg.gravatarMirror || '' },
+        avatarURL: cfg.avatarMirror || ''
+      });
+    }catch(e){ console.error('Artalk init failed', e); }
+  }
+});
+</script>
+  {% elif _provider == "waline" and config.extra.waline and config.extra.waline.serverURL is defined and config.extra.waline.serverURL != "" %}
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css">
+<script type="module">
+import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+document.addEventListener('DOMContentLoaded', function(){
+  var c = window.WALINE_CONFIG || {};
+  try{
+    init({
+      el: '#waline',
+      serverURL: c.serverURL,
+      lang: c.lang || 'zh-CN',
+      dark: c.dark === 'auto' ? 'html[data-theme="dark"]' : c.dark,
+      emoji: c.emoji,
+      meta: c.meta,
+      requiredMeta: c.requiredMeta,
+      login: c.login || 'enable',
+      placeholder: c.placeholder || undefined
+    });
+  }catch(e){ console.error('Waline init failed', e); }
+});
+</script>
+  {% endif %}
+{% endif %}
+{% endblock scripts %}
