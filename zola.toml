@@ -1,5 +1,5 @@
 # Zola configuration — Elysia Theme (modern minimalist)
-base_url = "http://localhost:3000"
+base_url = "https://blog.elysiamoon.com/zola-theme-elysia"
 title = "诗酒趁年华"
 description = "A modern, minimalist Zola theme — Reading is enjoyment."
 default_language = "zh"
