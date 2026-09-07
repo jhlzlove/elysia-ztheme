@@ -21,7 +21,7 @@ jobs:
 
       - name: Fix public permissions
         run: |
-          chmod -R u+rwX public
+          sudo chown -R $USER:$USER public
 
       - name: Encrypt private content
         uses: jhlzlove/ssg-encrypt@main
