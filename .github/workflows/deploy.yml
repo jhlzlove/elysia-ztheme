@@ -19,6 +19,10 @@ jobs:
         env:
           BUILD_ONLY: true
 
+      - name: Fix public permissions
+        run: |
+          chmod -R u+rwX public
+
       - name: Encrypt private content
         uses: jhlzlove/ssg-encrypt@main
         with:
