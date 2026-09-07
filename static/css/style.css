@@ -2043,6 +2043,7 @@ html[data-theme="dark"] .poetry__body{
 .cat-dir__name{font-size:15px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;flex:0 0 auto}
 .cat-dir__count{font-size:12px;color:var(--muted);background:var(--bg-soft);border:1px solid var(--border);padding:2px 8px;border-radius:999px}
 .cat-dir__arrow{margin-left:auto;width:18px;height:18px;color:var(--muted-2);transition:transform .2s;display:grid;place-items:center}
+.cat-dir__arrow svg{width:16px;height:16px;display:block}
 .cat-dir__group[open] .cat-dir__arrow{transform:rotate(180deg)}
 .cat-dir__link{width:28px;height:28px;display:grid;place-items:center;border:1px solid var(--border);border-radius:999px;background:var(--bg-soft);color:var(--muted);text-decoration:none;margin-left:4px;flex:0 0 28px;transition:all .15s}
 .cat-dir__link:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}

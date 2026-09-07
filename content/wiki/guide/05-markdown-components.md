@@ -275,7 +275,7 @@ interface User {
 {% raw %}
 ```jinja
 {{ <audio netease="1852892593" type="single" /> }}
-{{ <audio netease="288635756" type="album" /> }}
+{{ <audio netease="128938811" type="album" /> }}
 {{ <audio netease="2246151876" type="playlist" /> }}
 ```
 {% endraw %}

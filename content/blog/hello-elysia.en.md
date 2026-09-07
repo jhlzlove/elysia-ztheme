@@ -81,7 +81,7 @@ The page type is mainly determined by its location and template:
 
 Card layouts with cover images can look nice, but they require careful design. I previously tried the lists with images from [hexo-theme-stellar] and [hugo-theme-reimu] — nice designs worth checking if you like that style.
 
-This theme intentionally avoids cover images to save bandwidth (though it is not much) 😄. Images inside posts are supported via the `image` component; fancybox is not included yet.
+This theme intentionally avoids cover images to save bandwidth (though it is not much) 😄. Images inside posts are supported via the `image` component; fancybox is not included yet — that can wait until it is actually needed.
 
 ## No local search yet
 
@@ -97,7 +97,8 @@ Even without being listed, Zola still compiles those pages and they are reachabl
 
 Because of orphan pages, a flat directory for posts is generally recommended. Use categories to group posts; Zola's taxonomy pages make it easy to find posts in the same category.
 
-If you have multiple subdirectories with related content, the Wiki layout provided by the theme is a better fit.
+> [!tip]
+> If you have multiple subdirectories with related content, the Wiki layout provided by the theme is a better fit.
 
 ## Blog
 
@@ -170,13 +171,16 @@ The resume page is also standalone and not included in the blog list.
 
 ## Inspirations
 
-This theme borrows layout and ideas from:
+This theme "copies homework" from the layout and features of the following open-source projects and blogs:
 
 - [Hexo Stellar](https://xaoxuu.com/)
 - [Hugo reimu](https://github.com/D-Sketon/hugo-theme-reimu)
+- [BelResume](https://github.com/cx48/BelResume)
 - [Hugo 椒盐豆豉](https://blog.douchi.space/)
 - AI: Claude, ChatGPT, Opencode
 
 See the full guide:
 
 {{ <link href="/wiki/guide" title="Elysia Guide" icon="/avatar.svg" desc="Complete guide from install to writing and deployment"/> }}
+
+You can also explore this project's source structure to learn from it.

@@ -16,5 +16,3 @@ Elysia 是一个基于 [Zola](https://www.getzola.org/) 的博客主题，提供
 3. **配置详解**：`zola.toml` 逐项说明，覆盖所有常用配置。
 4. **部署网站**：构建静态文件并发布到 GitHub Pages 或其他平台。
 5. **Markdown 与组件**：Front Matter、Markdown 与组件（附写法与效果）。
-
-Wiki 章节导航由目录结构自动生成，无需额外系列字段。

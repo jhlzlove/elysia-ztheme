@@ -14,14 +14,13 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
-      - name: build_and_deploy
-        uses: shalzz/zola-deploy-action@master
-        env:
-          BUILD_ONLY: true
+      - name: Install Zola
+        uses: taiki-e/install-action@v2
+        with:
+          tool: zola
 
-      - name: Fix public permissions
-        run: |
-          sudo chown -R $USER:$USER public
+      - name: Build Zola
+        run: zola build
 
       - name: Encrypt private content
         uses: jhlzlove/ssg-encrypt@main
