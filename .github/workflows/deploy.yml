@@ -24,7 +24,7 @@ jobs:
         env:
           BUILD_ONLY: true
 
-      - uses: jhlzlove/site-encrypt@v1
+      - uses: jhlzlove/ssg-encrypt@main
         env:
           SITE_ENCRYPT_PASSWORDS: ${{ secrets.ENCRYPT_PASSWORDS }}
 
