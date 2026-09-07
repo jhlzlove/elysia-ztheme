@@ -25,6 +25,9 @@ jobs:
           BUILD_ONLY: true
 
       - uses: jhlzlove/ssg-encrypt@main
+        with:
+          selector: "#encryptedBox"
+          content-selector: "#articleContent"
         env:
           SITE_ENCRYPT_PASSWORDS: ${{ secrets.ENCRYPT_PASSWORDS }}
 
