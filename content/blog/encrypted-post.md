@@ -9,7 +9,7 @@ tags = ["encrypt", "demo"]
 [extra]
 encrypted = true
 password = "elysia"
-password_hint = "6 位数字"
+password_hint = "和 key 相同"
 +++
 
 这是加密的正文，只有输入正确密码（`123456`）后才会显示。
