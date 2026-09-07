@@ -47,10 +47,8 @@
         {% if "wiki" in _m_parent_path and _m_parent_path != "wiki/_index.md" and "wiki/_index." not in _m_parent_path %}
           {% set _m_parent = get_section(path=_m_parent_path) %}
           {% if _m_parent and _m_parent.pages | length > 0 %}
-          {% set _m_wiki_root = "/wiki/" %}
-          {% if lang != config.default_language %}
-            {% set _m_wiki_root = "/" ~ lang ~ "/wiki/" %}
-          {% endif %}
+          {% set _m_lang = lang | default(value=config.default_language) %}
+          {% set _m_wiki_root = get_url(path="wiki/", lang=_m_lang, trailing_slash=true) %}
           <details class="wiki-mobile" id="wikiMobile">
             <summary class="toc-mobile__summary">
               <span class="toc-mobile__label">📚 {{ _m_parent.title }}</span>

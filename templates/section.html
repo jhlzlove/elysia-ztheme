@@ -34,10 +34,8 @@
           <span class="toc-mobile__count">{{ section.pages | length }} 篇</span>
         </summary>
         <nav class="wiki-mobile__nav" aria-label="Wiki 目录">
-          {% set _m_wiki_root = "/wiki/" %}
-          {% if lang != config.default_language %}
-            {% set _m_wiki_root = "/" ~ lang ~ "/wiki/" %}
-          {% endif %}
+          {% set _m_lang = lang | default(value=config.default_language) %}
+          {% set _m_wiki_root = get_url(path="wiki/", lang=_m_lang, trailing_slash=true) %}
           <a class="wiki-mobile__back" href="{{ _m_wiki_root | safe }}">← 返回 Wiki</a>
           <ol class="wiki-side-nav__list">
             {% for p in section.pages %}

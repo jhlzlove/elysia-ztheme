@@ -63,21 +63,7 @@
     </button>
 
     <div class="sidebar__panel" id="sidebarPanel">
-      {% if not is_wiki_context %}
-      <div class="brand">
-        {% if config.extra.avatar %}
-          <img class="brand__avatar" src="{{ get_url(path=config.extra.avatar) | safe }}" alt="{{ config.extra.avatar_alt | default(value=config.title) }}" loading="lazy" onerror="this.style.display='none';document.getElementById('avatarFallback').style.display='grid'">
-          <div id="avatarFallback" class="brand__avatar brand__avatar--placeholder" style="display:none">{{ config.title | truncate(length=2, end="") | upper }}</div>
-        {% else %}
-          <div class="brand__avatar brand__avatar--placeholder">{{ config.title | truncate(length=2, end="") | upper }}</div>
-        {% endif %}
-        <div class="brand__title"><a href="{{ config.base_url | safe }}">{{ config.title }}</a></div>
-        {% if config.extra.site_motto %}<div class="brand__motto">{{ config.extra.site_motto }}</div>{% endif %}
-      </div>
-      {% endif %}
-      {# Menus — 基于 Zola translations 的多语言支持 #}
-      {# 仅维护一套 [[extra.menus]]（含 name_key/url/icon），名称通过 [translations] / [languages.<code>.translations] 翻译 #}
-      {# 增删菜单只需改一处，新增语言只需在对应 translations 中追加同名 key #}
+      {# cur_lang 提前计算：品牌首页、菜单、社交链接均需按语言 + base_url 生成 #}
       {% set_global cur_lang = lang | default(value=config.default_language) %}
       {# 优先以 URL 前缀判定（避免缺翻译时回退到默认语言导致菜单语言不一致） #}
       {% if current_path is defined %}
@@ -97,13 +83,25 @@
           {% set_global cur_lang = _first2 %}
         {% endif %}
       {% endif %}
+      {% if not is_wiki_context %}
+      <div class="brand">
+        {% if config.extra.avatar %}
+          <img class="brand__avatar" src="{{ get_url(path=config.extra.avatar) | safe }}" alt="{{ config.extra.avatar_alt | default(value=config.title) }}" loading="lazy" onerror="this.style.display='none';document.getElementById('avatarFallback').style.display='grid'">
+          <div id="avatarFallback" class="brand__avatar brand__avatar--placeholder" style="display:none">{{ config.title | truncate(length=2, end="") | upper }}</div>
+        {% else %}
+          <div class="brand__avatar brand__avatar--placeholder">{{ config.title | truncate(length=2, end="") | upper }}</div>
+        {% endif %}
+        <div class="brand__title"><a href="{{ get_url(path="/", lang=cur_lang, trailing_slash=true) | safe }}">{{ config.title }}</a></div>
+        {% if config.extra.site_motto %}<div class="brand__motto">{{ config.extra.site_motto }}</div>{% endif %}
+      </div>
+      {% endif %}
+      {# Menus — 基于 Zola translations 的多语言支持 #}
+      {# 仅维护一套 [[extra.menus]]（含 name_key/url/icon），名称通过 [translations] / [languages.<code>.translations] 翻译 #}
+      {# 增删菜单只需改一处，新增语言只需在对应 translations 中追加同名 key #}
       {% set_global menus = config.extra.menus %}
       {# Wiki 上下文判定已提前至 aside 之前，此处直接复用 is_wiki_context / wiki_nav_section #}
-      {# Wiki 根链接（按当前语言加前缀） #}
-      {% set _wiki_root_url = "/wiki/" %}
-      {% if cur_lang != config.default_language %}
-        {% set _wiki_root_url = "/" ~ cur_lang ~ "/wiki/" %}
-      {% endif %}
+      {# Wiki 根链接经 get_url 生成，自动携带 base_url 子路径（如 /repo/）与语言前缀 #}
+      {% set _wiki_root_url = get_url(path="wiki/", lang=cur_lang, trailing_slash=true) %}
       {% if is_wiki_context and wiki_nav_section %}
       <nav class="wiki-side-nav" aria-label="Wiki 目录">
         <a class="wiki-side-nav__back" href="{{ _wiki_root_url | safe }}">← 返回 Wiki</a>
@@ -158,21 +156,36 @@
       <nav class="nav-buttons" aria-label="Primary">
         {% for item in menus %}
           {% set display_name = trans(key=item.name_key, lang=cur_lang) %}
-          {% set href = item.url %}
-          {# 站内绝对路径按当前语言自动加前缀；已带前缀的跳过（通用逻辑，支持任意语言） #}
-          {% if cur_lang != config.default_language and href is starting_with(pat="/") and not href is starting_with(pat="http") %}
-            {% set parts = href | split(pat="/") %}
-            {% set first_seg = parts[1] | default(value="") %}
-            {% if first_seg != cur_lang %}
-              {% if href == "/" %}
-                {% set href = "/" ~ cur_lang ~ "/" %}
-              {% else %}
-                {% set href = "/" ~ cur_lang ~ href %}
+          {% set raw = item.url %}
+          {# 外链（http/mailto/tel/锚点/协议相对）原样输出；站内路径经 get_url 生成以支持 base_url 子路径部署（如 /repo/） #}
+          {% set is_external = raw is starting_with(pat="http://") or raw is starting_with(pat="https://") or raw is starting_with(pat="//") or raw is starting_with(pat="mailto:") or raw is starting_with(pat="tel:") or raw is starting_with(pat="#") %}
+          {% set is_http = raw is starting_with(pat="http://") or raw is starting_with(pat="https://") or raw is starting_with(pat="//") %}
+          {% if is_external %}
+            {% set href = raw %}
+            {% set href_path = raw %}
+          {% else %}
+            {# 站内绝对路径按当前语言自动加前缀；已带前缀的跳过（通用逻辑，支持任意语言） #}
+            {% set href_path = raw %}
+            {% if cur_lang != config.default_language and raw is starting_with(pat="/") %}
+              {% set parts = raw | split(pat="/") %}
+              {% set first_seg = parts[1] | default(value="") %}
+              {% if first_seg != cur_lang %}
+                {% if raw == "/" %}
+                  {% set href_path = "/" ~ cur_lang ~ "/" %}
+                {% else %}
+                  {% set href_path = "/" ~ cur_lang ~ raw %}
+                {% endif %}
               {% endif %}
             {% endif %}
+            {# 经 get_url 拼接 base_url 子路径；href_path 已含语言前缀，此处不再传 lang 以防双重前缀 #}
+            {% if href_path is ending_with(pat="/") %}
+              {% set href = get_url(path=href_path, trailing_slash=true) %}
+            {% else %}
+              {% set href = get_url(path=href_path) %}
+            {% endif %}
           {% endif %}
-          {% set is_active = current_path is defined and current_path == href %}
-          <a class="nav-btn {% if is_active %}is-active{% endif %}" href="{{ href | safe }}" {% if href is starting_with(pat="http") %}target="_blank" rel="noopener"{% endif %}>
+          {% set is_active = current_path is defined and current_path == href_path %}
+          <a class="nav-btn {% if is_active %}is-active{% endif %}" href="{{ href | safe }}" {% if is_http %}target="_blank" rel="noopener"{% endif %}>
             {% if item.icon %}<span class="nav-btn__icon">{{ item.icon }}</span>{% endif %}
             <span>{{ display_name }}</span>
           </a>
@@ -219,7 +232,27 @@
         {% if config.extra.socials %}
         <div class="socials" aria-label="Social links">
           {% for s in config.extra.socials %}
-            <a class="socials__link" href="{{ s.url | safe }}" target="_blank" rel="noopener" aria-label="{{ s.name }}" title="{{ s.name }}">
+            {# 站内路径（如 /atom.xml）经 get_url 生成以支持 base_url 子路径部署；外链原样输出 #}
+            {% set _s_raw = s.url %}
+            {% set _s_is_external = _s_raw is starting_with(pat="http://") or _s_raw is starting_with(pat="https://") or _s_raw is starting_with(pat="//") or _s_raw is starting_with(pat="mailto:") or _s_raw is starting_with(pat="tel:") or _s_raw is starting_with(pat="#") %}
+            {% if _s_is_external %}
+              {% set _s_href = _s_raw %}
+            {% else %}
+              {% set _s_path = _s_raw %}
+              {% if cur_lang != config.default_language and _s_raw is starting_with(pat="/") %}
+                {% set _s_parts = _s_raw | split(pat="/") %}
+                {% set _s_first = _s_parts[1] | default(value="") %}
+                {% if _s_first != cur_lang %}
+                  {% set _s_path = "/" ~ cur_lang ~ _s_raw %}
+                {% endif %}
+              {% endif %}
+              {% if _s_path is ending_with(pat="/") %}
+                {% set _s_href = get_url(path=_s_path, trailing_slash=true) %}
+              {% else %}
+                {% set _s_href = get_url(path=_s_path) %}
+              {% endif %}
+            {% endif %}
+            <a class="socials__link" href="{{ _s_href | safe }}" target="_blank" rel="noopener" aria-label="{{ s.name }}" title="{{ s.name }}">
               {% if s.icon == "github" %}
                 {{ <icon name="github"/> }}
               {% elif s.icon == "rss" %}
@@ -255,13 +288,13 @@
                 {% if current_path is defined %}
                   {% set _pp = current_path | split(pat="/") %}
                   {% set _pf = _pp[1] | default(value="") %}
-                  {% if _pf == "en" or _pf == "zh" or _pf == "ja" or _pf == "ko" %}
+                  {% if _pf and config.languages and config.languages[_pf] is defined %}
                     {% set _cur = _pf %}
                   {% endif %}
                 {% endif %}
-                {# 当前页面的多语言对应链接，优先跳转到同页翻译，否则回退首页 #}
-                {% set _zh_href = config.base_url | safe ~ "/" %}
-                {% set _en_href = config.base_url | safe ~ "/en/" %}
+                {# 当前页面的多语言对应链接，优先跳转到同页翻译，否则回退首页（经 get_url 生成，支持 base_url 子路径） #}
+                {% set _zh_href = get_url(path="/", trailing_slash=true) %}
+                {% set _en_href = get_url(path="en/", trailing_slash=true) %}
                 {% if page is defined %}
                   {% if page.lang == "zh" %}{% set_global _zh_href = page.permalink | safe %}{% elif page.lang == "en" %}{% set_global _en_href = page.permalink | safe %}{% endif %}
                   {% for t in page.translations %}
